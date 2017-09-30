@@ -1034,7 +1034,7 @@ void EPGDataFile::SaveEvent(FileStream &File, const EventInfo &Event)
 				GroupInfo.NetworkID         = Event.NetworkID;
 				GroupInfo.TransportStreamID = Event.TransportStreamID;
 
-				WriteData(File, &Event);
+				WriteData(File, GroupInfo);
 			}
 		}
 	}
