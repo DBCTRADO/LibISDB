@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_MD|Win32">
+      <Configuration>Release_MD</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_MD|x64">
+      <Configuration>Release_MD</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\LibISDB\Base\ARIBString.hpp" />
+    <ClInclude Include="..\LibISDB\Base\ARIBTime.hpp" />
+    <ClInclude Include="..\LibISDB\Base\BitstreamReader.hpp" />
+    <ClInclude Include="..\LibISDB\Base\DataBuffer.hpp" />
+    <ClInclude Include="..\LibISDB\Base\DataStorage.hpp" />
+    <ClInclude Include="..\LibISDB\Base\DataStorageManager.hpp" />
+    <ClInclude Include="..\LibISDB\Base\DataStream.hpp" />
+    <ClInclude Include="..\LibISDB\Base\DataStreamer.hpp" />
+    <ClInclude Include="..\LibISDB\Base\DateTime.hpp" />
+    <ClInclude Include="..\LibISDB\Base\Debug.hpp" />
+    <ClInclude Include="..\LibISDB\Base\DebugDef.hpp" />
+    <ClInclude Include="..\LibISDB\Base\ErrorHandler.hpp" />
+    <ClInclude Include="..\LibISDB\Base\EventListener.hpp" />
+    <ClInclude Include="..\LibISDB\Base\FileStream.hpp" />
+    <ClInclude Include="..\LibISDB\Base\FileStreamGeneric.hpp" />
+    <ClInclude Include="..\LibISDB\Base\FileStreamGenericC.hpp" />
+    <ClInclude Include="..\LibISDB\Base\FileStreamPOSIX.hpp" />
+    <ClInclude Include="..\LibISDB\Base\FileStreamWindows.hpp" />
+    <ClInclude Include="..\LibISDB\Base\JISKanjiMap.hpp" />
+    <ClInclude Include="..\LibISDB\Base\Logger.hpp" />
+    <ClInclude Include="..\LibISDB\Base\ObjectBase.hpp" />
+    <ClInclude Include="..\LibISDB\Base\SIMD.hpp" />
+    <ClInclude Include="..\LibISDB\Base\StandardStream.hpp" />
+    <ClInclude Include="..\LibISDB\Base\Stream.hpp" />
+    <ClInclude Include="..\LibISDB\Base\StreamBuffer.hpp" />
+    <ClInclude Include="..\LibISDB\Base\StreamBufferDataStreamer.hpp" />
+    <ClInclude Include="..\LibISDB\Base\StreamingThread.hpp" />
+    <ClInclude Include="..\LibISDB\Base\StreamWriter.hpp" />
+    <ClInclude Include="..\LibISDB\Engine\FilterGraph.hpp" />
+    <ClInclude Include="..\LibISDB\Engine\StreamSourceEngine.hpp" />
+    <ClInclude Include="..\LibISDB\Engine\TSEngine.hpp" />
+    <ClInclude Include="..\LibISDB\EPG\EPGDatabase.hpp" />
+    <ClInclude Include="..\LibISDB\EPG\EPGDataFile.hpp" />
+    <ClInclude Include="..\LibISDB\EPG\EventInfo.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\AnalyzerFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\AsyncStreamingFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\CaptionFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\EPGDatabaseFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\FilterBase.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\GrabberFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\LogoDownloaderFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\RecorderFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\ServiceSelectorFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\SourceFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\StreamBufferFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\StreamSourceFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\TeeFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\TSPacketCounterFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Filters\TSPacketParserFilter.hpp" />
+    <ClInclude Include="..\LibISDB\LibISDB.hpp" />
+    <ClInclude Include="..\LibISDB\LibISDBBase.hpp" />
+    <ClInclude Include="..\LibISDB\LibISDBConfig.hpp" />
+    <ClInclude Include="..\LibISDB\LibISDBConsts.hpp" />
+    <ClInclude Include="..\LibISDB\LibISDBPrivate.hpp" />
+    <ClInclude Include="..\LibISDB\LibISDBVersion.hpp" />
+    <ClInclude Include="..\LibISDB\LibISDBWindows.hpp" />
+    <ClInclude Include="..\LibISDB\MediaParsers\ADTSParser.hpp" />
+    <ClInclude Include="..\LibISDB\MediaParsers\H264Parser.hpp" />
+    <ClInclude Include="..\LibISDB\MediaParsers\H265Parser.hpp" />
+    <ClInclude Include="..\LibISDB\MediaParsers\MPEG2VideoParser.hpp" />
+    <ClInclude Include="..\LibISDB\MediaParsers\MPEGVideoParser.hpp" />
+    <ClInclude Include="..\LibISDB\Templates\cstring_view.hpp" />
+    <ClInclude Include="..\LibISDB\Templates\EnumFlags.hpp" />
+    <ClInclude Include="..\LibISDB\Templates\ReturnArg.hpp" />
+    <ClInclude Include="..\LibISDB\TS\CaptionParser.hpp" />
+    <ClInclude Include="..\LibISDB\TS\DescriptorBase.hpp" />
+    <ClInclude Include="..\LibISDB\TS\DescriptorBlock.hpp" />
+    <ClInclude Include="..\LibISDB\TS\Descriptors.hpp" />
+    <ClInclude Include="..\LibISDB\TS\OneSegPATGenerator.hpp" />
+    <ClInclude Include="..\LibISDB\TS\PESPacket.hpp" />
+    <ClInclude Include="..\LibISDB\TS\PIDMap.hpp" />
+    <ClInclude Include="..\LibISDB\TS\PSISection.hpp" />
+    <ClInclude Include="..\LibISDB\TS\PSITable.hpp" />
+    <ClInclude Include="..\LibISDB\TS\StreamSelector.hpp" />
+    <ClInclude Include="..\LibISDB\TS\Tables.hpp" />
+    <ClInclude Include="..\LibISDB\TS\TSDownload.hpp" />
+    <ClInclude Include="..\LibISDB\TS\TSInformation.hpp" />
+    <ClInclude Include="..\LibISDB\TS\TSPacket.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\AlignedAlloc.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\BitRateCalculator.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\BitTable.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\Clock.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\ConditionVariable.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\CRC.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\Hasher.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\Lock.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\MD5.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\Sort.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\StringUtilities.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\Thread.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\Utilities.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\LibISDB\Base\ARIBString.cpp" />
+    <ClCompile Include="..\LibISDB\Base\ARIBTime.cpp" />
+    <ClCompile Include="..\LibISDB\Base\BitstreamReader.cpp" />
+    <ClCompile Include="..\LibISDB\Base\DataBuffer.cpp" />
+    <ClCompile Include="..\LibISDB\Base\DataStorage.cpp" />
+    <ClCompile Include="..\LibISDB\Base\DataStorageManager.cpp" />
+    <ClCompile Include="..\LibISDB\Base\DataStreamer.cpp" />
+    <ClCompile Include="..\LibISDB\Base\DateTime.cpp" />
+    <ClCompile Include="..\LibISDB\Base\Debug.cpp" />
+    <ClCompile Include="..\LibISDB\Base\ErrorHandler.cpp" />
+    <ClCompile Include="..\LibISDB\Base\FileStreamGeneric.cpp" />
+    <ClCompile Include="..\LibISDB\Base\FileStreamGenericC.cpp" />
+    <ClCompile Include="..\LibISDB\Base\FileStreamPOSIX.cpp" />
+    <ClCompile Include="..\LibISDB\Base\FileStreamWindows.cpp" />
+    <ClCompile Include="..\LibISDB\Base\JISKanjiMap.cpp" />
+    <ClCompile Include="..\LibISDB\Base\Logger.cpp" />
+    <ClCompile Include="..\LibISDB\Base\ObjectBase.cpp" />
+    <ClCompile Include="..\LibISDB\Base\SIMD.cpp" />
+    <ClCompile Include="..\LibISDB\Base\StandardStream.cpp" />
+    <ClCompile Include="..\LibISDB\Base\StreamBuffer.cpp" />
+    <ClCompile Include="..\LibISDB\Base\StreamBufferDataStreamer.cpp" />
+    <ClCompile Include="..\LibISDB\Base\StreamingThread.cpp" />
+    <ClCompile Include="..\LibISDB\Base\StreamWriter.cpp" />
+    <ClCompile Include="..\LibISDB\Engine\FilterGraph.cpp" />
+    <ClCompile Include="..\LibISDB\Engine\StreamSourceEngine.cpp" />
+    <ClCompile Include="..\LibISDB\Engine\TSEngine.cpp" />
+    <ClCompile Include="..\LibISDB\EPG\EPGDatabase.cpp" />
+    <ClCompile Include="..\LibISDB\EPG\EPGDataFile.cpp" />
+    <ClCompile Include="..\LibISDB\EPG\EventInfo.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\AnalyzerFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\AsyncStreamingFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\CaptionFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\EPGDatabaseFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\FilterBase.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\GrabberFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\LogoDownloaderFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\RecorderFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\ServiceSelectorFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\SourceFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\StreamBufferFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\StreamSourceFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\TeeFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\TSPacketCounterFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Filters\TSPacketParserFilter.cpp" />
+    <ClCompile Include="..\LibISDB\MediaParsers\ADTSParser.cpp" />
+    <ClCompile Include="..\LibISDB\MediaParsers\H264Parser.cpp" />
+    <ClCompile Include="..\LibISDB\MediaParsers\H265Parser.cpp" />
+    <ClCompile Include="..\LibISDB\MediaParsers\MPEG2VideoParser.cpp" />
+    <ClCompile Include="..\LibISDB\MediaParsers\MPEGVideoParser.cpp" />
+    <ClCompile Include="..\LibISDB\TS\CaptionParser.cpp" />
+    <ClCompile Include="..\LibISDB\TS\DescriptorBase.cpp" />
+    <ClCompile Include="..\LibISDB\TS\DescriptorBlock.cpp" />
+    <ClCompile Include="..\LibISDB\TS\Descriptors.cpp" />
+    <ClCompile Include="..\LibISDB\TS\OneSegPATGenerator.cpp" />
+    <ClCompile Include="..\LibISDB\TS\PESPacket.cpp" />
+    <ClCompile Include="..\LibISDB\TS\PIDMap.cpp" />
+    <ClCompile Include="..\LibISDB\TS\PSISection.cpp" />
+    <ClCompile Include="..\LibISDB\TS\PSITable.cpp" />
+    <ClCompile Include="..\LibISDB\TS\StreamSelector.cpp" />
+    <ClCompile Include="..\LibISDB\TS\Tables.cpp" />
+    <ClCompile Include="..\LibISDB\TS\TSDownload.cpp" />
+    <ClCompile Include="..\LibISDB\TS\TSInformation.cpp" />
+    <ClCompile Include="..\LibISDB\TS\TSPacket.cpp" />
+    <ClCompile Include="..\LibISDB\Utilities\AlignedAlloc.cpp" />
+    <ClCompile Include="..\LibISDB\Utilities\BitRateCalculator.cpp" />
+    <ClCompile Include="..\LibISDB\Utilities\ConditionVariable.cpp" />
+    <ClCompile Include="..\LibISDB\Utilities\CRC.cpp" />
+    <ClCompile Include="..\LibISDB\Utilities\Lock.cpp" />
+    <ClCompile Include="..\LibISDB\Utilities\MD5.cpp" />
+    <ClCompile Include="..\LibISDB\Utilities\Thread.cpp" />
+    <ClCompile Include="..\LibISDB\Utilities\Utilities.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{55037A54-F0FB-446C-B81F-424C5D0FA3D9}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>LibISDB</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|x64'" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/source-charset:utf-8 /std:c++latest %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/source-charset:utf-8 /std:c++latest %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <AdditionalOptions>/source-charset:utf-8 /std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <AdditionalOptions>/source-charset:utf-8 /std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <AdditionalOptions>/source-charset:utf-8 /std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <AdditionalOptions>/source-charset:utf-8 /std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Base">
+      <UniqueIdentifier>{40e41b69-8b0b-4d53-84c0-44ba878141fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Source Files">
+      <UniqueIdentifier>{72953419-d55b-40df-ad26-a11b81010c6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Header Files">
+      <UniqueIdentifier>{51efd79f-c056-4900-9c40-62f57ad89dcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filters">
+      <UniqueIdentifier>{d68f306f-05df-4ad8-b50e-d28d9a9b001f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filters\Header Files">
+      <UniqueIdentifier>{78a71ea5-6333-46a3-9fac-0a889502b609}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filters\Source Files">
+      <UniqueIdentifier>{69a231bb-7aef-4a7a-89c1-bb14d4adf2bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer">
+      <UniqueIdentifier>{98535218-1b03-478a-8a40-29c5ed45ff49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\Source Files">
+      <UniqueIdentifier>{112deecb-ab83-44ad-8262-4f8138d5f3f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\Header Files">
+      <UniqueIdentifier>{1d7d3125-5d3e-4230-9a8d-dd77b70d8a96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow">
+      <UniqueIdentifier>{7cd7dc55-b6dc-445a-8875-4c94464a347e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\Source Files">
+      <UniqueIdentifier>{13dbba00-5a49-4173-9064-f9572fdeda51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\Header Files">
+      <UniqueIdentifier>{75313c0d-75f0-4c9f-874f-0fd101bfc182}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\VideoRenderers">
+      <UniqueIdentifier>{1e789c88-1cce-4a7c-868d-fa6e3dcd02cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\VideoRenderers\Source Files">
+      <UniqueIdentifier>{16545282-ed56-4968-981a-f9e65f60982b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\VideoRenderers\Header Files">
+      <UniqueIdentifier>{99e2a1e6-85c3-4532-b478-a3108b46b3aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\VideoRenderers\EVRCustomPresenter">
+      <UniqueIdentifier>{8f4aec28-b3ad-40ab-b960-d7f92ed1a169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Source Files">
+      <UniqueIdentifier>{2b922487-96dd-4b52-9cf0-f8ca2268b721}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Header Files">
+      <UniqueIdentifier>{dfd13b62-7795-42f9-bcf2-b1acddc3fe6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\AudioDecoders">
+      <UniqueIdentifier>{c20550eb-3215-482b-8176-71175abbb349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\AudioDecoders\Source Files">
+      <UniqueIdentifier>{ef677ff7-e1ec-4ac2-b6c5-645a52ae7060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\AudioDecoders\Header Files">
+      <UniqueIdentifier>{73bb0c9e-ea77-4b28-a0a9-40cb3a043c28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\ImageMixers">
+      <UniqueIdentifier>{aa0d36a1-22be-49cd-9e36-f60084b77d18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\ImageMixers\Source Files">
+      <UniqueIdentifier>{72970246-344f-4a74-b934-9df97c761cf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\ImageMixers\Header Files">
+      <UniqueIdentifier>{b9c98d8d-69f9-47c7-a083-8d99ead12439}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\VideoParsers">
+      <UniqueIdentifier>{e24fbce3-d217-4fc9-9de6-0da040aa2f07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\VideoParsers\Source Files">
+      <UniqueIdentifier>{64bafecf-36c7-4deb-aad8-50141d4ae3cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\VideoParsers\Header Files">
+      <UniqueIdentifier>{d23cdf7d-d74a-47eb-a191-9ddad6e3c919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\SourceFilter">
+      <UniqueIdentifier>{5385a346-5e20-4162-8374-0515f72c31a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\SourceFilter\Source Files">
+      <UniqueIdentifier>{6137dbd1-85c4-42a0-baa4-3d7eefe486d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\DirectShow\SourceFilter\Header Files">
+      <UniqueIdentifier>{edb20304-f60e-4fc8-9d1b-c6f540555bb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{ce3b3804-ce2d-4e7d-9e88-79c5456cb6b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Header Files">
+      <UniqueIdentifier>{d8f50278-ddbd-47b1-9930-a9087281fc3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Source Files">
+      <UniqueIdentifier>{39fd4cd3-9c2b-4a9c-b6c9-0dad10df72a5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\LibISDB\Windows\Base\BonDriver.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Filters\BonDriverSourceFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\ViewerEngine.hpp">
+      <Filter>Viewer\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\ViewerFilter.hpp">
+      <Filter>Viewer\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\DirectShowUtilities.hpp">
+      <Filter>Viewer\DirectShow\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRHelpers.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRMediaType.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRPresentEngine.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRPresenter.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRPresenterBase.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRScheduler.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\DirectShowBase.hpp">
+      <Filter>Viewer\DirectShow\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\KnownDecoderManager.hpp">
+      <Filter>Viewer\DirectShow\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_EVR.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR7.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR7Renderless.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR9.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR9Renderless.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\VideoRenderer_EVRCustomPresenter.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder.hpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AC3Decoder.hpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AudioDecoder.hpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AudioDecoderFilter.hpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\MPEGAudioDecoder.hpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer.hpp">
+      <Filter>Viewer\DirectShow\ImageMixers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_EVR.hpp">
+      <Filter>Viewer\DirectShow\ImageMixers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_VMR.hpp">
+      <Filter>Viewer\DirectShow\ImageMixers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_VMR7.hpp">
+      <Filter>Viewer\DirectShow\ImageMixers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_VMR9.hpp">
+      <Filter>Viewer\DirectShow\ImageMixers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\H264ParserFilter.hpp">
+      <Filter>Viewer\DirectShow\VideoParsers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\H265ParserFilter.hpp">
+      <Filter>Viewer\DirectShow\VideoParsers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\MPEG2ParserFilter.hpp">
+      <Filter>Viewer\DirectShow\VideoParsers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\VideoParser.hpp">
+      <Filter>Viewer\DirectShow\VideoParsers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\RingBuffer.hpp">
+      <Filter>Viewer\DirectShow\SourceFilter\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\TSSourceFilter.hpp">
+      <Filter>Viewer\DirectShow\SourceFilter\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\TSSourcePin.hpp">
+      <Filter>Viewer\DirectShow\SourceFilter\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\TSSourceStream.hpp">
+      <Filter>Viewer\DirectShow\SourceFilter\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Base\EDCBPluginWriter.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Utilities\COMUtilities.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\DirectShowFilterGraph.hpp">
+      <Filter>Viewer\DirectShow\Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\LibISDB\Windows\Base\BonDriver.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Filters\BonDriverSourceFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\ViewerEngine.cpp">
+      <Filter>Viewer\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\ViewerFilter.cpp">
+      <Filter>Viewer\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\DirectShowUtilities.cpp">
+      <Filter>Viewer\DirectShow\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRHelpers.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRMediaType.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRPresentEngine.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRPresenter.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRScheduler.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\KnownDecoderManager.cpp">
+      <Filter>Viewer\DirectShow\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_EVR.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR7.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR7Renderless.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR9.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR9Renderless.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\VideoRenderer_EVRCustomPresenter.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder.cpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AC3Decoder.cpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AudioDecoder.cpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AudioDecoderFilter.cpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\MPEGAudioDecoder.cpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer.cpp">
+      <Filter>Viewer\DirectShow\ImageMixers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_EVR.cpp">
+      <Filter>Viewer\DirectShow\ImageMixers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_VMR.cpp">
+      <Filter>Viewer\DirectShow\ImageMixers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_VMR7.cpp">
+      <Filter>Viewer\DirectShow\ImageMixers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_VMR9.cpp">
+      <Filter>Viewer\DirectShow\ImageMixers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\H264ParserFilter.cpp">
+      <Filter>Viewer\DirectShow\VideoParsers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\H265ParserFilter.cpp">
+      <Filter>Viewer\DirectShow\VideoParsers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\MPEG2ParserFilter.cpp">
+      <Filter>Viewer\DirectShow\VideoParsers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\VideoParser.cpp">
+      <Filter>Viewer\DirectShow\VideoParsers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\TSSourceFilter.cpp">
+      <Filter>Viewer\DirectShow\SourceFilter\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\TSSourcePin.cpp">
+      <Filter>Viewer\DirectShow\SourceFilter\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\TSSourceStream.cpp">
+      <Filter>Viewer\DirectShow\SourceFilter\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Base\EDCBPluginWriter.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\DirectShowFilterGraph.cpp">
+      <Filter>Viewer\DirectShow\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

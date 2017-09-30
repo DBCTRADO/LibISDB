@@ -1,0 +1,107 @@
+
+
+    統合デジタル放送サービス処理ライブラリ実装研究資料
+
+                                            デジタル放送総合技術研究開発機構
+
+
+◆ 概要
+
+  統合デジタル放送サービス処理ライブラリ実装研究資料(略称:LibISDB)は、パーソナル
+  コンピュータ上の汎用 OS において、統合デジタル放送サービス(ISDB)のストリームを
+  処理するライブラリの実装を研究する目的で頒布される研究資料である。
+
+  この資料は ISDB のストリームを処理するための基本的な機能を実装している。
+  CAS 処理は実装されていないため、一般のテレビ放送のストリームに用いることはでき
+  ない。
+
+
+◆ 試験環境
+
+  ・Windows
+      Windows 7/8.1/10
+      Visual Studio 2017 Update 3 以降
+
+  ・Linux
+      CMake 3.8 以降
+      GCC 7 以降 又は Clang 3.9 以降
+
+
+◆ 試験資料構築(Windows)
+
+  Visual Studio 2017 のプロジェクトファイルを添付している。
+  Projects フォルダ内のソリューションファイル LibISDB.sln を開いてビルドすること
+  ができる。
+
+  ソリューション内の各プロジェクトの概要は以下の通りである。
+
+  ・LibISDB
+      LibISDB ライブラリ
+
+  ・LibISDBWindows
+      Microsoft Windows 用ライブラリ
+
+  ・Samples
+      LibISDB を利用したサンプルプログラム
+
+  ・Tests
+      LibISDB のテストコード
+
+  ・Thirdparty
+      依存ライブラリ
+
+
+◆ 試験資料構築(Linux)
+
+  CMake でビルドすることができる。
+  LibISDB のルートにディレクトリを作成して make する場合は以下のようになる。
+
+  mkdir build
+  cd build
+  cmake ..
+  make
+
+
+◆ サンプルプログラム
+
+  Samples フォルダ内に以下のサンプルプログラムが存在する。
+
+  ・epgdatatojson
+      EPG データを JSON に変換する。
+
+  ・tslogoextract
+      TS からロゴ画像を抽出する。
+
+  ・tspidinfo
+      TS 中の各 PID の情報を出力する。
+
+
+◆ 依存ライブラリ
+
+  このライブラリは以下のライブラリに依存している。
+  いずれも LibISDBWindows で利用される。
+
+  ・FAAD2
+      Code from FAAD2 is copyright (c) Nero AG, www.nero.com
+
+  ・libmad
+      Copyright (C) 2000-2004 Underbit Technologies, Inc.
+
+  ・liba52
+      Copyright (C) 2000-2002 Michel Lespinasse
+      Copyright (C) 1999-2000 Aaron Holtzman
+
+  ・DirectShow BaseClasses
+      Copyright (c) Microsoft Corporation
+
+
+◆ 特記事項
+
+  ・この資料は GPLv2 に従って頒布される。
+  ・この資料の使用及び使用不能によって生じたいかなる損害も補償しない。
+
+
+◆ 頒布元
+
+  https://github.com/DBCTRADO/LibISDB
+

@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_MD|Win32">
+      <Configuration>Release_MD</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_MD|x64">
+      <Configuration>Release_MD</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\LibISDB\Windows\Base\BonDriver.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Base\EDCBPluginWriter.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Filters\BonDriverSourceFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Utilities\COMUtilities.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AC3Decoder.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AudioDecoder.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AudioDecoderFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\MPEGAudioDecoder.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\DirectShowBase.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\DirectShowFilterGraph.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\DirectShowUtilities.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_EVR.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_VMR.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_VMR7.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_VMR9.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\KnownDecoderManager.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\RingBuffer.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\TSSourceFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\TSSourcePin.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\TSSourceStream.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\H264ParserFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\H265ParserFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\MPEG2ParserFilter.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\VideoParser.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRHelpers.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRMediaType.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRPresentEngine.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRPresenter.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRPresenterBase.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRScheduler.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\VideoRenderer_EVRCustomPresenter.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_EVR.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR7.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR7Renderless.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR9.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR9Renderless.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\ViewerEngine.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\ViewerFilter.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\LibISDB\Windows\Base\BonDriver.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Base\EDCBPluginWriter.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Filters\BonDriverSourceFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AC3Decoder.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AudioDecoder.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AudioDecoderFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\MPEGAudioDecoder.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\DirectShowFilterGraph.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\DirectShowUtilities.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_EVR.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_VMR.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_VMR7.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\ImageMixers\ImageMixer_VMR9.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\KnownDecoderManager.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\TSSourceFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\TSSourcePin.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\SourceFilter\TSSourceStream.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\H264ParserFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\H265ParserFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\MPEG2ParserFilter.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoParsers\VideoParser.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRHelpers.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRMediaType.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRPresentEngine.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRPresenter.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\EVRScheduler.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\VideoRenderer_EVRCustomPresenter.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_EVR.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR7.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR7Renderless.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR9.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR9Renderless.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\ViewerEngine.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\ViewerFilter.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{990EB6F3-1222-41F1-B364-323F5BD4E1A7}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>LibISDBWindows</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="Common.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|x64'" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/source-charset:utf-8 /std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Thirdparty\BaseClasses\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/source-charset:utf-8 /std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Thirdparty\BaseClasses\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <AdditionalOptions>/source-charset:utf-8 /std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Thirdparty\BaseClasses\</AdditionalIncludeDirectories>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <AdditionalOptions>/source-charset:utf-8 /std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Thirdparty\BaseClasses\</AdditionalIncludeDirectories>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <AdditionalOptions>/source-charset:utf-8 /std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Thirdparty\BaseClasses\</AdditionalIncludeDirectories>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <AdditionalOptions>/source-charset:utf-8 /std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\Thirdparty\BaseClasses\</AdditionalIncludeDirectories>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

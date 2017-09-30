@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{0d110531-82f2-48b2-a92c-20012f5f6cb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Source Files">
+      <UniqueIdentifier>{16d7a0f4-800a-4405-9b67-7994b10519ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Header Files">
+      <UniqueIdentifier>{d0f009f9-edc1-49c9-b367-ce387461f89b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{6d3d4204-2c57-405c-a17c-b950dfffde70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Source Files">
+      <UniqueIdentifier>{3f57f239-8cc2-4804-b551-0ffdefdc4173}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities\Header Files">
+      <UniqueIdentifier>{22aad4ff-2441-4652-a2c9-630ccafc3eb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{8996e8dc-edee-4878-83b3-584aad26e1a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Source Files">
+      <UniqueIdentifier>{fdee88f0-5058-4860-aa75-26b3ca74783d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Header Files">
+      <UniqueIdentifier>{b6d9f32d-01c6-4e69-9e03-ad7496d22682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filters">
+      <UniqueIdentifier>{73647aa7-4950-4e17-bc12-fdcd2f3cff14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filters\Header Files">
+      <UniqueIdentifier>{62e98a89-f1cf-4de1-8e2f-264664b58ea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filters\Source Files">
+      <UniqueIdentifier>{1b140cc3-be62-4efa-a692-daf1fd3553f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MediaParsers">
+      <UniqueIdentifier>{8f36bd13-eb5c-4fa0-8f53-990569d34d60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MediaParsers\Header Files">
+      <UniqueIdentifier>{a061755d-2886-4b75-add3-a5edbdc956c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MediaParsers\Source Files">
+      <UniqueIdentifier>{5a7ab2ba-96ab-477c-8aa1-343aa4453ad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TS">
+      <UniqueIdentifier>{f03927f3-5885-4b8e-9fad-5b62ee132e4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TS\Header Files">
+      <UniqueIdentifier>{bdd6021d-49c4-4320-aff4-758a14206728}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TS\Source Files">
+      <UniqueIdentifier>{d5bec2f8-d467-43e2-bbf8-821e3abc939f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EPG">
+      <UniqueIdentifier>{253f486c-8365-4763-94f6-6bfb56ad772d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EPG\Source Files">
+      <UniqueIdentifier>{40fa2ea6-23f1-4dd8-b090-6555252b2177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EPG\Header Files">
+      <UniqueIdentifier>{18d56151-294a-4379-aadc-8cc8b0469a95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Templates">
+      <UniqueIdentifier>{be0bca17-cb88-43ad-8a6c-72023bd69374}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\LibISDB\LibISDBBase.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\LibISDBConfig.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\LibISDBConsts.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\LibISDBPrivate.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\LibISDBVersion.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\LibISDBWindows.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\ARIBString.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\ARIBTime.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\BitstreamReader.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\DataBuffer.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\DateTime.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\Debug.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\DebugDef.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\ErrorHandler.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\ObjectBase.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\BitRateCalculator.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\BitTable.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\Clock.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\CRC.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\Lock.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\MD5.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\Sort.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\StringUtilities.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\Utilities.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Engine\FilterGraph.hpp">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Engine\TSEngine.hpp">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\AnalyzerFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\CaptionFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\FilterBase.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\GrabberFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\LogoDownloaderFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\ServiceSelectorFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\SourceFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\TeeFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\TSPacketCounterFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\TSPacketParserFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\MediaParsers\ADTSParser.hpp">
+      <Filter>MediaParsers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\MediaParsers\H264Parser.hpp">
+      <Filter>MediaParsers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\MediaParsers\H265Parser.hpp">
+      <Filter>MediaParsers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\MediaParsers\MPEG2VideoParser.hpp">
+      <Filter>MediaParsers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\MediaParsers\MPEGVideoParser.hpp">
+      <Filter>MediaParsers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\CaptionParser.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\DescriptorBase.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\DescriptorBlock.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\Descriptors.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\OneSegPATGenerator.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\PESPacket.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\PIDMap.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\PSISection.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\PSITable.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\Tables.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\TSDownload.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\TSPacket.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\AlignedAlloc.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\TSInformation.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\FileStream.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\FileStreamGeneric.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\FileStreamWindows.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\Stream.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\Thread.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\StreamSourceFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\LibISDB.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\SIMD.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\EPG\EventInfo.hpp">
+      <Filter>EPG\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\TS\StreamSelector.hpp">
+      <Filter>TS\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\EventListener.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\Logger.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\FileStreamGenericC.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\StandardStream.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\DataStorage.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\StreamBufferFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\EPG\EPGDataFile.hpp">
+      <Filter>EPG\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\RecorderFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\StreamBuffer.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\DataStreamer.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\StreamBufferDataStreamer.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\EPG\EPGDatabase.hpp">
+      <Filter>EPG\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\EPGDatabaseFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\JISKanjiMap.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\DataStorageManager.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Filters\AsyncStreamingFilter.hpp">
+      <Filter>Filters\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Engine\StreamSourceEngine.hpp">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\Hasher.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\StreamingThread.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Templates\cstring_view.hpp">
+      <Filter>Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Templates\EnumFlags.hpp">
+      <Filter>Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Templates\ReturnArg.hpp">
+      <Filter>Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\DataStream.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\StreamWriter.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\ConditionVariable.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Base\FileStreamPOSIX.hpp">
+      <Filter>Base\Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\LibISDB\Base\ARIBString.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\ARIBTime.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\BitstreamReader.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\DataBuffer.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\DateTime.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\Debug.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\ErrorHandler.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\ObjectBase.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Utilities\BitRateCalculator.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Utilities\CRC.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Utilities\Lock.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Utilities\MD5.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Utilities\Utilities.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Engine\FilterGraph.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Engine\TSEngine.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\AnalyzerFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\CaptionFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\FilterBase.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\GrabberFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\LogoDownloaderFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\ServiceSelectorFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\SourceFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\TeeFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\TSPacketCounterFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\TSPacketParserFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\MediaParsers\ADTSParser.cpp">
+      <Filter>MediaParsers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\MediaParsers\H264Parser.cpp">
+      <Filter>MediaParsers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\MediaParsers\H265Parser.cpp">
+      <Filter>MediaParsers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\MediaParsers\MPEG2VideoParser.cpp">
+      <Filter>MediaParsers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\MediaParsers\MPEGVideoParser.cpp">
+      <Filter>MediaParsers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\CaptionParser.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\DescriptorBase.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\DescriptorBlock.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\Descriptors.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\OneSegPATGenerator.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\PESPacket.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\PIDMap.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\PSISection.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\PSITable.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\Tables.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\TSDownload.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\TSPacket.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Utilities\AlignedAlloc.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\TSInformation.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\FileStreamGeneric.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\FileStreamWindows.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Utilities\Thread.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\StreamSourceFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\SIMD.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\EPG\EventInfo.cpp">
+      <Filter>EPG\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\TS\StreamSelector.cpp">
+      <Filter>TS\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\Logger.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\FileStreamGenericC.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\DataStorage.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\StreamBufferFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\EPG\EPGDataFile.cpp">
+      <Filter>EPG\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\RecorderFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\StreamBuffer.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\DataStreamer.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\StreamBufferDataStreamer.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\EPG\EPGDatabase.cpp">
+      <Filter>EPG\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\EPGDatabaseFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\JISKanjiMap.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\DataStorageManager.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Filters\AsyncStreamingFilter.cpp">
+      <Filter>Filters\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Engine\StreamSourceEngine.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\StandardStream.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\StreamingThread.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\StreamWriter.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Utilities\ConditionVariable.cpp">
+      <Filter>Utilities\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Base\FileStreamPOSIX.cpp">
+      <Filter>Base\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
