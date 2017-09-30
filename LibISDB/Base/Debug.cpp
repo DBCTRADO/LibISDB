@@ -52,6 +52,8 @@ void DebugTraceV(TraceType Type, const CharType *pFormat, std::va_list Args)
 	CharType Buffer[MAX_TRACE_TEXT_LENGTH];
 	DateTime Time;
 
+	Time.NowLocal();
+
 #ifdef LIBISDB_WINDOWS
 
 	int Length = StringPrintf(
