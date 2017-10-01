@@ -630,7 +630,7 @@ bool ViewerFilter::OpenViewer(const OpenSettings &Settings)
 					OK = true;
 				}
 			}
-			if (OK) {
+			if (!OK) {
 				hr = ::CoCreateInstance(
 					CLSID_DSoundRender, nullptr, CLSCTX_INPROC_SERVER,
 					IID_PPV_ARGS(m_AudioRenderer.GetPP()));
