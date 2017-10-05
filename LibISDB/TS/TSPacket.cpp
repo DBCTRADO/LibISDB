@@ -219,7 +219,7 @@ uint8_t TSPacket::GetPayloadSize() const
 
 void TSPacket::SetPID(uint16_t PID)
 {
-	Store16(&m_pData[1], 0xE000 | (PID & 0x1FFF));
+	Store16(&m_pData[1], ((m_pData[1] & 0xE0) << 8) | (PID & 0x1FFF));
 	m_Header.PID = PID;
 }
 
