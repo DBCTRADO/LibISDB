@@ -62,7 +62,7 @@ int GetDayOfYear(int Year, int Month, int Day)
 
 int GetDayOfWeek(int Year, int Month, int Day)
 {
-	LIBISDB_ASSERT((Year >= 1) && (Year <= 12) && (Month >= 1) && (Month <= 12) && (Day >= 1) && (Day <= 31));
+	LIBISDB_ASSERT((Year >= 1583) && (Year <= 3999) && (Month >= 1) && (Month <= 12) && (Day >= 1) && (Day <= 31));
 
 	// Zeller's congruence
 	if (Month <= 2) {
