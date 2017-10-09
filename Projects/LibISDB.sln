@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 15.0.26730.3
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibISDB", "LibISDB.vcxproj", "{55037A54-F0FB-446C-B81F-424C5D0FA3D9}"
 EndProject
@@ -26,6 +26,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9E012E25-30D4-4B78-AE15-FEA3D9955319}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libisdbtest", "libisdbtest.vcxproj", "{90ABD800-1267-4F57-89BF-AB3895272DEE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{55037A54-F0FB-446C-B81F-424C5D0FA3D9} = {55037A54-F0FB-446C-B81F-424C5D0FA3D9}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "epgdatatojson", "epgdatatojson.vcxproj", "{ABE1955C-5420-4917-A704-EF991D4B68FA}"
 	ProjectSection(ProjectDependencies) = postProject
