@@ -32,6 +32,48 @@
 namespace LibISDB
 {
 
+namespace
+{
+
+namespace StreamID
+{
+
+	constexpr uint8_t PROGRAM_STREAM_MAP                   = 0xBC; // program_stream_map
+	constexpr uint8_t PRIVATE_STREAM_1                     = 0xBD; // private_stram_1
+	constexpr uint8_t PADDING_STREAM                       = 0xBE; // padding_stream
+	constexpr uint8_t PRIVATE_STREAM_2                     = 0xBF; // private_stream_2
+	constexpr uint8_t ECM_STREAM                           = 0xF0; // ECM_stream
+	constexpr uint8_t EMM_STREAM                           = 0xF1; // EMM_stream
+	constexpr uint8_t DSMCC_STREAM                         = 0xF2; // ITU-T Rec. H.222.0 | ISO/IEC 13818-1 Annex A or ISO/IEC 13818-6_DSMCC_stream
+	constexpr uint8_t ISO_IEC_13522_STREAM                 = 0xF3; // ISO/IEC_13522_stream
+	constexpr uint8_t ITU_T_REC_H222_1_TYPE_A              = 0xF4; // ITU-T Rec. H.222.1 type A
+	constexpr uint8_t ITU_T_REC_H222_1_TYPE_B              = 0xF5; // ITU-T Rec. H.222.1 type B
+	constexpr uint8_t ITU_T_REC_H222_1_TYPE_C              = 0xF6; // ITU-T Rec. H.222.1 type C
+	constexpr uint8_t ITU_T_REC_H222_1_TYPE_D              = 0xF7; // ITU-T Rec. H.222.1 type D
+	constexpr uint8_t ITU_T_REC_H222_1_TYPE_E              = 0xF8; // ITU-T Rec. H.222.1 type E
+	constexpr uint8_t ANCILLARY_STREAM                     = 0xF9; // ancillary_stram
+	constexpr uint8_t ISO_IEC_14496_1_SL_PACKETIZED_STREAM = 0xFA; // ISO/IEC14496-1_SL-packetized_stream
+	constexpr uint8_t ISO_IEC_14496_1_FLEXMUX_STREAM       = 0xFB; // ISO/IEC14496-1_FlexMux_stream
+	constexpr uint8_t PROGRAM_STREAM_DIRECTORY             = 0xFF; // program_stream_directory
+
+}
+
+constexpr bool IsAdditionalHeaderStreamID(uint8_t ID)
+{
+	return (ID != StreamID::PROGRAM_STREAM_MAP)
+	    && (ID != StreamID::PADDING_STREAM)
+	    && (ID != StreamID::PRIVATE_STREAM_2)
+	    && (ID != StreamID::ECM_STREAM)
+	    && (ID != StreamID::EMM_STREAM)
+	    && (ID != StreamID::PROGRAM_STREAM_DIRECTORY)
+	    && (ID != StreamID::DSMCC_STREAM)
+	    && (ID != StreamID::ITU_T_REC_H222_1_TYPE_E);
+}
+
+}
+
+
+
 
 PESPacket::PESPacket()
 	: m_Header()
@@ -48,34 +90,41 @@ PESPacket::PESPacket(size_t BufferSize)
 
 bool PESPacket::ParseHeader()
 {
-	if (m_DataSize < 9)
+	m_Header = PESHeader();
+
+	if (m_DataSize < 6)
 		return false;
 	if ((m_pData[0] != 0x00) || (m_pData[1] != 0x00) || (m_pData[2] != 0x01))
 		return false;	// packet_start_code_prefix 異常
-	if ((m_pData[6] & 0xC0) != 0x80)
-		return false;	// 固定ビット異常
 
-	// ヘッダ解析
-	m_Header.StreamID               = m_pData[3];
-	m_Header.PacketLength           = static_cast<uint16_t>((m_pData[4] << 8) | m_pData[5]);
-	m_Header.ScramblingControl      = (m_pData[6] & 0x30) >> 4;
-	m_Header.Priority               = (m_pData[6] & 0x08) != 0;
-	m_Header.DataAlignmentIndicator = (m_pData[6] & 0x04) != 0;
-	m_Header.Copyright              = (m_pData[6] & 0x02) != 0;
-	m_Header.OriginalOrCopy         = (m_pData[6] & 0x01) != 0;
-	m_Header.PTSDTSFlags            = (m_pData[7] & 0xC0) >> 6;
-	m_Header.ESCRFlag               = (m_pData[7] & 0x20) != 0;
-	m_Header.ESRateFlag             = (m_pData[7] & 0x10) != 0;
-	m_Header.DSMTrickModeFlag       = (m_pData[7] & 0x08) != 0;
-	m_Header.AdditionalCopyInfoFlag = (m_pData[7] & 0x04) != 0;
-	m_Header.CRCFlag                = (m_pData[7] & 0x02) != 0;
-	m_Header.ExtensionFlag          = (m_pData[7] & 0x01) != 0;
-	m_Header.HeaderDataLength       = m_pData[8];
+	m_Header.StreamID     = m_pData[3];
+	m_Header.PacketLength = Load16(&m_pData[4]);
 
-	if (m_Header.ScramblingControl != 0)
-		return false;	// Not scrambled のみ対応
-	if (m_Header.PTSDTSFlags == 1)
-		return false;	// 未定義のフラグ
+	if (IsAdditionalHeaderStreamID(m_Header.StreamID)) {
+		if (m_DataSize < 9)
+			return false;
+		if ((m_pData[6] & 0xC0) != 0x80)
+			return false;	// 固定ビット異常
+
+		m_Header.ScramblingControl      = (m_pData[6] & 0x30) >> 4;
+		m_Header.Priority               = (m_pData[6] & 0x08) != 0;
+		m_Header.DataAlignmentIndicator = (m_pData[6] & 0x04) != 0;
+		m_Header.Copyright              = (m_pData[6] & 0x02) != 0;
+		m_Header.OriginalOrCopy         = (m_pData[6] & 0x01) != 0;
+		m_Header.PTSDTSFlags            = (m_pData[7] & 0xC0) >> 6;
+		m_Header.ESCRFlag               = (m_pData[7] & 0x20) != 0;
+		m_Header.ESRateFlag             = (m_pData[7] & 0x10) != 0;
+		m_Header.DSMTrickModeFlag       = (m_pData[7] & 0x08) != 0;
+		m_Header.AdditionalCopyInfoFlag = (m_pData[7] & 0x04) != 0;
+		m_Header.CRCFlag                = (m_pData[7] & 0x02) != 0;
+		m_Header.ExtensionFlag          = (m_pData[7] & 0x01) != 0;
+		m_Header.HeaderDataLength       = m_pData[8];
+
+		if (m_Header.ScramblingControl != 0)
+			return false;	// Not scrambled のみ対応
+		if (m_Header.PTSDTSFlags == 1)
+			return false;	// 未定義のフラグ
+	}
 
 	return true;
 }
@@ -127,7 +176,8 @@ uint16_t PESPacket::GetPacketCRC() const
 
 const uint8_t * PESPacket::GetPayloadData() const
 {
-	const size_t PayloadPos = m_Header.HeaderDataLength + 9;
+	const size_t PayloadPos =
+		IsAdditionalHeaderStreamID(m_Header.StreamID) ? (m_Header.HeaderDataLength + 9) : 6;
 	if (m_DataSize <= PayloadPos)
 		return nullptr;
 
@@ -137,7 +187,8 @@ const uint8_t * PESPacket::GetPayloadData() const
 
 size_t PESPacket::GetPayloadSize() const
 {
-	const size_t HeaderSize = m_Header.HeaderDataLength + 9;
+	const size_t HeaderSize =
+		IsAdditionalHeaderStreamID(m_Header.StreamID) ? (m_Header.HeaderDataLength + 9) : 6;
 	if (m_DataSize <= HeaderSize)
 		return 0;
 
