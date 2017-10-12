@@ -117,16 +117,16 @@ void CaptionParser::OnPESPacket(const PESParser *pParser, const PESPacket *pPack
 	const uint8_t *pData = pPacket->GetPayloadData();
 	const size_t DataSize = pPacket->GetPayloadSize();
 
-	if ((pData == nullptr) || (DataSize < 3))
+	if (LIBISDB_TRACE_ERROR_IF((pData == nullptr) || (DataSize < 3)))
 		return;
 
-	if ((pData[0] != 0x80) && (pData[0] != 0x81))	// data_identifier
+	if (LIBISDB_TRACE_ERROR_IF((pData[0] != 0x80) && (pData[0] != 0x81)))	// data_identifier
 		return;
-	if (pData[1] != 0xFF)	// private_stream_id
+	if (LIBISDB_TRACE_ERROR_IF(pData[1] != 0xFF))	// private_stream_id
 		return;
 
 	const uint8_t HeaderLength = pData[2] & 0x0F;	// PES_data_packet_header_length
-	if (3_z + HeaderLength + 5_z >= DataSize)
+	if (LIBISDB_TRACE_ERROR_IF(3_z + HeaderLength + 5_z >= DataSize))
 		return;
 
 	size_t Pos = 3 + HeaderLength;
@@ -138,7 +138,7 @@ void CaptionParser::OnPESPacket(const PESParser *pParser, const PESPacket *pPack
 //	const uint8_t DataGroupLinkNumber     = pData[Pos + 1];          // data_group_link_number
 //	const uint8_t LastDataGroupLinkNumber = pData[Pos + 2];          // last_data_group_link_number
 	const uint16_t DataGroupSize          = Load16(&pData[Pos + 3]); // data_group_size
-	if (Pos + 5 + DataGroupSize + 2 > DataSize)
+	if (LIBISDB_TRACE_ERROR_IF(Pos + 5 + DataGroupSize + 2 > DataSize))
 		return;
 	if (CRC16CCITT::Calc(&pData[Pos], 5 + DataGroupSize + 2) != 0) {
 		LIBISDB_TRACE_ERROR(LIBISDB_STR("Caption data_group() CRC_16 error\n"));
@@ -167,7 +167,7 @@ bool CaptionParser::ParseManagementData(const uint8_t *pData, uint32_t DataSize)
 {
 	// caption_management_data()
 
-	if (DataSize < 2 + 5 + 3)
+	if (LIBISDB_TRACE_ERROR_IF(DataSize < 2 + 5 + 3))
 		return false;
 
 	uint32_t Pos = 0;
@@ -242,14 +242,14 @@ bool CaptionParser::ParseCaptionData(const uint8_t *pData, uint32_t DataSize)
 {
 	// caption_data()
 
-	if (DataSize <= 1 + 3)
+	if (LIBISDB_TRACE_ERROR_IF(DataSize <= 1 + 3))
 		return false;
 
 	uint32_t Pos = 0;
 	const uint8_t TMD = pData[Pos++] >> 6;
 	if ((TMD == 0b01) || (TMD == 0b10)) {
 		// STM
-		if (Pos + 5 + 3 >= DataSize)
+		if (LIBISDB_TRACE_ERROR_IF(Pos + 5 + 3 >= DataSize))
 			return false;
 		/*
 		TimeInfo STM;
@@ -281,13 +281,13 @@ bool CaptionParser::ParseUnitData(const uint8_t *pData, uint32_t *pDataSize)
 {
 	// data_unit()
 
-	if ((pData == nullptr) || (*pDataSize < 5))
+	if (LIBISDB_TRACE_ERROR_IF((pData == nullptr) || (*pDataSize < 5)))
 		return false;
-	if (pData[0] != 0x1F)	// unit_separator
+	if (LIBISDB_TRACE_ERROR_IF(pData[0] != 0x1F))	// unit_separator
 		return false;
 
 	const uint32_t UnitSize = Load24(&pData[2]);
-	if (5 + UnitSize > *pDataSize)
+	if (LIBISDB_TRACE_ERROR_IF(5 + UnitSize > *pDataSize))
 		return false;
 
 	const uint8_t DataUnitParameter = pData[1];
@@ -323,7 +323,7 @@ bool CaptionParser::ParseDRCSUnitData(const uint8_t *pData, uint32_t DataSize)
 {
 	uint32_t RemainSize = DataSize;
 
-	if (RemainSize < 1)
+	if (LIBISDB_TRACE_ERROR_IF(RemainSize < 1))
 		return false;
 
 	const int NumberOfCode = pData[0];
@@ -331,7 +331,7 @@ bool CaptionParser::ParseDRCSUnitData(const uint8_t *pData, uint32_t DataSize)
 	RemainSize--;
 
 	for (int i = 0; i < NumberOfCode; i++) {
-		if (RemainSize < 3)
+		if (LIBISDB_TRACE_ERROR_IF(RemainSize < 3))
 			return false;
 
 		const uint16_t CharacterCode = Load16(&pData[0]);
@@ -340,7 +340,7 @@ bool CaptionParser::ParseDRCSUnitData(const uint8_t *pData, uint32_t DataSize)
 		RemainSize -= 3;
 
 		for (int j = 0; j < NumberOfFont; j++) {
-			if (RemainSize < 1)
+			if (LIBISDB_TRACE_ERROR_IF(RemainSize < 1))
 				return false;
 
 		//	const uint8_t FontID = pData[0] >> 4;
@@ -349,13 +349,13 @@ bool CaptionParser::ParseDRCSUnitData(const uint8_t *pData, uint32_t DataSize)
 			RemainSize--;
 
 			if (Mode <= 0x0001) {
-				if (RemainSize < 3)
+				if (LIBISDB_TRACE_ERROR_IF(RemainSize < 3))
 					return false;
 
 				const uint8_t Depth  = pData[0];
 				const uint8_t Width  = pData[1];
 				const uint8_t Height = pData[2];
-				if ((Width == 0) || (Height == 0))
+				if (LIBISDB_TRACE_ERROR_IF((Width == 0) || (Height == 0)))
 					return false;
 
 				pData += 3;
@@ -387,7 +387,7 @@ bool CaptionParser::ParseDRCSUnitData(const uint8_t *pData, uint32_t DataSize)
 				}
 
 				const uint32_t DataSize = (Width * Height * BitsPerPixel + 7) >> 3;
-				if (RemainSize < DataSize)
+				if (LIBISDB_TRACE_ERROR_IF(RemainSize < DataSize))
 					return false;
 
 				if (j == 0) {
@@ -406,7 +406,7 @@ bool CaptionParser::ParseDRCSUnitData(const uint8_t *pData, uint32_t DataSize)
 				RemainSize -= DataSize;
 			} else {
 				// ジオメトリック(非対応)
-				if (RemainSize < 4)
+				if (LIBISDB_TRACE_ERROR_IF(RemainSize < 4))
 					return false;
 
 				//const uint8_t RegionX = pData[0];
@@ -414,7 +414,7 @@ bool CaptionParser::ParseDRCSUnitData(const uint8_t *pData, uint32_t DataSize)
 				const uint16_t GeometricDataLength = Load16(&pData[2]);
 				pData += 4;
 				RemainSize -= 4;
-				if (RemainSize < GeometricDataLength)
+				if (LIBISDB_TRACE_ERROR_IF(RemainSize < GeometricDataLength))
 					return false;
 				pData += GeometricDataLength;
 				RemainSize -= GeometricDataLength;
