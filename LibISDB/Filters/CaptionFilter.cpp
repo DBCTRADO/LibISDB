@@ -127,6 +127,8 @@ bool CaptionFilter::SetTargetStream(uint16_t ServiceID, uint8_t ComponentTag)
 {
 	BlockLock Lock(m_FilterLock);
 
+	LIBISDB_TRACE(LIBISDB_STR("Select caption : service_id %04X / component_tag %02X\n"), ServiceID, ComponentTag);
+
 	if (m_TargetESPID != PID_INVALID) {
 		CaptionStream *pStream = m_PIDMapManager.GetMapTarget<CaptionStream>(m_TargetESPID);
 
@@ -140,24 +142,27 @@ bool CaptionFilter::SetTargetStream(uint16_t ServiceID, uint8_t ComponentTag)
 
 	const int Index = GetServiceIndexByID(ServiceID);
 	if (Index >= 0) {
+		uint16_t TargetESPID = PID_INVALID;
+
 		if (ComponentTag == 0xFF) {
 			if (!m_ServiceList[Index].CaptionESList.empty())
-				m_TargetESPID = m_ServiceList[Index].CaptionESList[0].PID;
+				TargetESPID = m_ServiceList[Index].CaptionESList[0].PID;
 		} else {
 			for (auto const &e : m_ServiceList[Index].CaptionESList) {
 				if (e.ComponentTag == ComponentTag) {
-					m_TargetESPID = e.PID;
+					TargetESPID = e.PID;
 					break;
 				}
 			}
 		}
 
-		if (m_TargetESPID != PID_INVALID) {
-			CaptionStream *pStream = m_PIDMapManager.GetMapTarget<CaptionStream>(m_TargetESPID);
+		if (TargetESPID != PID_INVALID) {
+			CaptionStream *pStream = m_PIDMapManager.GetMapTarget<CaptionStream>(TargetESPID);
 
 			if (pStream != nullptr) {
 				pStream->SetCaptionHandler(this);
 				pStream->SetDRCSMap(m_pDRCSMap);
+				m_TargetESPID = TargetESPID;
 			}
 		}
 	}
@@ -273,6 +278,8 @@ void CaptionFilter::OnPATSection(const PSITableBase *pTable, const PSISection *p
 			m_PIDMapManager.UnmapTarget(m_ServiceList[i].CaptionESList[j].PID);
 	}
 
+	m_TargetESPID = PID_INVALID;
+
 	m_ServiceList.resize(pPATTable->GetProgramCount());
 
 	for (size_t i = 0; i < m_ServiceList.size(); i++) {
@@ -321,15 +328,11 @@ void CaptionFilter::OnPMTSection(const PSITableBase *pTable, const PSISection *p
 			Info.CaptionESList.push_back(CaptionInfo);
 
 			CaptionStream *pStream = new CaptionStream(Is1SegPMTPID(Info.PMTPID));
-			if ((Info.ServiceID == m_TargetServiceID)
-					&& ((m_TargetComponentTag == 0xFF && Info.CaptionESList.size() == 1)
-						|| (m_TargetComponentTag != 0xFF && CaptionInfo.ComponentTag == m_TargetComponentTag))) {
-				pStream->SetCaptionHandler(this);
-				pStream->SetDRCSMap(m_pDRCSMap);
-			}
 			m_PIDMapManager.MapTarget(CaptionInfo.PID, pStream);
 		}
 	}
+
+	SetTargetStream(m_TargetServiceID, m_TargetComponentTag);
 }
 
 
