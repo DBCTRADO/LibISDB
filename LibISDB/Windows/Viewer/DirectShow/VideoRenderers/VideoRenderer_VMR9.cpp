@@ -56,7 +56,7 @@ bool VideoRenderer_VMR9::Initialize(
 		return false;
 	}
 
-	IVMRFilterConfig *pFilterConfig;
+	IVMRFilterConfig9 *pFilterConfig;
 	hr = m_Renderer.QueryInterface(&pFilterConfig);
 	if (FAILED(hr)) {
 		m_Renderer.Release();

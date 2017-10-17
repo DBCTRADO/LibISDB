@@ -739,8 +739,13 @@ bool VideoRenderer_VMR9Renderless::Initialize(
 		return false;
 	}
 
-	IVMRFilterConfig *pFilterConfig;
-	m_Renderer.QueryInterface(&pFilterConfig);
+	IVMRFilterConfig9 *pFilterConfig;
+	hr = m_Renderer.QueryInterface(&pFilterConfig);
+	if (FAILED(hr)) {
+		m_Renderer.Release();
+		SetHRESULTError(hr, LIBISDB_STR("IVMRFilterConfig9 を取得できません。"));
+		return false;
+	}
 	pFilterConfig->SetRenderingMode(VMR9Mode_Renderless);
 	pFilterConfig->Release();
 
