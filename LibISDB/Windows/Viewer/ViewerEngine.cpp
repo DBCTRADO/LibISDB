@@ -48,13 +48,19 @@ bool ViewerEngine::BuildViewer(const ViewerFilter::OpenSettings &Settings)
 		return false;
 	}
 
+	m_EngineLock.Lock();
 	m_FilterGraph.DisconnectFilter(FilterID, FilterGraph::ConnectDirection::Upstream);
+	m_EngineLock.Unlock();
 
 	bool OK = m_pViewer->OpenViewer(Settings);
 	if (!OK)
 		SetError(m_pViewer->GetLastErrorDescription());
 
+	m_EngineLock.Lock();
 	m_FilterGraph.ConnectFilter(FilterID, FilterGraph::ConnectDirection::Upstream);
+	m_EngineLock.Unlock();
+
+	UpdateVideoAndAudioPID();
 
 	return OK;
 }
@@ -69,14 +75,20 @@ bool ViewerEngine::RebuildViewer(const ViewerFilter::OpenSettings &Settings)
 
 	EnableViewer(false);
 
+	m_EngineLock.Lock();
 	m_FilterGraph.DisconnectFilter(FilterID, FilterGraph::ConnectDirection::Upstream);
+	m_EngineLock.Unlock();
 
 	m_pViewer->CloseViewer();
 	bool OK = m_pViewer->OpenViewer(Settings);
 	if (!OK)
 		SetError(m_pViewer->GetLastErrorDescription());
 
+	m_EngineLock.Lock();
 	m_FilterGraph.ConnectFilter(FilterID, FilterGraph::ConnectDirection::Upstream);
+	m_EngineLock.Unlock();
+
+	UpdateVideoAndAudioPID();
 
 	return OK;
 }
@@ -103,18 +115,7 @@ bool ViewerEngine::ResetViewer()
 
 	m_pViewer->Reset();
 
-	BlockLock Lock(m_EngineLock);
-
-	const int ServiceIndex = GetServiceIndex();
-
-	if (ServiceIndex >= 0) {
-		const uint16_t VideoPID = m_pAnalyzer->GetVideoESPID(ServiceIndex, m_CurVideoStream);
-		if (VideoPID != PID_INVALID)
-			m_pViewer->SetActiveVideoPID(VideoPID, false);
-		const uint16_t AudioPID = m_pAnalyzer->GetAudioESPID(ServiceIndex, m_CurAudioStream);
-		if (AudioPID != PID_INVALID)
-			m_pViewer->SetActiveAudioPID(AudioPID, false);
-	}
+	UpdateVideoAndAudioPID();
 
 	return true;
 }
@@ -306,6 +307,23 @@ void ViewerEngine::OnAudioStreamTypeChanged(uint8_t StreamType)
 {
 	if (m_pViewer != nullptr)
 		m_pViewer->SetAudioStreamType(StreamType);
+}
+
+
+void ViewerEngine::UpdateVideoAndAudioPID()
+{
+	BlockLock Lock(m_EngineLock);
+
+	const int ServiceIndex = GetServiceIndex();
+
+	if (ServiceIndex >= 0) {
+		const uint16_t VideoPID = m_pAnalyzer->GetVideoESPID(ServiceIndex, m_CurVideoStream);
+		if (VideoPID != PID_INVALID)
+			m_pViewer->SetActiveVideoPID(VideoPID, false);
+		const uint16_t AudioPID = m_pAnalyzer->GetAudioESPID(ServiceIndex, m_CurAudioStream);
+		if (AudioPID != PID_INVALID)
+			m_pViewer->SetActiveAudioPID(AudioPID, false);
+	}
 }
 
 

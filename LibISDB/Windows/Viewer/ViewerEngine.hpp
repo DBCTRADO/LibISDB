@@ -70,6 +70,8 @@ namespace LibISDB
 		void OnVideoStreamTypeChanged(uint8_t StreamType) override;
 		void OnAudioStreamTypeChanged(uint8_t StreamType) override;
 
+		void UpdateVideoAndAudioPID();
+
 		ViewerFilter *m_pViewer;
 
 		std::bitset<0x88> m_PlayableStreamType;
