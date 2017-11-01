@@ -925,9 +925,9 @@ bool EPGDatabase::MergeEventMap(const ServiceInfo &Info, ServiceEventMap &Map, M
 						DatabaseFlag = true;
 					}
 				}
-
-				CurEvent = std::move(Event.second);
 			}
+
+			CurEvent = std::move(Event.second);
 
 			if (DatabaseFlag)
 				CurEvent.Type |= EventInfo::TypeFlag::Database;
