@@ -258,6 +258,73 @@ TEST_CASE("ARIBString", "[base][string]")
 }
 
 
+#include "../LibISDB/Base/DateTime.hpp"
+
+TEST_CASE("DateTime", "[base][time]")
+{
+	LibISDB::DateTime Time;
+
+	CHECK_FALSE(Time.IsValid());
+
+	Time.Year        = 2000;
+	Time.Month       = 12;
+	Time.Day         = 31;
+	Time.Hour        = 23;
+	Time.Minute      = 59;
+	Time.Second      = 59;
+	Time.Millisecond = 0;
+
+	Time.SetDayOfWeek();
+	CHECK(Time.DayOfWeek == 0);
+
+	CHECK(Time.IsValid());
+
+	Time.OffsetSeconds(1);
+
+	CHECK(Time.Year == 2001);
+	CHECK(Time.Month == 1);
+	CHECK(Time.Day == 1);
+	CHECK(Time.DayOfWeek == 1);
+	CHECK(Time.Hour == 0);
+	CHECK(Time.Minute == 0);
+	CHECK(Time.Second == 0);
+	CHECK(Time.Millisecond == 0);
+
+	LibISDB::DateTime Time2(Time);
+
+	CHECK(Time2.IsValid());
+	CHECK(Time2 == Time);
+	CHECK_FALSE(Time2 < Time);
+	CHECK(Time2 <= Time);
+	CHECK_FALSE(Time2 > Time);
+	CHECK(Time2 >= Time);
+	CHECK(Time2.Compare(Time) == 0);
+	CHECK(Time2.DiffMilliseconds(Time) == 0LL);
+
+	Time2.OffsetMinutes(-30);
+
+	CHECK(Time2.Year == 2000);
+	CHECK(Time2.Month == 12);
+	CHECK(Time2.Day == 31);
+	CHECK(Time2.DayOfWeek == 0);
+	CHECK(Time2.Hour == 23);
+	CHECK(Time2.Minute == 30);
+	CHECK(Time2.Second == 0);
+	CHECK(Time2.Millisecond == 0);
+
+	CHECK(Time2 != Time);
+	CHECK(Time2 < Time);
+	CHECK(Time2 <= Time);
+	CHECK(Time > Time2);
+	CHECK(Time >= Time2);
+	CHECK(Time2.Compare(Time) < 0);
+	CHECK(Time.Compare(Time2) > 0);
+	CHECK(Time2.Diff(Time) == std::chrono::milliseconds(-30LL * 60LL * 1000LL));
+	CHECK(Time2.DiffMilliseconds(Time) == -30LL * 60LL * 1000LL);
+	CHECK(Time2.DiffSeconds(Time) == -30LL * 60LL);
+}
+
+
 
 
 #ifdef LIBISDB_TEST_WMAIN
