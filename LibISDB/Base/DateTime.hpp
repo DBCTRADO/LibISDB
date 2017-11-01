@@ -79,7 +79,7 @@ namespace LibISDB
 		bool OffsetSeconds(long Seconds) noexcept;
 		bool OffsetMinutes(long Minutes) noexcept { return OffsetSeconds(Minutes * 60); }
 		bool OffsetHours(long Hours) noexcept { return OffsetSeconds(Hours * (60 * 60)); }
-		bool OffsetDays(long Hours) noexcept { return OffsetSeconds(Hours * (24 * 60 * 60)); }
+		bool OffsetDays(long Days) noexcept { return OffsetSeconds(Days * (24 * 60 * 60)); }
 		bool OffsetMilliseconds(long long Milliseconds) noexcept;
 		bool Offset(const std::chrono::milliseconds &Milliseconds) noexcept;
 
