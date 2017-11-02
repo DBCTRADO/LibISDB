@@ -47,5 +47,10 @@
 	LIBISDB_STR(".") \
 	LIBISDB_MAKE_STRING(LIBISDB_VERSION_REV) \
 
+#if __has_include("LibISDBVersionHash.hpp")
+#include "LibISDBVersionHash.hpp"
+#define LIBISDB_VERSION_HASH LIBISDB_STR(LIBISDB_VERSION_HASH_)
+#endif
+
 
 #endif	// ifndef LIBISDB_VERSION_H
