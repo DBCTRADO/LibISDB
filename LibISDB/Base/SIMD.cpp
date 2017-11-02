@@ -154,18 +154,18 @@ static CPUIdentify g_CPUIdentify;
 #if defined(LIBISDB_X86) || defined(LIBISDB_X64)
 
 
-#if !defined(LIBISDB_X64)
+#ifndef LIBISDB_NATIVE_SSE2
 bool IsSSE2Available()
 {
 	return g_CPUIdentify.IsAvailable(INSTRUCTION_SSE2);
 }
-#endif
 
 
 bool IsSSE2Enabled()
 {
 	return g_CPUIdentify.IsEnabled(INSTRUCTION_SSE2);
 }
+#endif
 
 
 void SetSSE2Enabled(bool Enabled)

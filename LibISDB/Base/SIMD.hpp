@@ -72,12 +72,17 @@ namespace LibISDB
 #if defined(LIBISDB_X86) || defined(LIBISDB_X64)
 	typedef AlignedDataBuffer<16> SSEDataBuffer;
 
-#if defined(LIBISDB_X64) || (defined(_M_IX86_FP) && (_M_IX86_FP >= 2))
+#if defined(LIBISDB_X64) || (defined(_M_IX86_FP) && (_M_IX86_FP >= 2)) || defined(__SSE2__)
+#define LIBISDB_NATIVE_SSE2
+#endif
+
+#ifdef LIBISDB_NATIVE_SSE2
 	constexpr bool IsSSE2Available() { return true; }
+	constexpr bool IsSSE2Enabled() { return true; }
 #else
 	bool IsSSE2Available();
-#endif
 	bool IsSSE2Enabled();
+#endif
 	void SetSSE2Enabled(bool Enabled);
 #endif
 
