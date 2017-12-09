@@ -31,7 +31,7 @@
     <RootNamespace>BaseClasses</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <ProjectName>BaseClasses</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -125,6 +125,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Lib>
       <AdditionalDependencies>strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -146,6 +147,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Lib>
       <AdditionalDependencies>strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -166,6 +168,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Lib>
       <AdditionalDependencies>strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -186,6 +189,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Lib>
       <AdditionalDependencies>strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -209,6 +213,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Lib>
       <AdditionalDependencies>strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -232,6 +237,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Lib>
       <AdditionalDependencies>strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
