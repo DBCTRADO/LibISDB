@@ -67,7 +67,7 @@ namespace LibISDB::DirectShow
 
 	template <class T> struct NoOp
 	{
-		void operator () (T &t)
+		void operator () (T &t) const
 		{
 		}
 	};
@@ -174,7 +174,7 @@ namespace LibISDB::DirectShow
 			return m_Count == 0;
 		}
 
-		template <class TFree> void Clear(TFree &Free)
+		template <class TFree> void Clear(const TFree &Free)
 		{
 			Node *pNext = m_Anchor.pNext;
 
@@ -315,7 +315,7 @@ namespace LibISDB::DirectShow
 
 	struct ComAutoRelease
 	{
-		void operator () (IUnknown *p)
+		void operator () (IUnknown *p) const
 		{
 			if (p != nullptr) {
 				p->Release();
@@ -325,7 +325,7 @@ namespace LibISDB::DirectShow
 
 	template<class T> struct AutoDelete
 	{
-		void operator () (T *p)
+		void operator () (T *p) const
 		{
 			if (p != nullptr) {
 				delete p;
@@ -348,6 +348,8 @@ namespace LibISDB::DirectShow
 		}
 
 	protected:
+		typedef typename LinkedList<T *>::Node Node;
+
 		HRESULT InsertAfter(T *pItem, Node *pBefore) override
 		{
 			if (!pItem && !NULLABLE) {

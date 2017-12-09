@@ -90,7 +90,8 @@ bool VideoRenderer_Default::InitializeBasicVideo(
 	m_VideoWindow->put_WindowStyle(WS_CHILD | WS_CLIPSIBLINGS);
 	m_VideoWindow->put_BackgroundPalette(OATRUE);
 	m_VideoWindow->put_BorderColor(RGB(0, 0, 0));
-	m_VideoWindow->put_Caption(L"");
+	WCHAR szCaption[] = L"";
+	m_VideoWindow->put_Caption(szCaption);
 	RECT rc;
 	::GetClientRect(hwndRender, &rc);
 	m_VideoWindow->SetWindowPosition(0, 0, rc.right, rc.bottom);

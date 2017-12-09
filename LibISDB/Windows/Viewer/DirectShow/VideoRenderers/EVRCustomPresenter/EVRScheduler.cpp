@@ -108,11 +108,13 @@ HRESULT EVRScheduler::StartScheduler(IMFClock *pClock)
 		goto Done;
 	}
 
-	HANDLE Objects[] = {m_hThreadReadyEvent, m_hSchedulerThread};
-	DWORD Wait = ::WaitForMultipleObjects(_countof(Objects), Objects, FALSE, INFINITE);
-	if (Wait != WAIT_OBJECT_0) {
-		hr = E_UNEXPECTED;
-		goto Done;
+	{
+		HANDLE Objects[] = {m_hThreadReadyEvent, m_hSchedulerThread};
+		DWORD Wait = ::WaitForMultipleObjects(_countof(Objects), Objects, FALSE, INFINITE);
+		if (Wait != WAIT_OBJECT_0) {
+			hr = E_UNEXPECTED;
+			goto Done;
+		}
 	}
 
 	m_ThreadID = ID;

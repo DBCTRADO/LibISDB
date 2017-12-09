@@ -402,7 +402,8 @@ bool ViewerFilter::OpenViewer(const OpenSettings &Settings)
 				if (FAILED(hr))
 					throw ErrorDescription(HRESULTErrorCode(hr));
 				// 映像出力ピン作成
-				hr = pMpeg2Demuxer->CreateOutputPin(&MediaTypeVideo, L"Video", OutputVideoPin.GetPP());
+				WCHAR szName[] = L"Video";
+				hr = pMpeg2Demuxer->CreateOutputPin(&MediaTypeVideo, szName, OutputVideoPin.GetPP());
 				if (FAILED(hr)) {
 					pMpeg2Demuxer->Release();
 					throw ErrorDescription(HRESULTErrorCode(hr), LIBISDB_STR("MPEG-2 Demultiplexerの映像出力ピンを作成できません。"));
@@ -419,7 +420,8 @@ bool ViewerFilter::OpenViewer(const OpenSettings &Settings)
 			MediaTypeAudio.SetSampleSize(0);
 			MediaTypeAudio.SetFormatType(&FORMAT_None);
 			// 音声出力ピン作成
-			hr = pMpeg2Demuxer->CreateOutputPin(&MediaTypeAudio, L"Audio", OutputAudioPin.GetPP());
+			WCHAR szName[] = L"Audio";
+			hr = pMpeg2Demuxer->CreateOutputPin(&MediaTypeAudio, szName, OutputAudioPin.GetPP());
 			pMpeg2Demuxer->Release();
 			if (FAILED(hr))
 				throw ErrorDescription(HRESULTErrorCode(hr), LIBISDB_STR("MPEG-2 Demultiplexerの音声出力ピンを作成できません。"));
