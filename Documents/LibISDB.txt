@@ -20,7 +20,7 @@
 
   ・Windows
       Windows 7/8.1/10
-      Visual Studio 2017 Update 3 以降
+      Visual Studio 2017 Update 5 以降
 
   ・Linux
       CMake 3.8 以降
