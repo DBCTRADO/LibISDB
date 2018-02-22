@@ -47,9 +47,6 @@ namespace LibISDB::DirectShow
 
 #define EVR_VIDEO_WINDOW_CLASS TEXT("LibISDB EVR Video Window")
 
-typedef HRESULT (WINAPI *MFStartupFunc)(ULONG Version, DWORD dwFlags);
-typedef HRESULT (WINAPI *MFShutdownFunc)();
-
 
 
 
