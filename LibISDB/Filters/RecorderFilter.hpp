@@ -56,6 +56,7 @@ namespace LibISDB
 			StreamSelector::StreamFlag StreamFlags = StreamSelector::StreamFlag::All;
 			size_t WriteCacheSize = 0;
 			size_t MaxPendingSize = 0;
+			bool ClearPendingBufferOnServiceChanged = true;
 		};
 
 		/** 録画統計情報 */

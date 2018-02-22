@@ -450,6 +450,7 @@ bool RecorderFilter::RecordingTaskImpl::SetOptions(const RecordingOptions &Optio
 		m_Options.MaxPendingSize = Options.MaxPendingSize;
 	}
 
+	m_Options.ClearPendingBufferOnServiceChanged = Options.ClearPendingBufferOnServiceChanged;
 
 	return true;
 }
@@ -497,6 +498,11 @@ void RecorderFilter::RecordingTaskImpl::OnActiveServiceChanged(uint16_t ServiceI
 	if (m_Options.FollowActiveService) {
 		m_Options.ServiceID = ServiceID;
 		m_StreamSelector.SetTarget(ServiceID, m_Options.StreamFlags);
+	}
+
+	if (m_Options.ClearPendingBufferOnServiceChanged) {
+		if (!m_DataStreamer.IsOutputValid())
+			m_DataStreamer.ClearBuffer();
 	}
 }
 
