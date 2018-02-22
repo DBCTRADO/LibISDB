@@ -223,7 +223,7 @@ bool VideoRenderer_Default::ShowCursor(bool Show)
 bool VideoRenderer_Default::SetVisible(bool Visible)
 {
 	if (m_VideoWindow)
-		return SUCCEEDED(m_VideoWindow->put_Visible(Visible));
+		return SUCCEEDED(m_VideoWindow->put_Visible(Visible ? OATRUE : OAFALSE));
 	return false;
 }
 
