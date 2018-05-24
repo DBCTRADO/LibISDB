@@ -38,16 +38,19 @@ namespace std
 
 	template<> struct is_error_code_enum<LibISDB::BonDriverSourceFilter::ErrorCode> : public true_type {};
 
-	error_code make_error_code(LibISDB::BonDriverSourceFilter::ErrorCode Code) noexcept
-	{
-		return std::error_code(static_cast<int>(Code), LibISDB::BonDriverSourceFilter::GetErrorCategory());
-	}
-
 }
 
 
 namespace LibISDB
 {
+
+
+std::error_code make_error_code(BonDriverSourceFilter::ErrorCode Code) noexcept
+{
+	return std::error_code(static_cast<int>(Code), BonDriverSourceFilter::GetErrorCategory());
+}
+
+
 
 
 BonDriverSourceFilter::ErrorCategory BonDriverSourceFilter::m_ErrorCategory;

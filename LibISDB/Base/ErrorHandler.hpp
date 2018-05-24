@@ -31,6 +31,14 @@
 #include <system_error>
 
 
+namespace std
+{
+
+	template<> struct is_error_code_enum<errc> : public true_type {};
+
+}
+
+
 namespace LibISDB
 {
 
@@ -81,7 +89,7 @@ namespace LibISDB
 			const CharType *pText = nullptr,
 			const CharType *pAdvise = nullptr,
 			const CharType *pSystemMessage = nullptr) noexcept
-			: ErrorDescription(std::make_error_code(Code), pText, pAdvise, pSystemMessage)
+			: ErrorDescription(std::error_code(Code), pText, pAdvise, pSystemMessage)
 		{
 		}
 
@@ -90,7 +98,7 @@ namespace LibISDB
 		void SetErrorCode(int Code, const std::error_category &Category) noexcept;
 		template<typename T> void SetErrorCode(T Code) noexcept
 		{
-			SetErrorCode(std::make_error_code(Code));
+			SetErrorCode(std::error_code(Code));
 		}
 		const std::error_code & GetErrorCode() const noexcept { return m_ErrorCode; }
 		void SetText(const CharType *pText) noexcept;
@@ -145,14 +153,14 @@ namespace LibISDB
 			const CharType *pAdvise = nullptr,
 			const CharType *pSystemMessage = nullptr) noexcept
 		{
-			SetError(std::make_error_code(Code), pText, pAdvise, pSystemMessage);
+			SetError(std::error_code(Code), pText, pAdvise, pSystemMessage);
 		}
 		void SetError(const ErrorDescription &Error) noexcept;
 		void SetErrorCode(const std::error_code &ErrorCode) noexcept;
 		void SetErrorCode(int Code, const std::error_category &Category) noexcept;
 		template<typename T> void SetErrorCode(T Code) noexcept
 		{
-			SetErrorCode(std::make_error_code(Code));
+			SetErrorCode(std::error_code(Code));
 		}
 		void SetErrorText(const CharType *pText) noexcept;
 		void SetErrorAdvise(const CharType *pAdvise) noexcept;
