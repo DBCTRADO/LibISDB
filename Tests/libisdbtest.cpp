@@ -322,6 +322,21 @@ TEST_CASE("DateTime", "[base][time]")
 	CHECK(Time2.Diff(Time) == std::chrono::milliseconds(-30LL * 60LL * 1000LL));
 	CHECK(Time2.DiffMilliseconds(Time) == -30LL * 60LL * 1000LL);
 	CHECK(Time2.DiffSeconds(Time) == -30LL * 60LL);
+
+	unsigned long long LinearSeconds = Time.GetLinearSeconds();
+	Time2.FromLinearSeconds(LinearSeconds);
+	CHECK(Time == Time2);
+
+	LinearSeconds += 60;
+	Time.FromLinearSeconds(LinearSeconds);
+	Time2.OffsetSeconds(60);
+	CHECK(Time == Time2);
+
+	Time.Millisecond = 500;
+	unsigned long long LinearMilliseconds = Time.GetLinearMilliseconds();
+	CHECK(LinearMilliseconds == LinearSeconds * 1000ULL + 500ULL);
+	Time2.FromLinearMilliseconds(LinearMilliseconds);
+	CHECK(Time == Time2);
 }
 
 
