@@ -85,6 +85,8 @@ namespace LibISDB
 
 		unsigned long long GetLinearSeconds() const noexcept;
 		unsigned long long GetLinearMilliseconds() const noexcept;
+		bool FromLinearSeconds(unsigned long long Seconds) noexcept;
+		bool FromLinearMilliseconds(unsigned long long Milliseconds) noexcept;
 
 		bool NowLocal() noexcept;
 		bool NowUTC() noexcept;

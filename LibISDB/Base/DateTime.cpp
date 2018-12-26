@@ -356,7 +356,60 @@ unsigned long long DateTime::GetLinearMilliseconds() const noexcept
 
 #else	// LIBISDB_WINDOWS
 
-	return GetLinearSeconds() * 1000ULL;
+	return GetLinearSeconds() * 1000ULL + Millisecond;
+
+#endif	// !def LIBISDB_WINDOWS
+}
+
+
+bool DateTime::FromLinearSeconds(unsigned long long Seconds) noexcept
+{
+#ifdef LIBISDB_WINDOWS
+
+	return FromLinearMilliseconds(Seconds * 1000ULL);
+
+#else	// LIBISDB_WINDOWS
+
+	std::time_t Time = Seconds;
+	std::tm Tm;
+
+	if (::gmtime_r(&Time, &Tm) == nullptr)
+		return false;
+
+	FromTm(Tm);
+
+	return true;
+
+#endif	// !def LIBISDB_WINDOWS
+}
+
+
+bool DateTime::FromLinearMilliseconds(unsigned long long Milliseconds) noexcept
+{
+#ifdef LIBISDB_WINDOWS
+
+	const unsigned long long Time = Milliseconds * 10000ULL;
+	::FILETIME ft;
+	::SYSTEMTIME st;
+
+	ft.dwLowDateTime = static_cast<DWORD>(Time & 0xFFFFFFFFULL);
+	ft.dwHighDateTime = static_cast<DWORD>(Time >> 32);
+
+	if (!::FileTimeToSystemTime(&ft, &st))
+		return false;
+
+	FromSYSTEMTIME(st);
+
+	return true;
+
+#else	// LIBISDB_WINDOWS
+
+	if (!FromLinearSeconds(Milliseconds / 1000ULL))
+		return false;
+
+	Millisecond = static_cast<int>(Milliseconds % 1000ULL);
+
+	return true;
 
 #endif	// !def LIBISDB_WINDOWS
 }
