@@ -112,7 +112,7 @@
     <ProjectGuid>{990EB6F3-1222-41F1-B364-323F5BD4E1A7}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>LibISDBWindows</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

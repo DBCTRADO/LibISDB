@@ -30,7 +30,7 @@
     <ProjectGuid>{93C05A34-C80F-458B-AE28-A62A3963582E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>tspidinfo</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
