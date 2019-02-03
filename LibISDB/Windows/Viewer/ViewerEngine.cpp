@@ -270,10 +270,8 @@ bool ViewerEngine::GetSelectableServiceList(AnalyzerFilter::ServiceList *pList) 
 	const int ServiceCount = m_pAnalyzer->GetServiceCount();
 
 	for (int i = 0; i < ServiceCount; i++) {
-		if (IsSelectableService(i)) {
-			pList->emplace_back();
-			m_pAnalyzer->GetServiceInfo(i, &pList->back());
-		}
+		if (IsSelectableService(i))
+			m_pAnalyzer->GetServiceInfo(i, &pList->emplace_back());
 	}
 
 	return true;

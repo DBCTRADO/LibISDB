@@ -434,8 +434,7 @@ bool GetEventExtendedTextList(
 	String Buffer;
 
 	for (auto const &e : TextList) {
-		List->emplace_back();
-		EventInfo::ExtendedTextInfo &Text = List->back();
+		EventInfo::ExtendedTextInfo &Text = List->emplace_back();
 		StringDecoder.Decode(e.Description, &Text.Description, DecodeFlags);
 		if (StringDecoder.Decode(e.Text, &Buffer, DecodeFlags))
 			CanonicalizeExtendedText(Buffer, &Text.Text);

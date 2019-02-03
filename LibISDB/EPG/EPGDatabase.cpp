@@ -647,8 +647,7 @@ bool EPGDatabase::UpdateSection(const EITPfScheduleTable *pScheduleTable, const 
 				pEvent->VideoList.clear();
 				pDescBlock->EnumDescriptors<ComponentDescriptor>(
 					[&](const ComponentDescriptor *pComponentDesc) {
-						pEvent->VideoList.emplace_back();
-						EventInfo::VideoInfo &Info = pEvent->VideoList.back();
+						EventInfo::VideoInfo &Info = pEvent->VideoList.emplace_back();
 
 						Info.StreamContent = pComponentDesc->GetStreamContent();
 						Info.ComponentType = pComponentDesc->GetComponentType();
@@ -664,8 +663,7 @@ bool EPGDatabase::UpdateSection(const EITPfScheduleTable *pScheduleTable, const 
 				pEvent->AudioList.clear();
 				pDescBlock->EnumDescriptors<AudioComponentDescriptor>(
 					[&](const AudioComponentDescriptor *pAudioDesc) {
-						pEvent->AudioList.emplace_back();
-						EventInfo::AudioInfo &Info = pEvent->AudioList.back();
+						EventInfo::AudioInfo &Info = pEvent->AudioList.emplace_back();
 
 						Info.StreamContent = pAudioDesc->GetStreamContent();
 						Info.ComponentType = pAudioDesc->GetComponentType();

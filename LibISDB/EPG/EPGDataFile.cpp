@@ -659,8 +659,7 @@ void EPGDataFile::LoadService(FileStream &File, ServiceInfo *pServiceInfo)
 		ReadChunkHeader(File, &ChunkHeader, &Size);
 
 		if ((ChunkHeader.Tag == EPGData::Tag::Event) && (ChunkHeader.Size == sizeof(EPGData::EventInfo))) {
-			pServiceInfo->EventList.emplace_back();
-			EventInfo &Event = pServiceInfo->EventList.back();
+			EventInfo &Event = pServiceInfo->EventList.emplace_back();
 
 			LoadEvent(File, pServiceInfo, &Event);
 		} else {

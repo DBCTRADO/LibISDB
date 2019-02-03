@@ -2202,8 +2202,7 @@ bool EmergencyInformationDescriptor::StoreContents(const uint8_t *pPayload)
 	size_t Pos = 0;
 
 	while (Pos + 4 <= m_Length) {
-		m_ServiceList.emplace_back();
-		ServiceInfo &Info = m_ServiceList.back();
+		ServiceInfo &Info = m_ServiceList.emplace_back();
 
 		Info.ServiceID    = Load16(&pPayload[Pos + 0]);
 		Info.StartEndFlag = (pPayload[Pos + 2] & 0x80) != 0;

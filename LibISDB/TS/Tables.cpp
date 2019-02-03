@@ -320,8 +320,7 @@ bool PMTTable::OnTableUpdate(const PSISection *pCurSection, const PSISection *pO
 		if (Pos + 5 + DescriptorLength > DataSize)
 			break;
 
-		m_ESList.emplace_back();
-		PMTItem &Item = m_ESList.back();
+		PMTItem &Item = m_ESList.emplace_back();
 
 		Item.StreamType = pData[Pos];
 		Item.ESPID      = Load16(&pData[Pos + 1]) & 0x1FFF;
@@ -483,8 +482,7 @@ bool SDTTable::OnTableUpdate(const PSISection *pCurSection, const PSISection *pO
 	m_ServiceList.clear();
 
 	for (size_t Pos = 3; Pos + 5 <= DataSize;) {
-		m_ServiceList.emplace_back();
-		SDTItem &Item = m_ServiceList.back();
+		SDTItem &Item = m_ServiceList.emplace_back();
 
 		Item.ServiceID               = Load16(&pData[Pos + 0]);
 		Item.HEITFlag                = (pData[Pos + 2] & 0x10) != 0;
@@ -638,8 +636,7 @@ bool NITTable::OnTableUpdate(const PSISection *pCurSection, const PSISection *pO
 		if (Pos + 6 + DescriptorLength > DataSize)
 			return false;
 
-		m_TransportStreamList.emplace_back();
-		NITItem &Item = m_TransportStreamList.back();
+		NITItem &Item = m_TransportStreamList.emplace_back();
 
 		Item.TransportStreamID = Load16(&pData[Pos + 0]);
 		Item.OriginalNetworkID = Load16(&pData[Pos + 2]);
@@ -819,8 +816,7 @@ bool EITTable::OnTableUpdate(const PSISection *pCurSection, const PSISection *pO
 	size_t Pos = 6;
 
 	while (Pos + 12 <= DataSize) {
-		m_EventList.emplace_back();
-		EventInfo &Info = m_EventList.back();
+		EventInfo &Info = m_EventList.emplace_back();
 
 		Info.EventID        = Load16(&pData[Pos + 0]);
 		MJDBCDTimeToDateTime(&pData[Pos + 2], &Info.StartTime);
@@ -1103,8 +1099,7 @@ bool BITTable::OnTableUpdate(const PSISection *pCurSection, const PSISection *pO
 	m_BroadcasterList.clear();
 
 	for (size_t Pos = 2 + DescriptorsLength; Pos + 3 <= DataSize; Pos += DescriptorsLength) {
-		m_BroadcasterList.emplace_back();
-		BroadcasterInfo &Info = m_BroadcasterList.back();
+		BroadcasterInfo &Info = m_BroadcasterList.emplace_back();
 
 		Info.BroadcasterID = pData[Pos + 0];
 		DescriptorsLength = ((pData[Pos + 1] & 0x0F) << 8) | pData[Pos + 2];
@@ -1441,8 +1436,7 @@ bool SDTTTable::OnTableUpdate(const PSISection *pCurSection)
 		if ((ContentDescLength < ScheduleDescLength) || (Pos + ContentDescLength > DataSize))
 			break;
 
-		m_ContentList.emplace_back();
-		ContentInfo &Content = m_ContentList.back();
+		ContentInfo &Content = m_ContentList.emplace_back();
 
 		Content.GroupID          = pData[Pos] >> 4;
 		Content.TargetVersion    = static_cast<uint16_t>(((pData[Pos] & 0x0F) << 8) | pData[Pos + 1]);

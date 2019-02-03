@@ -1331,8 +1331,7 @@ bool AnalyzerFilter::GetEventComponentGroupList(int ServiceIndex, ReturnArg<Even
 				const ComponentGroupDescriptor::GroupInfo *pGroup = pComponentGroupDesc->GetGroupInfo(i);
 
 				if (pGroup != nullptr) {
-					List->emplace_back();
-					EventComponentGroupInfo &Info = List->back();
+					EventComponentGroupInfo &Info = List->emplace_back();
 
 					Info.ComponentGroupID = pGroup->ComponentGroupID;
 					Info.NumOfCAUnit = pGroup->NumOfCAUnit;
@@ -2109,8 +2108,7 @@ void AnalyzerFilter::OnNITSection(const PSITableBase *pTable, const PSISection *
 			const DescriptorBlock *pDescBlock = pNITTable->GetItemDescriptorBlock(i);
 
 			if (pDescBlock != nullptr) {
-				m_NetworkStreamList.emplace_back();
-				NetworkStreamInfo &StreamInfo = m_NetworkStreamList.back();
+				NetworkStreamInfo &StreamInfo = m_NetworkStreamList.emplace_back();
 
 				StreamInfo.TransportStreamID = pNITTable->GetTransportStreamID(i);
 				StreamInfo.OriginalNetworkID = pNITTable->GetOriginalNetworkID(i);
