@@ -46,7 +46,7 @@ using namespace LibISDB::Literals;
 
 namespace
 {
-	constexpr const uint8_t * operator"" _b8(const char *str, size_t length) {
+	const uint8_t * operator"" _b8(const char *str, size_t length) {
 		return reinterpret_cast<const uint8_t *>(str);
 	}
 }

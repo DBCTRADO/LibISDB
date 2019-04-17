@@ -45,7 +45,7 @@ namespace LibISDB::DirectShow
 namespace
 {
 
-constexpr int16_t SampleToInt16(float Sample)
+inline int16_t SampleToInt16(float Sample)
 {
 	static_assert(sizeof(float) == sizeof(uint32_t));
 	const int32_t i = *reinterpret_cast<int32_t *>(&Sample);
