@@ -322,9 +322,7 @@ bool StreamBuffer::SetReaderPos(Reader *pReader, PosType Pos)
 {
 	BlockLock Lock(m_Lock);
 
-	auto Result = m_ReaderPosList.emplace(pReader, Pos);
-	if (!Result.second)
-		Result.first->second = Pos;
+	m_ReaderPosList.insert_or_assign(pReader, Pos);
 
 	FreeUnusedBlocks();
 
