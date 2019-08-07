@@ -46,9 +46,21 @@ using namespace LibISDB::Literals;
 
 namespace
 {
+#ifdef __cpp_char8_t
+	typedef char8_t Char8;
+#else
+	typedef char Char8;
+#endif
+
 	const uint8_t * operator"" _b8(const char *str, size_t length) {
 		return reinterpret_cast<const uint8_t *>(str);
 	}
+
+#ifdef __cpp_char8_t
+	const uint8_t * operator"" _b8(const char8_t *str, size_t length) {
+		return reinterpret_cast<const uint8_t *>(str);
+	}
+#endif
 }
 
 
@@ -230,7 +242,7 @@ TEST_CASE("MD5", "[utility][hash]")
 
 TEST_CASE("Load", "[utility][load]")
 {
-	const char *Data = u8"ABCDE";
+	const Char8 *Data = u8"ABCDE";
 
 	CHECK(LibISDB::Load16(Data) == 0x4142_u16);
 	CHECK(LibISDB::Load16(Data + 1) == 0x4243_u16);
