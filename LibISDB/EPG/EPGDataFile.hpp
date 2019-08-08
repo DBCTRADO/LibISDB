@@ -50,6 +50,7 @@ namespace LibISDB
 			PriorityLow  = 0x0010U, /**< 低優先度 */
 			PriorityIdle = 0x0020U, /**< 最低優先度 */
 			DiscardOld   = 0x0040U, /**< 古い情報を破棄 */
+			Flush        = 0x0080U, /**< 書き出し時にフラッシュする */
 		};
 
 		enum class Exception {

@@ -624,6 +624,9 @@ bool EPGDataFile::Save()
 		}
 
 		WriteChunkHeader(File, EPGData::Tag::End);
+
+		if (!!(m_OpenFlags & OpenFlag::Flush))
+			File.Flush();
 	} catch (Exception Code) {
 		ExceptionLog(Code);
 		ErrorCleanup();
