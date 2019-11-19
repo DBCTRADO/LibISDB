@@ -233,7 +233,7 @@ bool VideoRenderer_Default::SetVisible(bool Visible)
 class VideoRenderer_Basic : public VideoRenderer_Default
 {
 public:
-	VideoRenderer_Basic(RendererType Type, const CLSID &clsid, LPCTSTR pszName, bool NoSourcePosition = false);
+	VideoRenderer_Basic(RendererType Type, const CLSID &clsid, LPCTSTR pszName, bool NoSourcePosition = false) noexcept;
 
 	RendererType GetRendererType() const noexcept { return m_RendererType; }
 	bool Initialize(
@@ -252,7 +252,7 @@ protected:
 
 
 VideoRenderer_Basic::VideoRenderer_Basic(
-	RendererType Type, const CLSID &clsid, const CharType *pszName, bool NoSourcePosition)
+	RendererType Type, const CLSID &clsid, const CharType *pszName, bool NoSourcePosition) noexcept
 	: m_RendererType(Type)
 	, m_clsidRenderer(clsid)
 	, m_RendererName(pszName)
@@ -453,7 +453,7 @@ bool VideoRenderer_OverlayMixer::Finalize()
 
 
 
-VideoRenderer::VideoRenderer()
+VideoRenderer::VideoRenderer() noexcept
 	: m_hwndRender(nullptr)
 	, m_Crop1088To1080(true)
 	, m_ClipToDevice(true)

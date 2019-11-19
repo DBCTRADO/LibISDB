@@ -58,7 +58,7 @@ namespace LibISDB
 			return AlignedAlloc(Size, Align);
 		}
 
-		void Free(void *pBuffer) override
+		void Free(void *pBuffer) noexcept override
 		{
 			AlignedFree(pBuffer);
 		}

@@ -61,7 +61,7 @@ unsigned long long GetScheduleTime(unsigned long long CurTime, uint16_t TableID,
 
 
 
-EPGDatabase::EPGDatabase()
+EPGDatabase::EPGDatabase() noexcept
 	: m_IsUpdated(false)
 	, m_ScheduleOnly(false)
 	, m_NoPastEvents(true)

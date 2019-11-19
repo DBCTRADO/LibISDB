@@ -46,7 +46,7 @@ namespace LibISDB
 
 		virtual bool Allocate(SizeType Size) = 0;
 		virtual bool IsAllocated() const;
-		virtual void Free() = 0;
+		virtual void Free() noexcept = 0;
 		virtual SizeType GetCapacity() const = 0;
 		virtual SizeType GetDataSize() const = 0;
 		virtual bool IsFull() const;
@@ -63,7 +63,7 @@ namespace LibISDB
 	public:
 	// DataStorage
 		bool Allocate(SizeType Size) override;
-		void Free() override;
+		void Free() noexcept override;
 		SizeType GetCapacity() const override;
 		SizeType GetDataSize() const override;
 		size_t Read(void *pData, size_t Size) override;
@@ -83,7 +83,7 @@ namespace LibISDB
 	public:
 	// DataStorage
 		bool Allocate(SizeType Size) override;
-		void Free() override;
+		void Free() noexcept override;
 		SizeType GetCapacity() const override;
 		SizeType GetDataSize() const override;
 		size_t Read(void *pData, size_t Size) override;
@@ -103,14 +103,14 @@ namespace LibISDB
 	public:
 	// DataStorage
 		bool Allocate(SizeType Size) override;
-		void Free() override;
+		void Free() noexcept override;
 
 	// FileDataStorage
 		bool SetFileName(const StringView &FileName);
 		const String & GetFileName() const noexcept { return m_FileName; }
-		void SetOpenFlags(FileStream::OpenFlag Flags) { m_OpenFlags = Flags; }
+		void SetOpenFlags(FileStream::OpenFlag Flags) noexcept { m_OpenFlags = Flags; }
 		FileStream::OpenFlag GetOpenFlags() const noexcept { return m_OpenFlags; }
-		void SetPreallocate(bool Preallocate) { m_Preallocate = Preallocate; }
+		void SetPreallocate(bool Preallocate) noexcept { m_Preallocate = Preallocate; }
 		bool GetPreallocate() const noexcept { return m_Preallocate; }
 
 	protected:

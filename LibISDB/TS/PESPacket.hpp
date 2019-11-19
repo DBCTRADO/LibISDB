@@ -53,7 +53,7 @@ namespace LibISDB
 		: public DataBuffer
 	{
 	public:
-		PESPacket();
+		PESPacket() noexcept;
 		PESPacket(size_t BufferSize);
 
 		bool ParseHeader();

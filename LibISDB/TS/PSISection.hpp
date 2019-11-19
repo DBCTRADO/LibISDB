@@ -39,7 +39,7 @@ namespace LibISDB
 		: public DataBuffer
 	{
 	public:
-		PSISection();
+		PSISection() noexcept;
 		PSISection(size_t BufferSize);
 
 		bool operator == (const PSISection &rhs) const noexcept;

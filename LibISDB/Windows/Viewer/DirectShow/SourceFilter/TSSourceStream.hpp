@@ -54,16 +54,16 @@ namespace LibISDB::DirectShow
 		bool IsBufferActuallyFull();
 		int GetFillPercentage();
 		bool SetQueueSize(size_t Size);
-		size_t GetQueueSize() const { return m_QueueSize; }
+		size_t GetQueueSize() const noexcept { return m_QueueSize; }
 		bool SetPoolSize(size_t Size);
-		size_t GetPoolSize() const { return m_PoolSize; }
+		size_t GetPoolSize() const noexcept { return m_PoolSize; }
 		bool EnableSync(bool Enable, bool OneSeg = false);
-		bool IsSyncEnabled() const { return m_EnableSync; }
-		bool IsSyncFor1Seg() const { return m_SyncFor1Seg; }
+		bool IsSyncEnabled() const noexcept { return m_EnableSync; }
+		bool IsSyncFor1Seg() const noexcept { return m_SyncFor1Seg; }
 		void SetVideoPID(uint16_t PID);
 		void SetAudioPID(uint16_t PID);
 		void MapAudioPID(uint16_t AudioPID, uint16_t MapPID);
-		long long GetPTSDuration() const { return m_PTSDuration; }
+		long long GetPTSDuration() const noexcept { return m_PTSDuration; }
 
 	private:
 		struct PacketPTSData {

@@ -55,7 +55,7 @@ namespace LibISDB::DirectShow
 			EVRCustomPresenter, /**< EVR Custom Presenter */
 		};
 
-		VideoRenderer();
+		VideoRenderer() noexcept;
 		virtual ~VideoRenderer();
 
 		virtual RendererType GetRendererType() const noexcept = 0;

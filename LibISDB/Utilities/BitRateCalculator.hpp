@@ -38,11 +38,12 @@ namespace LibISDB
 	class BitRateCalculator
 	{
 	public:
-		BitRateCalculator();
-		void Initialize();
-		void Reset();
+		BitRateCalculator() noexcept;
+
+		void Initialize() noexcept;
+		void Reset() noexcept;
 		bool Update(size_t Bytes);
-		unsigned long GetBitRate() const;
+		unsigned long GetBitRate() const noexcept;
 		bool SetUpdateInterval(TickClock::ClockType Interval);
 		TickClock::ClockType GetUpdateInterval() const noexcept { return m_UpdateInterval; }
 

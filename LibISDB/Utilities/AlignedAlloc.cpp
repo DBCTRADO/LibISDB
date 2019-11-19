@@ -37,19 +37,19 @@ namespace LibISDB
 #if defined(_MSC_VER)
 
 
-void * AlignedAlloc(size_t Size, size_t Align, size_t Offset)
+void * AlignedAlloc(size_t Size, size_t Align, size_t Offset) noexcept
 {
 	return ::_aligned_offset_malloc(Size, Align, Offset);
 }
 
 
-void * AlignedRealloc(void *pBuffer, size_t Size, size_t Align, size_t Offset)
+void * AlignedRealloc(void *pBuffer, size_t Size, size_t Align, size_t Offset) noexcept
 {
 	return ::_aligned_offset_realloc(pBuffer, Size, Align, Offset);
 }
 
 
-void AlignedFree(void *pBuffer)
+void AlignedFree(void *pBuffer) noexcept
 {
 	::_aligned_free(pBuffer);
 }
@@ -79,7 +79,7 @@ inline AlignedMemoryInfo * GetAlignedMemoryInfo(void *pBuffer)
 }
 
 
-void * AlignedAlloc(size_t Size, size_t Align, size_t Offset)
+void * AlignedAlloc(size_t Size, size_t Align, size_t Offset) noexcept
 {
 	if (LIBISDB_TRACE_ERROR_IF((Size == 0) || (Offset >= Size) || (Offset >= Align)))
 		return nullptr;
@@ -110,7 +110,7 @@ void * AlignedAlloc(size_t Size, size_t Align, size_t Offset)
 }
 
 
-void * AlignedRealloc(void *pBuffer, size_t Size, size_t Align, size_t Offset)
+void * AlignedRealloc(void *pBuffer, size_t Size, size_t Align, size_t Offset) noexcept
 {
 	if (pBuffer == nullptr)
 		return AlignedAlloc(Size, Align, Offset);
@@ -138,7 +138,7 @@ void * AlignedRealloc(void *pBuffer, size_t Size, size_t Align, size_t Offset)
 }
 
 
-void AlignedFree(void *pBuffer)
+void AlignedFree(void *pBuffer) noexcept
 {
 	if (pBuffer == nullptr)
 		return;

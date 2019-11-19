@@ -46,7 +46,7 @@ namespace LibISDB::DirectShow
 		: public AudioDecoder
 	{
 	public:
-		MPEGAudioDecoder();
+		MPEGAudioDecoder() noexcept;
 		~MPEGAudioDecoder();
 
 	// AudioDecoder

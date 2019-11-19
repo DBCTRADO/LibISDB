@@ -55,7 +55,7 @@ constexpr int16_t FixedToInt16(mad_fixed_t Value)
 
 
 
-MPEGAudioDecoder::MPEGAudioDecoder()
+MPEGAudioDecoder::MPEGAudioDecoder() noexcept
 	: m_Initialized(false)
 	, m_DecodeError(false)
 {

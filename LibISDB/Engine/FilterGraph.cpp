@@ -34,7 +34,7 @@ namespace LibISDB
 {
 
 
-FilterGraph::FilterGraph()
+FilterGraph::FilterGraph() noexcept
 	: m_CurID(0)
 {
 }

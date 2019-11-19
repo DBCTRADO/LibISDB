@@ -40,7 +40,7 @@ namespace LibISDB::DirectShow
 {
 
 
-ImageMixer_EVR::ImageMixer_EVR(IBaseFilter *pRenderer)
+ImageMixer_EVR::ImageMixer_EVR(IBaseFilter *pRenderer) noexcept
 	: ImageMixer_VMR(pRenderer)
 {
 }

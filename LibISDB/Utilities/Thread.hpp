@@ -43,7 +43,7 @@ namespace LibISDB
 	class Thread
 	{
 	public:
-		Thread();
+		Thread() noexcept;
 		virtual ~Thread();
 
 		Thread(const Thread &) = delete;

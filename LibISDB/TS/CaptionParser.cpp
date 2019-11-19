@@ -35,7 +35,7 @@ namespace LibISDB
 {
 
 
-CaptionParser::CaptionParser(bool OneSeg)
+CaptionParser::CaptionParser(bool OneSeg) noexcept
 	: m_PESParser(this)
 	, m_pHandler(nullptr)
 	, m_pDRCSMap(nullptr)

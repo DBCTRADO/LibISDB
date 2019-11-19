@@ -41,7 +41,7 @@ namespace LibISDB
 		: public TSEngine
 	{
 	public:
-		ViewerEngine();
+		ViewerEngine() noexcept;
 
 		bool BuildViewer(const ViewerFilter::OpenSettings &Settings);
 		bool RebuildViewer(const ViewerFilter::OpenSettings &Settings);

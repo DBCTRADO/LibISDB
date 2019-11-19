@@ -35,7 +35,7 @@ namespace LibISDB::DirectShow
 {
 
 
-VideoParser::VideoParser()
+VideoParser::VideoParser() noexcept
 	: m_pStreamCallback(nullptr)
 	, m_AttachMediaType(false)
 {

@@ -35,7 +35,7 @@ namespace LibISDB
 {
 
 
-PSISection::PSISection()
+PSISection::PSISection() noexcept
 	: m_Header()
 {
 }

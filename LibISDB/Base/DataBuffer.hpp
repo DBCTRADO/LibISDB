@@ -39,7 +39,7 @@ namespace LibISDB
 
 		DataBuffer() = default;
 		DataBuffer(const DataBuffer &Src);
-		DataBuffer(DataBuffer &&Src);
+		DataBuffer(DataBuffer &&Src) noexcept;
 		DataBuffer(size_t BufferSize);
 		DataBuffer(const void *pData, size_t DataSize);
 		DataBuffer(size_t DataSize, uint8_t Filler);
@@ -47,13 +47,13 @@ namespace LibISDB
 		virtual ~DataBuffer();
 
 		DataBuffer & operator = (const DataBuffer &Src);
-		DataBuffer & operator = (DataBuffer &&Src);
+		DataBuffer & operator = (DataBuffer &&Src) noexcept;
 
 		bool operator == (const DataBuffer &rhs) const noexcept;
 		bool operator != (const DataBuffer &rhs) const noexcept { return !(*this == rhs); }
 
-		uint8_t * GetData();
-		const uint8_t * GetData() const;
+		uint8_t * GetData() noexcept;
+		const uint8_t * GetData() const noexcept;
 		uint8_t * GetBuffer() noexcept { return m_pData; }
 		size_t GetSize() const noexcept { return m_DataSize; }
 		size_t GetBufferSize() const noexcept { return m_BufferSize; }
@@ -73,8 +73,8 @@ namespace LibISDB
 		size_t SetSize(size_t Size);
 		size_t SetSize(size_t Size, uint8_t Filler);
 
-		void ClearSize();
-		void FreeBuffer();
+		void ClearSize() noexcept;
+		void FreeBuffer() noexcept;
 
 		// dynamic_cast は遅いのでその代替
 		template<typename T> T * Cast()
@@ -90,7 +90,7 @@ namespace LibISDB
 
 	protected:
 		virtual void * Allocate(size_t Size);
-		virtual void Free(void *pBuffer);
+		virtual void Free(void *pBuffer) noexcept;
 		virtual void * ReAllocate(void *pBuffer, size_t Size);
 
 		size_t m_DataSize = 0;

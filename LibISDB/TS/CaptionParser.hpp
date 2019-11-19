@@ -98,7 +98,7 @@ namespace LibISDB
 			virtual bool SetDRCS(uint16_t Code, const DRCSBitmap *pBitmap) = 0;
 		};
 
-		CaptionParser(bool OneSeg = false);
+		CaptionParser(bool OneSeg = false) noexcept;
 
 		void Reset();
 		bool StorePacket(const TSPacket *pPacket);

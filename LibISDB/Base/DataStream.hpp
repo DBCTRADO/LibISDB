@@ -60,7 +60,7 @@ namespace LibISDB
 		: public DataStream
 	{
 	public:
-		SingleDataStream(T *pData)
+		SingleDataStream(T *pData) noexcept
 			: m_pData(pData)
 		{
 		}
@@ -91,7 +91,7 @@ namespace LibISDB
 		T & operator [] (size_t Index) { return m_DataList[Index]; }
 		const T & operator [] (size_t Index) const { return m_DataList[Index]; }
 
-		void Clear()
+		void Clear() noexcept
 		{
 			m_DataList.clear();
 			m_ValidCount = 0;

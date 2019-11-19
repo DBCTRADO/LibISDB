@@ -35,7 +35,7 @@ namespace LibISDB::DirectShow
 {
 
 
-KnownDecoderManager::KnownDecoderManager()
+KnownDecoderManager::KnownDecoderManager() noexcept
 	: m_hLib(nullptr)
 {
 }

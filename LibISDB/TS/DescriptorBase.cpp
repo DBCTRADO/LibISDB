@@ -33,7 +33,7 @@ namespace LibISDB
 {
 
 
-DescriptorBase::DescriptorBase()
+DescriptorBase::DescriptorBase() noexcept
 	: m_Tag(0)
 	, m_Length(0)
 	, m_IsValid(false)

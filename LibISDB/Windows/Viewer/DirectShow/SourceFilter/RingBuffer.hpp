@@ -41,7 +41,7 @@ namespace LibISDB::DirectShow
 	public:
 		static constexpr size_t UnitBytes = Unit * sizeof(T);
 
-		RingBuffer()
+		RingBuffer() noexcept
 			: m_pBuffer(nullptr)
 			, m_Capacity(0)
 			, m_Used(0)
@@ -112,7 +112,7 @@ namespace LibISDB::DirectShow
 			return true;
 		}
 
-		void Free()
+		void Free() noexcept
 		{
 			if (m_pBuffer) {
 				delete [] m_pBuffer;
@@ -182,17 +182,17 @@ namespace LibISDB::DirectShow
 			return Avail;
 		}
 
-		void Clear()
+		void Clear() noexcept
 		{
 			m_Used = 0;
 			m_Pos = 0;
 		}
 
-		bool IsAllocated() const { return m_pBuffer != nullptr; }
-		size_t GetCapacity() const { return m_Capacity; }
-		size_t GetUsed() const { return m_Used; }
-		bool IsEmpty() const { return m_Used == 0; }
-		bool IsFull() const { return m_Used == m_Capacity; }
+		bool IsAllocated() const noexcept { return m_pBuffer != nullptr; }
+		size_t GetCapacity() const noexcept { return m_Capacity; }
+		size_t GetUsed() const noexcept { return m_Used; }
+		bool IsEmpty() const noexcept { return m_Used == 0; }
+		bool IsFull() const noexcept { return m_Used == m_Capacity; }
 	
 	protected:
 		T *m_pBuffer;
@@ -206,7 +206,7 @@ namespace LibISDB::DirectShow
 	public:
 		static constexpr size_t UnitBytes = Unit * sizeof(T);
 
-		ChunkedRingBuffer()
+		ChunkedRingBuffer() noexcept
 			: m_MaxChunks(1)
 			, m_Capacity(ChunkSize)
 			, m_Used(0)
@@ -254,7 +254,7 @@ namespace LibISDB::DirectShow
 			return true;
 		}
 
-		void Free()
+		void Free() noexcept
 		{
 			while (!m_ChunkList.empty()) {
 				delete [] m_ChunkList.front();
@@ -356,13 +356,13 @@ namespace LibISDB::DirectShow
 			return Avail;
 		}
 
-		void Clear()
+		void Clear() noexcept
 		{
 			m_Used = 0;
 			m_Pos = 0;
 		}
 
-		void ShrinkToFit()
+		void ShrinkToFit() noexcept
 		{
 			const size_t Used = m_Pos + m_Used;
 			while (!m_ChunkList.empty()
@@ -372,14 +372,14 @@ namespace LibISDB::DirectShow
 			}
 		}
 
-		size_t GetChunkSize() const { return ChunkSize; }
-		size_t GetMaxChunkCount() const { return m_MaxChunks; }
-		size_t GetAllocatedChunkCount() const { return m_ChunkList.size(); }
-		size_t GetCapacity() const { return m_Capacity; }
-		size_t GetUsed() const { return m_Used; }
-		size_t GetAllocatedSize() const { return m_ChunkList.size() * ChunkSize; }
-		bool IsEmpty() const { return m_Used == 0; }
-		bool IsFull() const { return m_Used == m_Capacity; }
+		size_t GetChunkSize() const noexcept { return ChunkSize; }
+		size_t GetMaxChunkCount() const noexcept { return m_MaxChunks; }
+		size_t GetAllocatedChunkCount() const noexcept { return m_ChunkList.size(); }
+		size_t GetCapacity() const noexcept { return m_Capacity; }
+		size_t GetUsed() const noexcept { return m_Used; }
+		size_t GetAllocatedSize() const noexcept { return m_ChunkList.size() * ChunkSize; }
+		bool IsEmpty() const noexcept { return m_Used == 0; }
+		bool IsFull() const noexcept { return m_Used == m_Capacity; }
 
 	protected:
 		void RotateBuffer()

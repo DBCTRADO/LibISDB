@@ -33,7 +33,7 @@ namespace LibISDB
 {
 
 
-FileStreamWriter::FileStreamWriter()
+FileStreamWriter::FileStreamWriter() noexcept
 	: m_WriteSize(0)
 {
 }

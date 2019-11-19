@@ -33,7 +33,7 @@ namespace LibISDB
 {
 
 
-StreamBuffer::StreamBuffer()
+StreamBuffer::StreamBuffer() noexcept
 	: m_BlockSize(0)
 	, m_MinBlockCount(0)
 	, m_MaxBlockCount(0)
@@ -466,13 +466,13 @@ bool StreamBuffer::CheckBufferSize(size_t BlockSize, size_t MinBlockCount, size_
 
 
 
-StreamBuffer::QueueBlock::QueueBlock()
+StreamBuffer::QueueBlock::QueueBlock() noexcept
 	: m_SerialPos(POS_INVALID)
 {
 }
 
 
-StreamBuffer::QueueBlock::QueueBlock(QueueBlock &&Src)
+StreamBuffer::QueueBlock::QueueBlock(QueueBlock &&Src) noexcept
 	: QueueBlock()
 {
 	*this = std::move(Src);
@@ -485,7 +485,7 @@ StreamBuffer::QueueBlock::~QueueBlock()
 }
 
 
-StreamBuffer::QueueBlock & StreamBuffer::QueueBlock::operator = (QueueBlock &&Src)
+StreamBuffer::QueueBlock & StreamBuffer::QueueBlock::operator = (QueueBlock &&Src) noexcept
 {
 	if (&Src != this) {
 		Free();
@@ -509,7 +509,7 @@ bool StreamBuffer::QueueBlock::SetStorage(DataStorage *pStorage)
 }
 
 
-void StreamBuffer::QueueBlock::Free()
+void StreamBuffer::QueueBlock::Free() noexcept
 {
 	if (m_Storage)
 		m_Storage->Free();

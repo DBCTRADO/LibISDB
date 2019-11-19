@@ -39,7 +39,7 @@ namespace LibISDB
 {
 
 
-Thread::Thread()
+Thread::Thread() noexcept
 {
 }
 

@@ -39,7 +39,7 @@ namespace LibISDB::DirectShow
 {
 
 
-ImageMixer::ImageMixer(IBaseFilter *pRenderer)
+ImageMixer::ImageMixer(IBaseFilter *pRenderer) noexcept
 	: m_Renderer(pRenderer)
 {
 }

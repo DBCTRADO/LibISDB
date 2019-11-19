@@ -53,7 +53,7 @@ std::error_code make_error_code(EDCBPluginWriter::ErrorCode Code) noexcept
 EDCBPluginWriter::ErrorCategory EDCBPluginWriter::m_ErrorCategory;
 
 
-EDCBPluginWriter::EDCBPluginWriter()
+EDCBPluginWriter::EDCBPluginWriter() noexcept
 	: m_hLib(nullptr)
 	, m_ID(0)
 	, m_IsOpen(false)

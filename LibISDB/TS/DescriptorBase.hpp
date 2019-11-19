@@ -35,7 +35,7 @@ namespace LibISDB
 	class DescriptorBase
 	{
 	public:
-		DescriptorBase();
+		DescriptorBase() noexcept;
 		virtual ~DescriptorBase() = default;
 
 		virtual void CopyFrom(const DescriptorBase *pSrc);

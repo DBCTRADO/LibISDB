@@ -58,7 +58,7 @@ namespace LibISDB
 			Both       = 0x0003U,
 		};
 
-		FilterGraph();
+		FilterGraph() noexcept;
 
 		bool ConnectFilters(const ConnectionInfo *pConnectionList, size_t ConnectionCount);
 		void DisconnectFilters();

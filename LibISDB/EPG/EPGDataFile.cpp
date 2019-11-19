@@ -380,7 +380,7 @@ void WriteChunkString(FileStream &File, uint8_t Tag, const String &Str)
 
 
 
-EPGDataFile::EPGDataFile()
+EPGDataFile::EPGDataFile() noexcept
 	: m_pEPGDatabase(nullptr)
 	, m_OpenFlags(OpenFlag::None)
 	, m_UpdateCount(0)

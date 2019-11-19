@@ -32,14 +32,14 @@ namespace LibISDB
 {
 
 
-BitRateCalculator::BitRateCalculator()
+BitRateCalculator::BitRateCalculator() noexcept
 	: m_UpdateInterval(TickClock::ClocksPerSec)
 {
 	Reset();
 }
 
 
-void BitRateCalculator::Initialize()
+void BitRateCalculator::Initialize() noexcept
 {
 	m_LastClock = m_Clock.Get();
 	m_Bytes = 0;
@@ -47,7 +47,7 @@ void BitRateCalculator::Initialize()
 }
 
 
-void BitRateCalculator::Reset()
+void BitRateCalculator::Reset() noexcept
 {
 	m_LastClock = 0;
 	m_Bytes = 0;
@@ -79,7 +79,7 @@ bool BitRateCalculator::Update(size_t Bytes)
 }
 
 
-unsigned long BitRateCalculator::GetBitRate() const
+unsigned long BitRateCalculator::GetBitRate() const noexcept
 {
 	if (m_Clock.Get() - m_LastClock >= 2 * m_UpdateInterval)
 		return 0;

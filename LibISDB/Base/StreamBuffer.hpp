@@ -86,7 +86,7 @@ namespace LibISDB
 			PosType m_Pos;
 		};
 
-		StreamBuffer();
+		StreamBuffer() noexcept;
 		~StreamBuffer();
 
 		bool Create(
@@ -110,16 +110,16 @@ namespace LibISDB
 		class QueueBlock
 		{
 		public:
-			QueueBlock();
+			QueueBlock() noexcept;
 			QueueBlock(const QueueBlock &) = delete;
-			QueueBlock(QueueBlock &&Src);
+			QueueBlock(QueueBlock &&Src) noexcept;
 			~QueueBlock();
 
 			QueueBlock & operator = (const QueueBlock &) = delete;
-			QueueBlock & operator = (QueueBlock &&Src);
+			QueueBlock & operator = (QueueBlock &&Src) noexcept;
 
 			bool SetStorage(DataStorage *pStorage);
-			void Free();
+			void Free() noexcept;
 			void Reuse();
 			size_t Write(const void *pData, size_t DataSize);
 			size_t Read(size_t Offset, void *pData, size_t DataSize);

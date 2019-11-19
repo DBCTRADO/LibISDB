@@ -243,7 +243,7 @@ void * TSPacket::Allocate(size_t Size)
 }
 
 
-void TSPacket::Free(void *pBuffer)
+void TSPacket::Free(void *pBuffer) noexcept
 {
 	if (!((pBuffer >= m_Data) && (pBuffer < m_Data + sizeof(m_Data)))) {
 #ifdef LIBISDB_TS_PACKET_PAYLOAD_ALIGN

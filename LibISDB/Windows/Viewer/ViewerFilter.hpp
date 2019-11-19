@@ -103,7 +103,7 @@ namespace LibISDB
 			AudioRenderer,
 		};
 
-		ViewerFilter();
+		ViewerFilter() noexcept;
 		~ViewerFilter();
 
 	// ObjectBase

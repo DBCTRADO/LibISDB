@@ -39,7 +39,7 @@ namespace LibISDB::DirectShow
 		: public ImageMixer_VMR
 	{
 	public:
-		ImageMixer_VMR7(IBaseFilter *pRenderer);
+		ImageMixer_VMR7(IBaseFilter *pRenderer) noexcept;
 		~ImageMixer_VMR7();
 
 		void Clear() override;

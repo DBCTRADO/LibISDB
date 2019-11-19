@@ -34,7 +34,7 @@ namespace LibISDB
 {
 
 
-ViewerEngine::ViewerEngine()
+ViewerEngine::ViewerEngine() noexcept
 	: m_pViewer(nullptr)
 	, m_PlayRadio(true)
 {

@@ -33,7 +33,7 @@ namespace LibISDB
 {
 
 
-TSEngine::TSEngine()
+TSEngine::TSEngine() noexcept
 	: m_IsBuilt(false)
 
 	, m_pSource(nullptr)

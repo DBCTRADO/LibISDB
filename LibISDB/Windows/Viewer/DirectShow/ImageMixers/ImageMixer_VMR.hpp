@@ -39,7 +39,7 @@ namespace LibISDB::DirectShow
 		: public ImageMixer
 	{
 	public:
-		ImageMixer_VMR(IBaseFilter *pRenderer);
+		ImageMixer_VMR(IBaseFilter *pRenderer) noexcept;
 		~ImageMixer_VMR();
 
 		bool SetText(LPCTSTR pszText, int x, int y, HFONT hfont, COLORREF Color, int Opacity) override;

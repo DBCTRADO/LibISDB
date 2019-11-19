@@ -133,7 +133,7 @@ namespace LibISDB
 			Database           = 0x0004U,
 		};
 
-		EPGDatabase();
+		EPGDatabase() noexcept;
 
 		void Clear();
 		int GetServiceCount() const;

@@ -68,7 +68,7 @@ namespace LibISDB
 		: public StreamWriter
 	{
 	public:
-		FileStreamWriter();
+		FileStreamWriter() noexcept;
 		~FileStreamWriter();
 
 	// StreamWriter

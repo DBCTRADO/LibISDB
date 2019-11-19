@@ -120,7 +120,7 @@ namespace LibISDB
 	private:
 	// DataBuffer
 		void * Allocate(size_t Size) override;
-		void Free(void *pBuffer) override;
+		void Free(void *pBuffer) noexcept override;
 		void * ReAllocate(void *pBuffer, size_t Size) override;
 
 #ifdef LIBISDB_TS_PACKET_PAYLOAD_ALIGN

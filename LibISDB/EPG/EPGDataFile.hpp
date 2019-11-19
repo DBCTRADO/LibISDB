@@ -62,7 +62,7 @@ namespace LibISDB
 			Internal,
 		};
 
-		EPGDataFile();
+		EPGDataFile() noexcept;
 
 	// LibISDB::ObjectBase
 		const CharType * GetObjectName() const noexcept { return LIBISDB_STR("EPGDataFile"); }

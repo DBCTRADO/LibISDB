@@ -59,7 +59,7 @@ namespace LibISDB
 			void Reset() noexcept { *this = ServiceSelectInfo(); }
 		};
 
-		TSEngine();
+		TSEngine() noexcept;
 		virtual ~TSEngine();
 
 		bool BuildEngine(const FilterGraph::ConnectionInfo *pConnectionList, size_t ConnectionCount);

@@ -75,7 +75,7 @@ constexpr bool IsAdditionalHeaderStreamID(uint8_t ID)
 
 
 
-PESPacket::PESPacket()
+PESPacket::PESPacket() noexcept
 	: m_Header()
 {
 }

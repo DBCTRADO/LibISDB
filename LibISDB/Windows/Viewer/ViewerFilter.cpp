@@ -146,7 +146,7 @@ HRESULT SetVideoMediaType(CMediaType *pMediaType, BYTE VideoStreamType, int Widt
 
 
 
-ViewerFilter::ViewerFilter()
+ViewerFilter::ViewerFilter() noexcept
 	: m_IsOpen(false)
 
 	, m_pVideoParser(nullptr)

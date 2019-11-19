@@ -53,7 +53,7 @@ namespace LibISDB::DirectShow
 			bool bEnableDXVA2 = true;
 		};
 
-		KnownDecoderManager();
+		KnownDecoderManager() noexcept;
 		~KnownDecoderManager();
 
 		HRESULT CreateInstance(const GUID &MediaSubType, IBaseFilter **ppFilter);

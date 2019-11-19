@@ -39,7 +39,7 @@ DataBuffer::DataBuffer(const DataBuffer &Src)
 }
 
 
-DataBuffer::DataBuffer(DataBuffer &&Src)
+DataBuffer::DataBuffer(DataBuffer &&Src) noexcept
 {
 	*this = std::move(Src);
 }
@@ -80,7 +80,7 @@ DataBuffer & DataBuffer::operator = (const DataBuffer &Src)
 }
 
 
-DataBuffer & DataBuffer::operator = (DataBuffer &&Src)
+DataBuffer & DataBuffer::operator = (DataBuffer &&Src) noexcept
 {
 	if (&Src != this) {
 		FreeBuffer();
@@ -105,13 +105,13 @@ bool DataBuffer::operator == (const DataBuffer &rhs) const noexcept
 }
 
 
-uint8_t * DataBuffer::GetData()
+uint8_t * DataBuffer::GetData() noexcept
 {
 	return (m_DataSize > 0) ? m_pData : nullptr;
 }
 
 
-const uint8_t * DataBuffer::GetData() const
+const uint8_t * DataBuffer::GetData() const noexcept
 {
 	return (m_DataSize > 0) ? m_pData : nullptr;
 }
@@ -274,13 +274,13 @@ size_t DataBuffer::SetSize(size_t Size, uint8_t Filler)
 }
 
 
-void DataBuffer::ClearSize()
+void DataBuffer::ClearSize() noexcept
 {
 	m_DataSize = 0;
 }
 
 
-void DataBuffer::FreeBuffer()
+void DataBuffer::FreeBuffer() noexcept
 {
 	m_DataSize = 0;
 	m_BufferSize = 0;
@@ -297,7 +297,7 @@ void * DataBuffer::Allocate(size_t Size)
 }
 
 
-void DataBuffer::Free(void *pBuffer)
+void DataBuffer::Free(void *pBuffer) noexcept
 {
 	std::free(pBuffer);
 }

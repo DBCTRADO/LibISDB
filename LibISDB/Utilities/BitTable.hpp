@@ -54,7 +54,7 @@ namespace LibISDB
 			*this = Src;
 		}
 
-		BitTable(BitTable &&Src)
+		BitTable(BitTable &&Src) noexcept
 		{
 			*this = std::move(Src);
 		}
@@ -69,7 +69,7 @@ namespace LibISDB
 			return *this;
 		}
 
-		BitTable & operator = (BitTable &&rhs)
+		BitTable & operator = (BitTable &&rhs) noexcept
 		{
 			if (&rhs != this) {
 				m_Size = rhs.m_Size;
@@ -88,7 +88,7 @@ namespace LibISDB
 			m_Size = Size;
 		}
 
-		void Clear()
+		void Clear() noexcept
 		{
 			m_Size = 0;
 			m_Table.reset();
@@ -104,7 +104,7 @@ namespace LibISDB
 				return ((m_Table[Index >> 3] >> (Index & 0x07)) & 1) != 0;
 		}
 
-		void Set() { Fill(true); }
+		void Set() noexcept { Fill(true); }
 
 		void Set(size_t Index)
 		{
@@ -116,7 +116,7 @@ namespace LibISDB
 				m_Table[Index >> 3] |= 1 << (Index & 0x07);
 		}
 
-		void Reset() { Fill(false); }
+		void Reset() noexcept { Fill(false); }
 
 		void Reset(size_t Index)
 		{
@@ -129,7 +129,7 @@ namespace LibISDB
 		}
 
 	private:
-		void Fill(bool Bit)
+		void Fill(bool Bit) noexcept
 		{
 			if (m_Size <= ScalarBits)
 				m_Bits = Bit ? ~(ScalarType)0 : (ScalarType)0;

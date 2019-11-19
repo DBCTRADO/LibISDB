@@ -62,7 +62,7 @@ bool MemoryDataStorage::Allocate(SizeType Size)
 }
 
 
-void MemoryDataStorage::Free()
+void MemoryDataStorage::Free() noexcept
 {
 	m_Buffer.FreeBuffer();
 }
@@ -138,7 +138,7 @@ bool StreamDataStorage::Allocate(SizeType Size)
 }
 
 
-void StreamDataStorage::Free()
+void StreamDataStorage::Free() noexcept
 {
 	m_Stream.reset();
 	m_Capacity = 0;
@@ -226,7 +226,7 @@ bool FileDataStorage::Allocate(SizeType Size)
 }
 
 
-void FileDataStorage::Free()
+void FileDataStorage::Free() noexcept
 {
 	if (m_Stream) {
 		m_Stream->Close();

@@ -51,7 +51,7 @@ namespace LibISDB
 			std::string message(int ev) const override;
 		};
 
-		EDCBPluginWriter();
+		EDCBPluginWriter() noexcept;
 		~EDCBPluginWriter();
 
 		bool Load(const CStringView &FileName);

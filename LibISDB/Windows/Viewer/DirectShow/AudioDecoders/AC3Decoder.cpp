@@ -61,7 +61,7 @@ inline int16_t SampleToInt16(float Sample)
 
 
 
-AC3Decoder::AC3Decoder()
+AC3Decoder::AC3Decoder() noexcept
 	: m_pA52State(nullptr)
 	, m_DecodeError(false)
 {

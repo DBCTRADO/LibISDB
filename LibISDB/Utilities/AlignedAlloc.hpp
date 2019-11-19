@@ -31,9 +31,9 @@
 namespace LibISDB
 {
 
-	[[nodiscard]] void * AlignedAlloc(size_t Size, size_t Align, size_t Offset = 0);
-	[[nodiscard]] void * AlignedRealloc(void *pBuffer, size_t Size, size_t Align, size_t Offset = 0);
-	void AlignedFree(void *pBuffer);
+	[[nodiscard]] void * AlignedAlloc(size_t Size, size_t Align, size_t Offset = 0) noexcept;
+	[[nodiscard]] void * AlignedRealloc(void *pBuffer, size_t Size, size_t Align, size_t Offset = 0) noexcept;
+	void AlignedFree(void *pBuffer) noexcept;
 
 }	// namespace LibISDB
 

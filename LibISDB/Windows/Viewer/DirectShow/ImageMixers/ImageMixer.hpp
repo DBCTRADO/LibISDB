@@ -38,7 +38,7 @@ namespace LibISDB::DirectShow
 	class ImageMixer
 	{
 	public:
-		ImageMixer(IBaseFilter *pRenderer);
+		ImageMixer(IBaseFilter *pRenderer) noexcept;
 		virtual ~ImageMixer() = default;
 
 		virtual void Clear() = 0;

@@ -128,7 +128,7 @@ namespace LibISDB::DirectShow
 			OneSeg    = 0x0004U,
 		};
 
-		VideoParser();
+		VideoParser() noexcept;
 		virtual ~VideoParser();
 
 		bool GetVideoInfo(VideoInfo *pInfo) const;

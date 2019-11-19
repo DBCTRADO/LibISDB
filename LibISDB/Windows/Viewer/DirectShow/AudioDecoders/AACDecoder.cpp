@@ -43,7 +43,7 @@ namespace LibISDB::DirectShow
 {
 
 
-AACDecoder::AACDecoder()
+AACDecoder::AACDecoder() noexcept
 	: m_ADTSParser(nullptr)
 	, m_hDecoder(nullptr)
 	, m_InitRequest(false)
