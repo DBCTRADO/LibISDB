@@ -142,7 +142,7 @@ bool EDCBPluginWriter::Open(const CStringView &FileName, OpenFlag Flags)
 	m_IsOpen = true;
 
 	WCHAR ActualPath[MAX_PATH];
-	DWORD PathLength = static_cast<DWORD>(CountOf(ActualPath));
+	DWORD PathLength = static_cast<DWORD>(std::size(ActualPath));
 	if (m_pGetSaveFilePath(m_ID, ActualPath, &PathLength)) {
 		m_hFile = ::CreateFileW(
 			ActualPath,
@@ -214,7 +214,7 @@ bool EDCBPluginWriter::GetFileName(String *pFileName) const
 		return false;
 
 	WCHAR Path[MAX_PATH];
-	DWORD Size = static_cast<DWORD>(CountOf(Path));
+	DWORD Size = static_cast<DWORD>(std::size(Path));
 	if (!m_pGetSaveFilePath(m_ID, Path, &Size) || (Size == 0))
 		return false;
 

@@ -133,7 +133,7 @@ void Thread::SetThreadName(const CharType *pName)
 		pSetThreadDescription(::GetCurrentThread(), pName);
 #else
 		WCHAR Name[256];
-		::MultiByteToWideChar(CP_ACP, 0, pName, -1, Name, (int)CountOf(Name));
+		::MultiByteToWideChar(CP_ACP, 0, pName, -1, Name, (int)std::size(Name));
 		pSetThreadDescription(::GetCurrentThread(), Name);
 #endif
 		return;

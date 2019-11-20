@@ -278,8 +278,6 @@ namespace LibISDB
 	typedef std::basic_string_view<CharType> StringView;
 	typedef basic_cstring_view<CharType> CStringView;
 
-	template<typename T, size_t N> constexpr size_t CountOf(const T (&a)[N]) { return N; }
-
 }	// namespace LibISDB
 
 

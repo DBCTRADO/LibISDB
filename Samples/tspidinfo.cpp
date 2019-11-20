@@ -98,7 +98,7 @@ LibISDB::String PIDInfoEngine::GetPIDDescription(std::uint16_t PID) const
 
 	for (auto &Service : m_ServiceList) {
 		LibISDB::CharType ServiceText[8];
-		LibISDB::StringPrintf(ServiceText, LibISDB::CountOf(ServiceText), LIBISDB_STR("[%04X]"), Service.ServiceID);
+		LibISDB::StringPrintf(ServiceText, std::size(ServiceText), LIBISDB_STR("[%04X]"), Service.ServiceID);
 
 		for (std::uint16_t PMT : Service.PMTPID) {
 			if (PMT == PID) {

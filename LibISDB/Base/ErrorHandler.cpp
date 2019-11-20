@@ -293,7 +293,7 @@ bool ErrorHandler::SetErrorSystemMessageByWin32ErrorCode(uint32_t ErrorCode) noe
 	if (::FormatMessage(
 			FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr,
 			ErrorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-			Text, static_cast<DWORD>(CountOf(Text)), nullptr) <= 0) {
+			Text, static_cast<DWORD>(std::size(Text)), nullptr) <= 0) {
 		m_ErrorDescription.SetSystemMessage(nullptr);
 		return false;
 	}
@@ -328,8 +328,8 @@ std::string ErrorCategory_HRESULT::message(int ev) const
 	if (::FormatMessageA(
 			FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr,
 			ev, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-			szText, (DWORD)CountOf(szText), nullptr) <= 0) {
-		StringPrintf(szText, CountOf(szText), "HRESULT %08x", ev);
+			szText, (DWORD)std::size(szText), nullptr) <= 0) {
+		StringPrintf(szText, std::size(szText), "HRESULT %08x", ev);
 	}
 
 	return std::string(szText);

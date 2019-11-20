@@ -220,7 +220,7 @@ bool EventInfo::GetConcatenatedExtendedText(ReturnArg<String> Text) const
 
 size_t EventInfo::GetConcatenatedExtendedTextLength() const
 {
-	static const size_t NewLineLength = CountOf(LIBISDB_STR(LIBISDB_NEWLINE)) - 1;
+	static const size_t NewLineLength = std::size(LIBISDB_STR(LIBISDB_NEWLINE)) - 1;
 	size_t Length = 0;
 
 	for (auto it = ExtendedText.begin(); it != ExtendedText.end(); ++it) {

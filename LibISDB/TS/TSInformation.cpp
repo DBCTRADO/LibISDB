@@ -269,7 +269,7 @@ bool GetLanguageText_ja(
 	if ((pText == nullptr) || (MaxText < 1))
 		return false;
 
-	for (size_t i = 0; i < CountOf(LanguageList); i++) {
+	for (size_t i = 0; i < std::size(LanguageList); i++) {
 		if (LanguageList[i].LanguageCode == LanguageCode) {
 			const CharType *pLang;
 

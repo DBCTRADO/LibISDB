@@ -64,7 +64,7 @@ void DebugTraceV(TraceType Type, const CharType *pFormat, std::va_list Args)
 		Type == TraceType::Warning ? LIBISDB_STR("[Warning] ") :
 		Type == TraceType::Error   ? LIBISDB_STR("[Error] ") :
 		LIBISDB_STR(""));
-	StringPrintfV(Buffer + Length, CountOf(Buffer) - Length, pFormat, Args);
+	StringPrintfV(Buffer + Length, std::size(Buffer) - Length, pFormat, Args);
 	::OutputDebugString(Buffer);
 
 #else
@@ -81,7 +81,7 @@ void DebugTraceV(TraceType Type, const CharType *pFormat, std::va_list Args)
 		Type == TraceType::Error   ? LIBISDB_STR("[Error] ") :
 #endif
 		LIBISDB_STR(""));
-	StringPrintfV(Buffer + Length, CountOf(Buffer) - Length, pFormat, Args);
+	StringPrintfV(Buffer + Length, std::size(Buffer) - Length, pFormat, Args);
 
 #ifdef LIBISDB_WCHAR
 	std::fputws(Buffer, stderr);

@@ -734,7 +734,7 @@ bool ViewerFilter::OpenViewer(const OpenSettings &Settings)
 		if (Error.GetErrorCode().value() != 0) {
 			TCHAR szText[MAX_ERROR_TEXT_LEN];
 
-			if (::AMGetErrorText(Error.GetErrorCode().value(), szText, (DWORD)CountOf(szText)) > 0)
+			if (::AMGetErrorText(Error.GetErrorCode().value(), szText, (DWORD)std::size(szText)) > 0)
 				SetErrorSystemMessage(szText);
 		}
 

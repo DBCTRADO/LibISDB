@@ -479,7 +479,7 @@ void ARIBStringDecoder::PutKanjiChar(uint16_t Code, InternalString *pDstString)
 				{0x76, 0x2A}, {0x77, 0x40},
 			};
 
-			for (size_t i = 0; (i < CountOf(Map)) && (Map[i].From <= Second); i++) {
+			for (size_t i = 0; (i < std::size(Map)) && (Map[i].From <= Second); i++) {
 				if (Map[i].From == Second) {
 					AlnumCode = Map[i].To;
 					break;
@@ -516,7 +516,7 @@ void ARIBStringDecoder::PutKanjiChar(uint16_t Code, InternalString *pDstString)
 
 	// Shift_JIS (CP932) -> UTF-16
 	WCHAR Unicode[2];
-	int Length = ::MultiByteToWideChar(932, MB_PRECOMPOSED, ShiftJIS, 2, Unicode, static_cast<int>(CountOf(Unicode)));
+	int Length = ::MultiByteToWideChar(932, MB_PRECOMPOSED, ShiftJIS, 2, Unicode, static_cast<int>(std::size(Unicode)));
 	if (Length > 0)
 		pDstString->append(Unicode, Length);
 	else
@@ -527,7 +527,7 @@ void ARIBStringDecoder::PutKanjiChar(uint16_t Code, InternalString *pDstString)
 #ifdef LIBISDB_ARIB_STR_IS_UTF8
 	// JIS -> UTF-8 漢字コード変換
 	char Buffer[4];
-	size_t Length = JISX0213KanjiToUTF8(1, Code, Buffer, CountOf(Buffer));
+	size_t Length = JISX0213KanjiToUTF8(1, Code, Buffer, std::size(Buffer));
 	if (Length > 0)
 		pDstString->append(Buffer, Length);
 	else
@@ -535,7 +535,7 @@ void ARIBStringDecoder::PutKanjiChar(uint16_t Code, InternalString *pDstString)
 #else
 	// JIS -> wchar_t 漢字コード変換
 	wchar_t Buffer[2];
-	size_t Length = JISX0213KanjiToWChar(1, Code, Buffer, CountOf(Buffer));
+	size_t Length = JISX0213KanjiToWChar(1, Code, Buffer, std::size(Buffer));
 	if (Length > 0)
 		pDstString->append(Buffer, Length);
 	else
@@ -551,7 +551,7 @@ void ARIBStringDecoder::PutKanjiPlane2Char(uint16_t Code, InternalString *pDstSt
 #ifdef LIBISDB_ARIB_STR_IS_UTF8
 	// JIS X 0213 漢字集合2面 -> UTF-8
 	char Buffer[4];
-	size_t Length = JISX0213KanjiToUTF8(2, Code, Buffer, CountOf(Buffer));
+	size_t Length = JISX0213KanjiToUTF8(2, Code, Buffer, std::size(Buffer));
 	if (Length > 0)
 		pDstString->append(Buffer, Length);
 	else
@@ -559,7 +559,7 @@ void ARIBStringDecoder::PutKanjiPlane2Char(uint16_t Code, InternalString *pDstSt
 #else
 	// JIS X 0213 漢字集合2面 -> wchar_t
 	wchar_t Buffer[2];
-	size_t Length = JISX0213KanjiToWChar(2, Code, Buffer, CountOf(Buffer));
+	size_t Length = JISX0213KanjiToWChar(2, Code, Buffer, std::size(Buffer));
 	if (Length > 0)
 		pDstString->append(Buffer, Length);
 	else

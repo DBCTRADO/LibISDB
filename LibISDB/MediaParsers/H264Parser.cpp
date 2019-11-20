@@ -313,7 +313,7 @@ bool H264AccessUnit::GetSAR(ReturnArg<uint16_t> Horizontal, ReturnArg<uint16_t> 
 		return false;
 
 	uint16_t Horz, Vert;
-	if (m_Header.SPS.VUI.AspectRatioIDC < CountOf(SARList)) {
+	if (m_Header.SPS.VUI.AspectRatioIDC < std::size(SARList)) {
 		Horz = SARList[m_Header.SPS.VUI.AspectRatioIDC].Horz;
 		Vert = SARList[m_Header.SPS.VUI.AspectRatioIDC].Vert;
 	} else if (m_Header.SPS.VUI.AspectRatioIDC == 255) {	// Extended_SAR

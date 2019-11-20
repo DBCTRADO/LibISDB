@@ -403,7 +403,7 @@ void StreamSelector::StreamTypeTable::FromStreamFlags(StreamFlag Flags)
 
 	Set();
 
-	for (size_t i = 0; i < CountOf(StreamTypeList); i++) {
+	for (size_t i = 0; i < std::size(StreamTypeList); i++) {
 		if (!(Flags & static_cast<StreamFlag>(1UL << i)))
 			Reset(StreamTypeList[i]);
 	}

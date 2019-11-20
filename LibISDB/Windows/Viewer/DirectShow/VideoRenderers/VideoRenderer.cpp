@@ -541,7 +541,7 @@ LPCTSTR VideoRenderer::EnumRendererName(int Index)
 		TEXT("EVR Custom Presenter"),
 	};
 
-	if (static_cast<unsigned int>(Index) >= CountOf(pszRendererName))
+	if (static_cast<unsigned int>(Index) >= std::size(pszRendererName))
 		return nullptr;
 
 	return pszRendererName[Index];

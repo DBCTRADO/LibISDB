@@ -168,17 +168,17 @@ TEST_CASE("Sort", "[utility][sort]")
 	LibISDB::InsertionSort(list1);
 	CHECK(
 		[&list1]() -> bool {
-			for (int i = 0; i < static_cast<int>(LibISDB::CountOf(list1)); i++) {
+			for (int i = 0; i < static_cast<int>(std::size(list1)); i++) {
 				if (list1[i] != i)
 					return false;
 			}
 			return true;
 		}());
-	LibISDB::InsertionSort(list1, list1 + LibISDB::CountOf(list1), std::greater<int>());
+	LibISDB::InsertionSort(list1, list1 + std::size(list1), std::greater<int>());
 	CHECK(
 		[&list1]() -> bool {
-			for (int i = 0; i < static_cast<int>(LibISDB::CountOf(list1)); i++) {
-				if (list1[i] != static_cast<int>(LibISDB::CountOf(list1)) - 1 - i)
+			for (int i = 0; i < static_cast<int>(std::size(list1)); i++) {
+				if (list1[i] != static_cast<int>(std::size(list1)) - 1 - i)
 					return false;
 			}
 			return true;
@@ -208,7 +208,7 @@ TEST_CASE("Sort", "[utility][sort]")
 	LibISDB::InsertionSort(list2);
 	CHECK((
 		[&list2, &list2_sorted]() -> bool {
-			for (int i = 0; i < static_cast<int>(LibISDB::CountOf(list2)); i++) {
+			for (int i = 0; i < static_cast<int>(std::size(list2)); i++) {
 				if ((list2[i].value != list2_sorted[i].value)
 						|| (list2[i].text != list2_sorted[i].text))
 					return false;
