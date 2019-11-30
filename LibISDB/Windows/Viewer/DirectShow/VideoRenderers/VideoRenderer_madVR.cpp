@@ -27,10 +27,10 @@
 #include "../../../../LibISDBPrivate.hpp"
 #include "../../../../LibISDBWindows.hpp"
 #include "VideoRenderer_madVR.hpp"
+#include <d3d9.h>
+#include <initguid.h>
+#include "../../../../../Thirdparty/madVR/mvrInterfaces.h"
 #include "../../../../Base/DebugDef.hpp"
-
-
-static const CLSID CLSID_madVR = {0xe1a8b82a, 0x32ce, 0x4b0d, {0xbe, 0x0d, 0xaa, 0x68, 0xc7, 0x72, 0xe4, 0x23}};
 
 
 namespace LibISDB::DirectShow
@@ -40,6 +40,55 @@ namespace LibISDB::DirectShow
 VideoRenderer_madVR::VideoRenderer_madVR()
 	: VideoRenderer_Basic(CLSID_madVR, LIBISDB_STR("madVR"), true)
 {
+}
+
+
+COMMemoryPointer<> VideoRenderer_madVR::GetCurrentImage()
+{
+	if (m_Renderer) {
+		COMPointer<IMadVRFrameGrabber> FrameGrabber;
+
+		if (SUCCEEDED(m_Renderer.QueryInterface(&FrameGrabber))) {
+			LPVOID pDIB = nullptr;
+			HRESULT hr = FrameGrabber->GrabFrame(
+				ZOOM_100_PERCENT,
+				0,
+				CHROMA_UPSCALING_USER_SELECTED,
+				IMAGE_DOWNSCALING_USER_SELECTED,
+				IMAGE_UPSCALING_USER_SELECTED,
+				0,
+				&pDIB,
+				nullptr);
+			if (SUCCEEDED(hr) && pDIB != nullptr) {
+				const size_t Size = ::LocalSize(pDIB);
+				if (Size > sizeof(BITMAPINFOHEADER)) {
+#ifdef LIBISDB_ENABLE_TRACE
+					const BITMAPINFOHEADER *pbmih = static_cast<const BITMAPINFOHEADER *>(pDIB);
+					LIBISDB_TRACE(
+						LIBISDB_STR("IMadVRFrameGrabber::GrabFrame() %d x %d (%d)\n"),
+						pbmih->biWidth, pbmih->biHeight, pbmih->biBitCount);
+#endif
+
+					void *pBuffer = ::CoTaskMemAlloc(Size);
+					if (pBuffer != nullptr) {
+						::CopyMemory(pBuffer, pDIB, Size);
+						::LocalFree(pDIB);
+						return COMMemoryPointer<>(static_cast<BYTE *>(pBuffer));
+					}
+				}
+				::LocalFree(pDIB);
+			}
+
+			LIBISDB_TRACE(LIBISDB_STR("IMadVRFrameGrabber::GrabFrame() Failed %x\n"), hr);
+		}
+#ifdef LIBISDB_ENABLE_TRACE
+		else {
+			LIBISDB_TRACE(LIBISDB_STR("No IMadVRFrameGrabber interface\n"));
+		}
+#endif
+	}
+
+	return VideoRenderer_Basic::GetCurrentImage();
 }
 
 
