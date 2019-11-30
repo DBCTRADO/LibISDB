@@ -32,41 +32,16 @@
 #include "VideoRenderer_VMR9.hpp"
 #include "VideoRenderer_VMR9Renderless.hpp"
 #include "VideoRenderer_EVR.hpp"
+#include "VideoRenderer_OverlayMixer.hpp"
+#include "VideoRenderer_madVR.hpp"
 #include "EVRCustomPresenter/VideoRenderer_EVRCustomPresenter.hpp"
 #include "../DirectShowUtilities.hpp"
 #include "../../../../Utilities/StringUtilities.hpp"
 #include "../../../../Base/DebugDef.hpp"
 
 
-static const CLSID CLSID_madVR = {0xe1a8b82a, 0x32ce, 0x4b0d, {0xbe, 0x0d, 0xaa, 0x68, 0xc7, 0x72, 0xe4, 0x23}};
-
-
 namespace LibISDB::DirectShow
 {
-
-
-class VideoRenderer_Default : public VideoRenderer
-{
-public:
-	RendererType GetRendererType() const noexcept { return RendererType::Default; }
-	bool Initialize(
-		IGraphBuilder *pGraphBuilder, IPin *pInputPin,
-		HWND hwndRender, HWND hwndMessageDrain) override;
-	bool Finalize() override;
-	bool SetVideoPosition(
-		int SourceWidth, int SourceHeight, const RECT &SourceRect,
-		const RECT &DestRect, const RECT &WindowRect) override;
-	bool GetDestPosition(ReturnArg<RECT> Rect) override;
-	COMMemoryPointer<> GetCurrentImage() override;
-	bool ShowCursor(bool Show) override;
-	bool SetVisible(bool Visible) override;
-
-protected:
-	bool InitializeBasicVideo(IGraphBuilder *pGraphBuilder, HWND hwndRender, HWND hwndMessageDrain);
-
-	COMPointer<IVideoWindow> m_VideoWindow;
-	COMPointer<IBasicVideo> m_BasicVideo;
-};
 
 
 bool VideoRenderer_Default::InitializeBasicVideo(
@@ -230,31 +205,9 @@ bool VideoRenderer_Default::SetVisible(bool Visible)
 
 
 
-class VideoRenderer_Basic : public VideoRenderer_Default
-{
-public:
-	VideoRenderer_Basic(RendererType Type, const CLSID &clsid, LPCTSTR pszName, bool NoSourcePosition = false) noexcept;
-
-	RendererType GetRendererType() const noexcept { return m_RendererType; }
-	bool Initialize(
-		IGraphBuilder *pGraphBuilder, IPin *pInputPin,
-		HWND hwndRender, HWND hwndMessageDrain) override;
-	bool SetVideoPosition(
-		int SourceWidth, int SourceHeight, const RECT &SourceRect,
-		const RECT &DestRect, const RECT &WindowRect) override;
-
-protected:
-	RendererType m_RendererType;
-	CLSID m_clsidRenderer;
-	String m_RendererName;
-	bool m_NoSourcePosition;
-};
-
-
 VideoRenderer_Basic::VideoRenderer_Basic(
-	RendererType Type, const CLSID &clsid, const CharType *pszName, bool NoSourcePosition) noexcept
-	: m_RendererType(Type)
-	, m_clsidRenderer(clsid)
+	const CLSID &clsid, const CharType *pszName, bool NoSourcePosition) noexcept
+	: m_clsidRenderer(clsid)
 	, m_RendererName(pszName)
 	, m_NoSourcePosition(NoSourcePosition)
 {
@@ -368,91 +321,6 @@ bool VideoRenderer_Basic::SetVideoPosition(
 
 
 
-class VideoRenderer_OverlayMixer : public VideoRenderer_Default
-{
-public:
-	RendererType GetRendererType() const noexcept { return RendererType::OverlayMixer; }
-	bool Initialize(
-		IGraphBuilder *pGraphBuilder, IPin *pInputPin,
-		HWND hwndRender, HWND hwndMessageDrain) override;
-	bool Finalize() override;
-
-private:
-	COMPointer<ICaptureGraphBuilder2> m_CaptureGraphBuilder2;
-};
-
-
-bool VideoRenderer_OverlayMixer::Initialize(
-	IGraphBuilder *pGraphBuilder, IPin *pInputPin, HWND hwndRender, HWND hwndMessageDrain)
-{
-	if (pGraphBuilder == nullptr) {
-		SetHRESULTError(E_POINTER);
-		return false;
-	}
-
-	HRESULT hr;
-
-	hr = ::CoCreateInstance(
-		CLSID_OverlayMixer, nullptr, CLSCTX_INPROC_SERVER,
-		IID_PPV_ARGS(m_Renderer.GetPP()));
-	if (FAILED(hr)) {
-		SetHRESULTError(hr, LIBISDB_STR("Overlay Mixer のインスタンスを作成できません。"));
-		return false;
-	}
-	hr = pGraphBuilder->AddFilter(m_Renderer.Get(), L"Overlay Mixer");
-	if (FAILED(hr)) {
-		m_Renderer.Release();
-		SetHRESULTError(hr, LIBISDB_STR("OverlayMixer をフィルタグラフに追加できません。"));
-		return false;
-	}
-
-	hr = ::CoCreateInstance(
-		CLSID_CaptureGraphBuilder2, nullptr, CLSCTX_INPROC_SERVER,
-		IID_PPV_ARGS(m_CaptureGraphBuilder2.GetPP()));
-	if (FAILED(hr)) {
-		m_Renderer.Release();
-		SetHRESULTError(hr, LIBISDB_STR("Capture Graph Builder2 のインスタンスを作成できません。"));
-		return false;
-	}
-	hr = m_CaptureGraphBuilder2->SetFiltergraph(pGraphBuilder);
-	if (FAILED(hr)) {
-		m_Renderer.Release();
-		m_CaptureGraphBuilder2.Release();
-		SetHRESULTError(hr, LIBISDB_STR("Capture Graph Builder2 にフィルタグラフを設定できません。"));
-		return false;
-	}
-	hr = m_CaptureGraphBuilder2->RenderStream(nullptr, nullptr, pInputPin, m_Renderer.Get(), nullptr);
-	if (FAILED(hr)) {
-		m_Renderer.Release();
-		m_CaptureGraphBuilder2.Release();
-		SetHRESULTError(hr, LIBISDB_STR("映像レンダラを構築できません。"));
-		return false;
-	}
-
-	if (!InitializeBasicVideo(pGraphBuilder, hwndRender, hwndMessageDrain)) {
-		m_Renderer.Release();
-		m_CaptureGraphBuilder2.Release();
-		return false;
-	}
-
-	ResetError();
-
-	return true;
-}
-
-
-bool VideoRenderer_OverlayMixer::Finalize()
-{
-	VideoRenderer_Default::Finalize();
-
-	m_CaptureGraphBuilder2.Release();
-
-	return true;
-}
-
-
-
-
 VideoRenderer::VideoRenderer() noexcept
 	: m_hwndRender(nullptr)
 	, m_Crop1088To1080(true)
@@ -517,7 +385,7 @@ VideoRenderer * VideoRenderer::CreateRenderer(RendererType Type)
 		return new VideoRenderer_OverlayMixer;
 
 	case RendererType::madVR:
-		return new VideoRenderer_Basic(RendererType::madVR, CLSID_madVR, LIBISDB_STR("madVR"), true);
+		return new VideoRenderer_madVR;
 
 	case RendererType::EVRCustomPresenter:
 		return new VideoRenderer_EVRCustomPresenter;
@@ -595,7 +463,7 @@ bool VideoRenderer::IsAvailable(RendererType Type)
 		return TestCreateInstance(CLSID_OverlayMixer);
 
 	case RendererType::madVR:
-		return TestCreateInstance(CLSID_madVR);
+		return TestCreateInstance(VideoRenderer_madVR::GetCLSID());
 	}
 
 	return false;

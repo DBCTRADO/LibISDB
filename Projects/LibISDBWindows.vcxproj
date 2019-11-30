@@ -62,6 +62,8 @@
     <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\VideoRenderer_EVRCustomPresenter.hpp" />
     <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer.hpp" />
     <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_EVR.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_madVR.hpp" />
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_OverlayMixer.hpp" />
     <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR7.hpp" />
     <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR7Renderless.hpp" />
     <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR9.hpp" />
@@ -101,6 +103,8 @@
     <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\VideoRenderer_EVRCustomPresenter.cpp" />
     <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer.cpp" />
     <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_EVR.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_madVR.cpp" />
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_OverlayMixer.cpp" />
     <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR7.cpp" />
     <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR7Renderless.cpp" />
     <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_VMR9.cpp" />

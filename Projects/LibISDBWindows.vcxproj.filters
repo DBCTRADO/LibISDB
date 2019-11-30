@@ -225,6 +225,12 @@
     <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\DirectShowFilterGraph.hpp">
       <Filter>Viewer\DirectShow\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_madVR.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_OverlayMixer.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\LibISDB\Windows\Base\BonDriver.cpp">
@@ -337,6 +343,12 @@
     </ClCompile>
     <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\DirectShowFilterGraph.cpp">
       <Filter>Viewer\DirectShow\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_madVR.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_OverlayMixer.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

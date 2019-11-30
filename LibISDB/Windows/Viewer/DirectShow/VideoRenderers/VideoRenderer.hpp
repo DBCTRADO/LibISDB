@@ -92,6 +92,51 @@ namespace LibISDB::DirectShow
 		bool m_ClipToDevice;
 	};
 
+	/** デフォルト映像レンダラクラス */
+	class VideoRenderer_Default
+		: public VideoRenderer
+	{
+	public:
+		RendererType GetRendererType() const noexcept { return RendererType::Default; }
+		bool Initialize(
+			IGraphBuilder *pGraphBuilder, IPin *pInputPin,
+			HWND hwndRender, HWND hwndMessageDrain) override;
+		bool Finalize() override;
+		bool SetVideoPosition(
+			int SourceWidth, int SourceHeight, const RECT &SourceRect,
+			const RECT &DestRect, const RECT &WindowRect) override;
+		bool GetDestPosition(ReturnArg<RECT> Rect) override;
+		COMMemoryPointer<> GetCurrentImage() override;
+		bool ShowCursor(bool Show) override;
+		bool SetVisible(bool Visible) override;
+
+	protected:
+		bool InitializeBasicVideo(IGraphBuilder *pGraphBuilder, HWND hwndRender, HWND hwndMessageDrain);
+
+		COMPointer<IVideoWindow> m_VideoWindow;
+		COMPointer<IBasicVideo> m_BasicVideo;
+	};
+
+	/** 映像レンダラ標準実装クラス */
+	class VideoRenderer_Basic
+		: public VideoRenderer_Default
+	{
+	public:
+		VideoRenderer_Basic(const CLSID &clsid, LPCTSTR pszName, bool NoSourcePosition = false) noexcept;
+
+		bool Initialize(
+			IGraphBuilder *pGraphBuilder, IPin *pInputPin,
+			HWND hwndRender, HWND hwndMessageDrain) override;
+		bool SetVideoPosition(
+			int SourceWidth, int SourceHeight, const RECT &SourceRect,
+			const RECT &DestRect, const RECT &WindowRect) override;
+
+	protected:
+		CLSID m_clsidRenderer;
+		String m_RendererName;
+		bool m_NoSourcePosition;
+	};
+
 }	// namespace LibISDB::DirectShow
 
 
