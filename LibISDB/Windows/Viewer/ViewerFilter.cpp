@@ -36,6 +36,9 @@
 #include <dvdmedia.h>
 #include "../../Base/DebugDef.hpp"
 
+// LAV Video Decoder で一度再生を停止すると再開が正常に行われない現象の回避策を行う
+#define LAV_VIDEO_DECODER_WORKAROUND
+
 
 //const CLSID CLSID_NullRenderer = {0xc1f400a4, 0x3f08, 0x11d3, {0x9f, 0x0b, 0x00, 0x60, 0x08, 0x03, 0x9e, 0x37}};
 EXTERN_C const CLSID CLSID_NullRenderer;
@@ -139,6 +142,53 @@ HRESULT SetVideoMediaType(CMediaType *pMediaType, BYTE VideoStreamType, int Widt
 
 	return S_OK;
 }
+
+
+#ifdef LAV_VIDEO_DECODER_WORKAROUND
+
+
+interface __declspec(uuid("8B81E022-52C7-4B89-9F11-ACFD063AABB4")) IPinSegmentEx : public IUnknown
+{
+	virtual HRESULT STDMETHODCALLTYPE EndOfSegment(void) = 0;
+};
+
+
+bool IsLAVVideoDecoderName(const String &Name)
+{
+	return StringCompareI(Name.c_str(), LIBISDB_STR("LAV Video Decoder")) == 0;
+}
+
+
+void LAVVideoDecoder_NotifyEndOfSegment(COMPointer<IBaseFilter> &Filter, const String &Name)
+{
+	if (Filter && IsLAVVideoDecoderName(Name)) {
+		IPin *pPin = DirectShow::GetFilterPin(Filter.Get(), PINDIR_INPUT);
+		if (pPin != nullptr) {
+			IPinSegmentEx *pPinSegmentEx;
+			if (SUCCEEDED(pPin->QueryInterface(IID_PPV_ARGS(&pPinSegmentEx)))) {
+				LIBISDB_TRACE(LIBISDB_STR("Call IPinSegmentEx::EndOfSegment()\n"));
+				pPinSegmentEx->EndOfSegment();
+				pPinSegmentEx->Release();
+			}
+		}
+	}
+}
+
+
+void LAVVideoDecoder_NotifyNewSegment(COMPointer<IBaseFilter> &Filter, const String &Name)
+{
+	if (Filter && IsLAVVideoDecoderName(Name)) {
+		IPin *pPin = DirectShow::GetFilterPin(Filter.Get(), PINDIR_INPUT);
+		if (pPin != nullptr) {
+			LIBISDB_TRACE(LIBISDB_STR("Call IPin::NewSegment()\n"));
+			pPin->NewSegment(0, 0, 1.0);
+			pPin->Release();
+		}
+	}
+}
+
+
+#endif	// LAV_VIDEO_DECODER_WORKAROUND
 
 
 }	// namespace
@@ -826,6 +876,10 @@ bool ViewerFilter::Play()
 	if (!Lock.TryLock(LOCK_TIMEOUT))
 		return false;
 
+#ifdef LAV_VIDEO_DECODER_WORKAROUND
+	LAVVideoDecoder_NotifyNewSegment(m_VideoDecoderFilter, m_VideoDecoderName);
+#endif
+
 	return FilterGraph::Play();
 }
 
@@ -843,6 +897,10 @@ bool ViewerFilter::Stop()
 		m_SourceFilter->Flush();
 	}
 
+#ifdef LAV_VIDEO_DECODER_WORKAROUND
+	LAVVideoDecoder_NotifyEndOfSegment(m_VideoDecoderFilter, m_VideoDecoderName);
+#endif
+
 	return FilterGraph::Stop();
 }
 
@@ -859,6 +917,10 @@ bool ViewerFilter::Pause()
 		//m_SourceFilter->Reset();
 		m_SourceFilter->Flush();
 	}
+
+#ifdef LAV_VIDEO_DECODER_WORKAROUND
+	LAVVideoDecoder_NotifyEndOfSegment(m_VideoDecoderFilter, m_VideoDecoderName);
+#endif
 
 	return FilterGraph::Pause();
 }
