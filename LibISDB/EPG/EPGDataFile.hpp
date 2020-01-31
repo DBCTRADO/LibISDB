@@ -62,6 +62,36 @@ namespace LibISDB
 			Internal,
 		};
 
+		class SequentialStreamReader
+		{
+		public:
+			SequentialStreamReader(FileStream &File) noexcept : m_File(File), m_Begin(0) {}
+			SequentialStreamReader(const SequentialStreamReader &) = delete;
+			SequentialStreamReader & operator = (const SequentialStreamReader &) = delete;
+			size_t Read(void *pBuff, size_t Size);
+			void SeekForward(size_t Size);
+		private:
+			static constexpr size_t MAX_BUFF_SIZE = 4096;
+			FileStream &m_File;
+			std::vector<uint8_t> m_Buff;
+			size_t m_Begin;
+		};
+
+		class SequentialStreamWriter
+		{
+		public:
+			SequentialStreamWriter(FileStream &File) noexcept : m_File(File) {}
+			SequentialStreamWriter(const SequentialStreamWriter &) = delete;
+			SequentialStreamWriter & operator = (const SequentialStreamWriter &) = delete;
+			~SequentialStreamWriter() noexcept;
+			void Write(const void *pBuff, size_t Size);
+			void Flush();
+		private:
+			static constexpr size_t MAX_BUFF_SIZE = 4096;
+			FileStream &m_File;
+			std::vector<uint8_t> m_Buff;
+		};
+
 		EPGDataFile() noexcept;
 
 	// LibISDB::ObjectBase
@@ -86,12 +116,12 @@ namespace LibISDB
 			EPGDatabase::EventList EventList;
 		};
 
-		void LoadService(FileStream &File, ServiceInfo *pServiceInfo);
-		void LoadEvent(FileStream &File, const ServiceInfo *pServiceInfo, EventInfo *pEvent);
+		void LoadService(SequentialStreamReader &File, ServiceInfo *pServiceInfo);
+		void LoadEvent(SequentialStreamReader &File, const ServiceInfo *pServiceInfo, EventInfo *pEvent);
 		void SaveService(
-			FileStream &File, const EPGDatabase::ServiceInfo &ServiceInfo,
+			SequentialStreamWriter &File, const EPGDatabase::ServiceInfo &ServiceInfo,
 			uint16_t EventCount, const DateTime &EarliestTime);
-		void SaveEvent(FileStream &File, const EventInfo &Event);
+		void SaveEvent(SequentialStreamWriter &File, const EventInfo &Event);
 		void ExceptionLog(Exception Code);
 
 		EPGDatabase *m_pEPGDatabase;

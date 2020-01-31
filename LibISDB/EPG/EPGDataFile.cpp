@@ -273,7 +273,7 @@ LIBISDB_PRAGMA_PACK_POP
 constexpr uint16_t MAX_EPG_TEXT_LENGTH = 4096;
 
 
-void ReadData(FileStream &File, void *pData, size_t DataSize, size_t *pSizeLimit)
+void ReadData(EPGDataFile::SequentialStreamReader &File, void *pData, size_t DataSize, size_t *pSizeLimit)
 {
 	if (DataSize > *pSizeLimit)
 		throw EPGDataFile::Exception::FormatError;
@@ -283,20 +283,20 @@ void ReadData(FileStream &File, void *pData, size_t DataSize, size_t *pSizeLimit
 }
 
 
-template<typename T> void ReadData(FileStream &File, T &Data, size_t *pSizeLimit)
+template<typename T> void ReadData(EPGDataFile::SequentialStreamReader &File, T &Data, size_t *pSizeLimit)
 {
 	ReadData(File, &Data, sizeof(Data), pSizeLimit);
 }
 
 
-void ReadChunkHeader(FileStream &File, EPGData::ChunkHeader *pHeader, size_t *pSizeLimit)
+void ReadChunkHeader(EPGDataFile::SequentialStreamReader &File, EPGData::ChunkHeader *pHeader, size_t *pSizeLimit)
 {
 	ReadData(File, pHeader->Tag, pSizeLimit);
 	ReadData(File, pHeader->Size, pSizeLimit);
 }
 
 
-void ReadString(FileStream &File, String *pString, size_t *pSizeLimit)
+void ReadString(EPGDataFile::SequentialStreamReader &File, String *pString, size_t *pSizeLimit)
 {
 	uint16_t Length;
 
@@ -313,20 +313,19 @@ void ReadString(FileStream &File, String *pString, size_t *pSizeLimit)
 }
 
 
-void WriteData(FileStream &File, const void *pData, size_t DataSize)
+void WriteData(EPGDataFile::SequentialStreamWriter &File, const void *pData, size_t DataSize)
 {
-	if (File.Write(pData, DataSize) != DataSize)
-		throw EPGDataFile::Exception::Write;
+	File.Write(pData, DataSize);
 }
 
 
-template<typename T> void WriteData(FileStream &File, const T &Data)
+template<typename T> void WriteData(EPGDataFile::SequentialStreamWriter &File, const T &Data)
 {
 	WriteData(File, &Data, sizeof(Data));
 }
 
 
-void WriteChunkHeader(FileStream &File, uint8_t Tag, size_t Size = 0)
+void WriteChunkHeader(EPGDataFile::SequentialStreamWriter &File, uint8_t Tag, size_t Size = 0)
 {
 	LIBISDB_ASSERT(Size <= 0xFFFF);
 	if (Size > 0xFFFF)
@@ -337,14 +336,14 @@ void WriteChunkHeader(FileStream &File, uint8_t Tag, size_t Size = 0)
 }
 
 
-void WriteChunk(FileStream &File, uint8_t Tag, const void *pData, size_t Size)
+void WriteChunk(EPGDataFile::SequentialStreamWriter &File, uint8_t Tag, const void *pData, size_t Size)
 {
 	WriteChunkHeader(File, Tag, Size);
 	WriteData(File, pData, Size);
 }
 
 
-template<typename T> void WriteChunk(FileStream &File, uint8_t Tag, const T &Data)
+template<typename T> void WriteChunk(EPGDataFile::SequentialStreamWriter &File, uint8_t Tag, const T &Data)
 {
 	static_assert(sizeof(Data) <= 0xFFFF);
 
@@ -352,7 +351,7 @@ template<typename T> void WriteChunk(FileStream &File, uint8_t Tag, const T &Dat
 }
 
 
-void WriteString(FileStream &File, const String &Str)
+void WriteString(EPGDataFile::SequentialStreamWriter &File, const String &Str)
 {
 	const uint16_t Length = static_cast<uint16_t>(Str.length());
 	if (Length > MAX_EPG_TEXT_LENGTH)
@@ -365,7 +364,7 @@ void WriteString(FileStream &File, const String &Str)
 }
 
 
-void WriteChunkString(FileStream &File, uint8_t Tag, const String &Str)
+void WriteChunkString(EPGDataFile::SequentialStreamWriter &File, uint8_t Tag, const String &Str)
 {
 	if (Str.length() > MAX_EPG_TEXT_LENGTH)
 		throw EPGDataFile::Exception::FormatError;
@@ -378,6 +377,87 @@ void WriteChunkString(FileStream &File, uint8_t Tag, const String &Str)
 }	// namespace
 
 
+
+
+size_t EPGDataFile::SequentialStreamReader::Read(void *pBuff, size_t Size)
+{
+	if (Size == 0)
+		return 0;
+	if (pBuff == nullptr)
+		throw Exception::Read;
+
+	for (size_t Count = 0;;) {
+		size_t Remain = m_Buff.size() - m_Begin;
+		if (Remain != 0) {
+			if (Remain >= Size - Count) {
+				std::memcpy(static_cast<uint8_t*>(pBuff) + Count, m_Buff.data() + m_Begin, Size - Count);
+				m_Begin += Size - Count;
+				return Size;
+			}
+			std::memcpy(static_cast<uint8_t*>(pBuff) + Count, m_Buff.data() + m_Begin, Remain);
+			Count += Remain;
+		}
+		m_Begin = 0;
+		m_Buff.resize(MAX_BUFF_SIZE);
+		m_Buff.resize(m_File.Read(m_Buff.data(), m_Buff.size()));
+		if (m_Buff.empty())
+			return Count;
+	}
+}
+
+
+void EPGDataFile::SequentialStreamReader::SeekForward(size_t Size)
+{
+	size_t Remain = m_Buff.size() - m_Begin;
+	if (Remain >= Size) {
+		m_Begin += Size;
+		return;
+	}
+	m_Begin = m_Buff.size();
+	if (!m_File.SetPos(Size - Remain, Stream::SetPosType::Current))
+		throw Exception::Seek;
+}
+
+
+EPGDataFile::SequentialStreamWriter::~SequentialStreamWriter() noexcept
+{
+	try {
+		Flush();
+	} catch (...) {
+	}
+}
+
+
+void EPGDataFile::SequentialStreamWriter::Write(const void *pBuff, size_t Size)
+{
+	if (Size == 0)
+		return;
+	if (pBuff == nullptr)
+		throw Exception::Write;
+
+	for (size_t Count = 0;;) {
+		size_t Remain = MAX_BUFF_SIZE - m_Buff.size();
+		if (Remain != 0) {
+			if (Remain >= Size - Count) {
+				m_Buff.insert(m_Buff.end(), static_cast<const uint8_t*>(pBuff) + Count, static_cast<const uint8_t*>(pBuff) + Size);
+				return;
+			}
+			m_Buff.insert(m_Buff.end(), static_cast<const uint8_t*>(pBuff) + Count, static_cast<const uint8_t*>(pBuff) + Count + Remain);
+			Count += Remain;
+		}
+		Flush();
+	}
+}
+
+
+void EPGDataFile::SequentialStreamWriter::Flush()
+{
+	if (!m_Buff.empty()) {
+		if (m_File.Write(m_Buff.data(), m_Buff.size()) != m_Buff.size())
+			throw Exception::Write;
+		m_Buff.clear();
+	}
+}
 
 
 EPGDataFile::EPGDataFile() noexcept
@@ -461,24 +541,22 @@ bool EPGDataFile::Load()
 	m_UpdateCount = FileHeader.UpdateCount;
 
 	try {
+		SequentialStreamReader Reader(File);
 		EPGData::ChunkHeader ChunkHeader;
 
 		do {
 			size_t Size = EPGData::CHUNK_HEADER_SIZE;
-			ReadChunkHeader(File, &ChunkHeader, &Size);
+			ReadChunkHeader(Reader, &ChunkHeader, &Size);
 
 			if ((ChunkHeader.Tag == EPGData::Tag::Service) && (ChunkHeader.Size == sizeof(EPGData::ServiceInfo))) {
 				ServiceInfo Service;
 
-				LoadService(File, &Service);
+				LoadService(Reader, &Service);
 
 				if (!Service.EventList.empty())
 					m_pEPGDatabase->SetServiceEventList(Service.Info, std::move(Service.EventList));
 			} else {
-				if (ChunkHeader.Size > 0) {
-					if (!File.SetPos(ChunkHeader.Size, Stream::SetPosType::Current))
-						throw Exception::Seek;
-				}
+				Reader.SeekForward(ChunkHeader.Size);
 			}
 		} while (ChunkHeader.Tag != EPGData::Tag::End);
 	} catch (Exception Code) {
@@ -609,6 +687,7 @@ bool EPGDataFile::Save()
 	};
 
 	try {
+		SequentialStreamWriter Writer(File);
 		EPGData::FileHeader FileHeader;
 
 		std::memcpy(FileHeader.Type, EPGData::FileHeader_Type, sizeof(FileHeader.Type));
@@ -616,15 +695,16 @@ bool EPGDataFile::Save()
 		FileHeader.ServiceCount = ValidServiceCount;
 		FileHeader.UpdateCount = ++m_UpdateCount;
 
-		WriteData(File, FileHeader);
+		WriteData(Writer, FileHeader);
 
 		for (size_t ServiceIndex = 0; ServiceIndex < ServiceList.size(); ServiceIndex++) {
 			if (EventCountList[ServiceIndex] > 0)
-				SaveService(File, ServiceList[ServiceIndex], EventCountList[ServiceIndex], EarliestTime);
+				SaveService(Writer, ServiceList[ServiceIndex], EventCountList[ServiceIndex], EarliestTime);
 		}
 
-		WriteChunkHeader(File, EPGData::Tag::End);
+		WriteChunkHeader(Writer, EPGData::Tag::End);
 
+		Writer.Flush();
 		if (!!(m_OpenFlags & OpenFlag::Flush))
 			File.Flush();
 	} catch (Exception Code) {
@@ -641,7 +721,7 @@ bool EPGDataFile::Save()
 }
 
 
-void EPGDataFile::LoadService(FileStream &File, ServiceInfo *pServiceInfo)
+void EPGDataFile::LoadService(SequentialStreamReader &File, ServiceInfo *pServiceInfo)
 {
 	EPGData::ServiceInfo ServiceHeader;
 	size_t Size;
@@ -666,17 +746,13 @@ void EPGDataFile::LoadService(FileStream &File, ServiceInfo *pServiceInfo)
 
 			LoadEvent(File, pServiceInfo, &Event);
 		} else {
-			if (ChunkHeader.Size > 0) {
-				if (!File.SetPos(ChunkHeader.Size, Stream::SetPosType::Current)) {
-					throw Exception::Seek;
-				}
-			}
+			File.SeekForward(ChunkHeader.Size);
 		}
 	} while (ChunkHeader.Tag != EPGData::Tag::ServiceEnd);
 }
 
 
-void EPGDataFile::LoadEvent(FileStream &File, const ServiceInfo *pServiceInfo, EventInfo *pEvent)
+void EPGDataFile::LoadEvent(SequentialStreamReader &File, const ServiceInfo *pServiceInfo, EventInfo *pEvent)
 {
 	EPGData::EventInfo EventHeader;
 	size_t Size = sizeof(EPGData::EventInfo);
@@ -845,10 +921,7 @@ void EPGDataFile::LoadEvent(FileStream &File, const ServiceInfo *pServiceInfo, E
 			break;
 
 		default:
-			if (ChunkHeader.Size > 0) {
-				if (!File.SetPos(ChunkHeader.Size, Stream::SetPosType::Current))
-					throw Exception::Seek;
-			}
+			File.SeekForward(ChunkHeader.Size);
 			break;
 		}
 	} while (ChunkHeader.Tag != EPGData::Tag::EventEnd);
@@ -856,7 +929,7 @@ void EPGDataFile::LoadEvent(FileStream &File, const ServiceInfo *pServiceInfo, E
 
 
 void EPGDataFile::SaveService(
-	FileStream &File, const EPGDatabase::ServiceInfo &ServiceInfo,
+	SequentialStreamWriter &File, const EPGDatabase::ServiceInfo &ServiceInfo,
 	uint16_t EventCount, const DateTime &EarliestTime)
 {
 	EPGData::ServiceInfo ServiceHeader;
@@ -878,7 +951,7 @@ void EPGDataFile::SaveService(
 }
 
 
-void EPGDataFile::SaveEvent(FileStream &File, const EventInfo &Event)
+void EPGDataFile::SaveEvent(SequentialStreamWriter &File, const EventInfo &Event)
 {
 	EPGData::EventInfo EventHeader;
 
