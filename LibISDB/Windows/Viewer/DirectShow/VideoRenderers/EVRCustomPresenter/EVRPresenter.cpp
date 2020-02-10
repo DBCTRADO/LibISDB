@@ -578,7 +578,7 @@ HRESULT EVRPresenter::OnClockRestart(MFTIME hnsSystemTime)
 		return hr;
 	}
 
-	_ASSERT(m_RenderState == RenderState::Paused);
+	LIBISDB_ASSERT(m_RenderState == RenderState::Paused);
 
 	m_RenderState = RenderState::Started;
 
@@ -1142,7 +1142,7 @@ HRESULT EVRPresenter::PrepareFrameStep(DWORD cSteps)
 
 HRESULT EVRPresenter::StartFrameStep()
 {
-	_ASSERT(m_RenderState == RenderState::Started);
+	LIBISDB_ASSERT(m_RenderState == RenderState::Started);
 
 	HRESULT hr = S_OK;
 
@@ -1532,7 +1532,7 @@ void EVRPresenter::ProcessOutputLoop()
 
 HRESULT EVRPresenter::ProcessOutput()
 {
-	_ASSERT(m_SampleNotify || m_Repaint);
+	LIBISDB_ASSERT(m_SampleNotify || m_Repaint);
 
 	HRESULT hr = S_OK;
 	DWORD Status = 0;
@@ -1620,7 +1620,7 @@ HRESULT EVRPresenter::ProcessOutput()
 
 HRESULT EVRPresenter::DeliverSample(IMFSample *pSample, BOOL bRepaint)
 {
-	_ASSERT(pSample != nullptr);
+	LIBISDB_ASSERT(pSample != nullptr);
 
 	HRESULT hr;
 	EVRPresentEngine::DeviceState State = EVRPresentEngine::DeviceState::OK;
@@ -1759,7 +1759,7 @@ HRESULT EVRPresenter::OnSampleFree(IMFAsyncResult *pResult)
 
 float EVRPresenter::GetMaxRate(BOOL bThin)
 {
-	float fMaxRate = FLT_MAX;
+	float fMaxRate = std::numeric_limits<float>::max();
 
 	if (!bThin && m_MediaType) {
 		MFRatio fps = {0, 0};

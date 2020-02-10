@@ -86,7 +86,7 @@ LIBISDB_PRAGMA_MSVC(warning(pop))
 		StringPrintf(pDstString, Length, "%s", pSrcString);
 	}
 	inline void StringCopy(wchar_t *pDstString, const wchar_t *pSrcString, std::size_t Length) {
-		StringPrintf(pDstString, Length, L"%s", pSrcString);
+		StringPrintf(pDstString, Length, L"%ls", pSrcString);
 	}
 #endif
 

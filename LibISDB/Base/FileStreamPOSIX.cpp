@@ -33,6 +33,7 @@
 #include <fcntl.h>
 #ifdef LIBISDB_WINDOWS
 #include <io.h>
+#include <share.h>
 #else
 #include <unistd.h>
 #endif

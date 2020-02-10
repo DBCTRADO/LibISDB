@@ -231,7 +231,7 @@ size_t FileStreamWindows::Write(const void *pBuff, size_t Size)
 				&& CurPos.QuadPart + static_cast<LONGLONG>(Size) > FileSize.QuadPart) {
 			LONGLONG ExtendSize = RoundUp(static_cast<LONGLONG>(Size), static_cast<LONGLONG>(m_PreallocationUnit));
 			LIBISDB_TRACE(
-				LIBISDB_STR("Preallocate file: %lld + %lld bytes (%s)\n"),
+				LIBISDB_STR("Preallocate file: %lld + %lld bytes (%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR(")\n"),
 				FileSize.QuadPart, ExtendSize, m_FileName.c_str());
 			FileSize.QuadPart += ExtendSize;
 			if (::SetFilePointerEx(m_hFile, FileSize, nullptr, FILE_BEGIN)) {

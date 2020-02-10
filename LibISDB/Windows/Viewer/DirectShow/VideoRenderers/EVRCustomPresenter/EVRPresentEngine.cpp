@@ -469,8 +469,8 @@ HRESULT EVRPresentEngine::GetDibFromSurface(
 
 HRESULT EVRPresentEngine::InitializeD3D()
 {
-	_ASSERT(!m_D3D9);
-	_ASSERT(!m_DeviceManager);
+	LIBISDB_ASSERT(!m_D3D9);
+	LIBISDB_ASSERT(!m_DeviceManager);
 
 	HRESULT hr;
 
