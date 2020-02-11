@@ -47,7 +47,7 @@ namespace LibISDB::DirectShow
 
 		DECLARE_IUNKNOWN
 
-	// CTransInplaceFilter
+	// CTransformFilter
 		HRESULT CheckInputType(const CMediaType *mtIn) override;
 		HRESULT CheckTransform(const CMediaType *mtIn, const CMediaType *mtOut) override;
 		HRESULT DecideBufferSize(IMemAllocator *pAllocator, ALLOCATOR_PROPERTIES *pprop) override;
