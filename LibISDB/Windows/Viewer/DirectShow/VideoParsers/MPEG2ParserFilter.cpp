@@ -250,7 +250,13 @@ HRESULT MPEG2ParserFilter::StopStreaming()
 
 HRESULT MPEG2ParserFilter::BeginFlush()
 {
-	HRESULT hr = __super::BeginFlush();
+	HRESULT hr =
+#ifndef MPEG2PARSERFILTER_INPLACE
+		CTransformFilter
+#else
+		CTransInPlaceFilter
+#endif
+			::BeginFlush();
 
 	CAutoLock Lock(&m_ParserLock);
 

@@ -293,7 +293,7 @@ HRESULT AudioDecoderFilter::StopStreaming()
 
 HRESULT AudioDecoderFilter::BeginFlush()
 {
-	HRESULT hr = __super::BeginFlush();
+	HRESULT hr = CTransformFilter::BeginFlush();
 
 	CAutoLock AutoLock(&m_cPropLock);
 
@@ -309,7 +309,7 @@ HRESULT AudioDecoderFilter::BeginFlush()
 
 HRESULT AudioDecoderFilter::NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate)
 {
-	HRESULT hr = __super::NewSegment(tStart, tStop, dRate);
+	HRESULT hr = CTransformFilter::NewSegment(tStart, tStop, dRate);
 
 	CAutoLock AutoLock(&m_cPropLock);
 
