@@ -144,7 +144,7 @@ namespace LibISDB::DirectShow
 
 		void Pop()
 		{
-			_ASSERT(m_Used != 0);
+			LIBISDB_ASSERT(m_Used != 0);
 			m_Used--;
 			m_Pos++;
 			if (m_Pos == m_Capacity)

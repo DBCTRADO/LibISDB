@@ -784,7 +784,7 @@ bool EPGDatabase::UpdateSection(const EITPfScheduleTable *pScheduleTable, const 
 			// 1サービス分の番組情報が揃ったら通知する
 			if (!IsComplete && Service.Schedule.IsComplete(m_CurTOTTime.Hour, IsExtended)) {
 				LIBISDB_TRACE(
-					LIBISDB_STR("EPG schedule %s completed : NID %x / TSID %x / SID %x\n"),
+					LIBISDB_STR("EPG schedule %") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR(" completed : NID %x / TSID %x / SID %x\n"),
 					IsExtended ? LIBISDB_STR("extended") : LIBISDB_STR("basic"),
 					itService->first.NetworkID,
 					itService->first.TransportStreamID,

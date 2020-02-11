@@ -671,7 +671,7 @@ bool BonDriverSourceFilter::SetStreamingThreadPriority(int Priority)
 void BonDriverSourceFilter::SetPurgeStreamOnChannelChange(bool Purge)
 {
 	LIBISDB_TRACE(
-		LIBISDB_STR("BonDriverSourceFilter::SetPurgeStreamOnChannelChange(%s)\n"),
+		LIBISDB_STR("BonDriverSourceFilter::SetPurgeStreamOnChannelChange(%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR(")\n"),
 		Purge ? LIBISDB_STR("true") : LIBISDB_STR("false"));
 
 	m_PurgeStreamOnChannelChange = Purge;

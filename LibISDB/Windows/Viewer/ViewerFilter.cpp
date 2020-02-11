@@ -1901,7 +1901,7 @@ bool ViewerFilter::SetPacketInputWait(DWORD Wait)
 void ViewerFilter::ConnectVideoDecoder(
 	LPCTSTR pszCodecName, const GUID &MediaSubType, LPCTSTR pszDecoderName, COMPointer<IPin> *pOutputPin)
 {
-	Log(Logger::LogType::Information, LIBISDB_STR("%sデコーダの接続中..."), pszCodecName);
+	Log(Logger::LogType::Information, LIBISDB_STR("%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("デコーダの接続中..."), pszCodecName);
 
 	const bool Default = StringIsEmpty(pszDecoderName);
 	bool ConnectSuccess = false;
@@ -1936,11 +1936,11 @@ void ViewerFilter::ConnectVideoDecoder(
 		if (!FilterFinder.FindFilters(&MEDIATYPE_Video, &MediaSubType)) {
 			StringPrintf(
 				szText1,
-				LIBISDB_STR("%sデコーダが見付かりません。"),
+				LIBISDB_STR("%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("デコーダが見付かりません。"),
 				pszCodecName);
 			StringPrintf(
 				szText2,
-				LIBISDB_STR("%sデコーダがインストールされているか確認してください。"),
+				LIBISDB_STR("%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("デコーダがインストールされているか確認してください。"),
 				pszCodecName);
 			throw ErrorDescription(HRESULTErrorCode(E_FAIL), szText1, szText2);
 		}
@@ -1976,7 +1976,7 @@ void ViewerFilter::ConnectVideoDecoder(
 	} else {
 		StringPrintf(
 			szText1,
-			LIBISDB_STR("%sデコーダフィルタをフィルタグラフに追加できません。"),
+			LIBISDB_STR("%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("デコーダフィルタをフィルタグラフに追加できません。"),
 			pszCodecName);
 		throw ErrorDescription(
 			HRESULTErrorCode(hr), szText1,

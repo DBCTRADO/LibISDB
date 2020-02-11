@@ -115,7 +115,7 @@
 #define LIBISDB_SEH_FINALLY   __finally
 #else
 #define LIBISDB_SEH_TRY
-#define LIBISDB_SEH_EXCEPT(x)
+#define LIBISDB_SEH_EXCEPT(x) if constexpr (false)
 #define LIBISDB_SEH_FINALLY
 #endif
 
