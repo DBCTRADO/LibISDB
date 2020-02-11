@@ -35,6 +35,10 @@
 namespace LibISDB
 {
 
+	// IUnknown に IID_PPV_ARGS を使うと warning C4828 が出るので、その回避用
+#define IDD_PPV_ARGS_IUNKNOWN(ppUnknown) IID_IUnknown, IUnknownPP(ppUnknown)
+	inline void ** IUnknownPP(IUnknown **ppUnknown) { return reinterpret_cast<void**>(ppUnknown); }
+
 	template<typename T> inline void SafeRelease(T *&p)
 	{
 		if (p != nullptr) {
@@ -55,8 +59,8 @@ namespace LibISDB
 			IUnknown *pUnk1 = nullptr;
 			IUnknown *pUnk2 = nullptr;
 
-			if (SUCCEEDED(p1->QueryInterface(IID_PPV_ARGS(&pUnk1)))) {
-				if (SUCCEEDED(p2->QueryInterface(IID_PPV_ARGS(&pUnk2)))) {
+			if (SUCCEEDED(p1->QueryInterface(IDD_PPV_ARGS_IUNKNOWN(&pUnk1)))) {
+				if (SUCCEEDED(p2->QueryInterface(IDD_PPV_ARGS_IUNKNOWN(&pUnk2)))) {
 					Result = (pUnk1 == pUnk2);
 					pUnk2->Release();
 				}

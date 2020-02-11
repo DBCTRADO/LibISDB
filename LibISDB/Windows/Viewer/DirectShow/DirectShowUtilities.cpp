@@ -430,7 +430,7 @@ bool ShowPropertyPage(IBaseFilter *pFilter, HWND hwndOwner)
 			if (SUCCEEDED(hr)) {
 				IUnknown *pUnknown;
 
-				hr = pFilter->QueryInterface(IID_PPV_ARGS(&pUnknown));
+				hr = pFilter->QueryInterface(IDD_PPV_ARGS_IUNKNOWN(&pUnknown));
 				if (SUCCEEDED(hr)) {
 					::OleCreatePropertyFrame(
 						hwndOwner,

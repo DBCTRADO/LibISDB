@@ -136,7 +136,7 @@ HRESULT ClearDesiredSampleTime(IMFSample *pSample)
 
 	UINT32 Counter = ::MFGetAttributeUINT32(pSample, SampleAttribute_Counter, (UINT32)-1);
 
-	pSample->GetUnknown(SampleAttribute_SwapChain, IID_PPV_ARGS(&pUnkSwapChain));
+	pSample->GetUnknown(SampleAttribute_SwapChain, IDD_PPV_ARGS_IUNKNOWN(&pUnkSwapChain));
 
 	hr = pSample->QueryInterface(IID_PPV_ARGS(&pDesired));
 	if (SUCCEEDED(hr)) {
@@ -1665,7 +1665,7 @@ HRESULT EVRPresenter::DeliverFrameStepSample(IMFSample *pSample)
 			if (SUCCEEDED(hr)) {
 				IUnknown *pUnk = nullptr;
 
-				hr = pSample->QueryInterface(IID_PPV_ARGS(&pUnk));
+				hr = pSample->QueryInterface(IDD_PPV_ARGS_IUNKNOWN(&pUnk));
 				if (SUCCEEDED(hr)) {
 					m_FrameStep.pSampleNoRef = pUnk;
 					m_FrameStep.State = FrameStepState::Scheduled;
@@ -1721,7 +1721,7 @@ HRESULT EVRPresenter::OnSampleFree(IMFAsyncResult *pResult)
 			if (m_FrameStep.State == FrameStepState::Scheduled)  {
 				IUnknown *pUnk = nullptr;
 
-				hr = pSample->QueryInterface(IID_PPV_ARGS(&pUnk));
+				hr = pSample->QueryInterface(IDD_PPV_ARGS_IUNKNOWN(&pUnk));
 
 				if (SUCCEEDED(hr)) {
 					if (m_FrameStep.pSampleNoRef == pUnk) {
