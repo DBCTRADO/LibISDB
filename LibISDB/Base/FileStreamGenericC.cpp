@@ -30,6 +30,7 @@
 
 #ifdef _MSC_VER
 #include <io.h>
+#include <share.h>
 #elif !defined(LIBISDB_NO_POSIX_FILE)
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -73,7 +74,7 @@ bool FileStreamGenericC::Open(const CStringView &FileName, OpenFlag Flags)
 		return false;
 	}
 
-	CharType Mode[4];
+	CharType Mode[8];
 	if ((Flags & (OpenFlag::Read | OpenFlag::Write)) == (OpenFlag::Read | OpenFlag::Write)) {
 		// Read + Write
 		if (!!(Flags & OpenFlag::Append))
@@ -94,28 +95,57 @@ bool FileStreamGenericC::Open(const CStringView &FileName, OpenFlag Flags)
 			StringCopy(Mode, LIBISDB_STR("r+b"));
 	}
 
+	std::FILE *pFile;
+
+#ifdef _MSC_VER
+
+	if (!!(Flags & OpenFlag::SequentialRead))
+		StringAppend(Mode, LIBISDB_STR("S"));
+	else if (!!(Flags & OpenFlag::RandomAccess))
+		StringAppend(Mode, LIBISDB_STR("R"));
+	StringAppend(Mode, LIBISDB_STR("N"));
+
+	int Share;
+	switch (Flags & (OpenFlag::ShareRead | OpenFlag::ShareWrite)) {
+	case OpenFlag::ShareRead | OpenFlag::ShareWrite:
+		Share = _SH_DENYNO;
+		break;
+	case OpenFlag::ShareRead:
+		Share = _SH_DENYWR;
+		break;
+	case OpenFlag::ShareWrite:
+		Share = _SH_DENYRD;
+		break;
+	default:
+		Share = _SH_DENYRW;
+		break;
+	}
+
+	LIBISDB_TRACE(
+		LIBISDB_STR("FileStreamGenericC::Open() : Open file \"%")
+			LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\" \"%")
+			LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\" %d\n"),
+		FileName.c_str(), Mode, Share);
+
+	pFile =
+#ifdef LIBISDB_WCHAR
+		::_wfsopen
+#else
+		::_fsopen
+#endif
+			(FileName.c_str(), Mode, Share);
+	if (pFile == nullptr) {
+		SetError(static_cast<std::errc>(errno));
+		return false;
+	}
+
+#else
+
 	LIBISDB_TRACE(
 		LIBISDB_STR("FileStreamGenericC::Open() : Open file \"%")
 			LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\" \"%")
 			LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\"\n"),
 		FileName.c_str(), Mode);
-
-	std::FILE *pFile;
-
-#ifdef LIBISDB_WINDOWS
-
-	::errno_t Err =
-#ifdef LIBISDB_WCHAR
-		::_wfopen_s(&pFile, FileName.c_str(), Mode);
-#else
-		::_fopen_s(&pFile, FileName.c_str(), Mode);
-#endif
-	if (Err != 0) {
-		SetError((std::errc)Err);
-		return false;
-	}
-
-#else
 
 	pFile = std::fopen(FileName.c_str(), Mode);
 	if (pFile == nullptr) {
