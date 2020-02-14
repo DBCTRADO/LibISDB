@@ -273,7 +273,7 @@ LIBISDB_PRAGMA_PACK_POP
 constexpr uint16_t MAX_EPG_TEXT_LENGTH = 4096;
 
 
-void ReadData(FileStream &File, void *pData, size_t DataSize, size_t *pSizeLimit)
+void ReadData(Stream &File, void *pData, size_t DataSize, size_t *pSizeLimit)
 {
 	if (DataSize > *pSizeLimit)
 		throw EPGDataFile::Exception::FormatError;
@@ -283,20 +283,20 @@ void ReadData(FileStream &File, void *pData, size_t DataSize, size_t *pSizeLimit
 }
 
 
-template<typename T> void ReadData(FileStream &File, T &Data, size_t *pSizeLimit)
+template<typename T> void ReadData(Stream &File, T &Data, size_t *pSizeLimit)
 {
 	ReadData(File, &Data, sizeof(Data), pSizeLimit);
 }
 
 
-void ReadChunkHeader(FileStream &File, EPGData::ChunkHeader *pHeader, size_t *pSizeLimit)
+void ReadChunkHeader(Stream &File, EPGData::ChunkHeader *pHeader, size_t *pSizeLimit)
 {
 	ReadData(File, pHeader->Tag, pSizeLimit);
 	ReadData(File, pHeader->Size, pSizeLimit);
 }
 
 
-void ReadString(FileStream &File, String *pString, size_t *pSizeLimit)
+void ReadString(Stream &File, String *pString, size_t *pSizeLimit)
 {
 	uint16_t Length;
 
@@ -313,20 +313,20 @@ void ReadString(FileStream &File, String *pString, size_t *pSizeLimit)
 }
 
 
-void WriteData(FileStream &File, const void *pData, size_t DataSize)
+void WriteData(Stream &File, const void *pData, size_t DataSize)
 {
 	if (File.Write(pData, DataSize) != DataSize)
 		throw EPGDataFile::Exception::Write;
 }
 
 
-template<typename T> void WriteData(FileStream &File, const T &Data)
+template<typename T> void WriteData(Stream &File, const T &Data)
 {
 	WriteData(File, &Data, sizeof(Data));
 }
 
 
-void WriteChunkHeader(FileStream &File, uint8_t Tag, size_t Size = 0)
+void WriteChunkHeader(Stream &File, uint8_t Tag, size_t Size = 0)
 {
 	LIBISDB_ASSERT(Size <= 0xFFFF);
 	if (Size > 0xFFFF)
@@ -337,14 +337,14 @@ void WriteChunkHeader(FileStream &File, uint8_t Tag, size_t Size = 0)
 }
 
 
-void WriteChunk(FileStream &File, uint8_t Tag, const void *pData, size_t Size)
+void WriteChunk(Stream &File, uint8_t Tag, const void *pData, size_t Size)
 {
 	WriteChunkHeader(File, Tag, Size);
 	WriteData(File, pData, Size);
 }
 
 
-template<typename T> void WriteChunk(FileStream &File, uint8_t Tag, const T &Data)
+template<typename T> void WriteChunk(Stream &File, uint8_t Tag, const T &Data)
 {
 	static_assert(sizeof(Data) <= 0xFFFF);
 
@@ -352,7 +352,7 @@ template<typename T> void WriteChunk(FileStream &File, uint8_t Tag, const T &Dat
 }
 
 
-void WriteString(FileStream &File, const String &Str)
+void WriteString(Stream &File, const String &Str)
 {
 	const uint16_t Length = static_cast<uint16_t>(Str.length());
 	if (Length > MAX_EPG_TEXT_LENGTH)
@@ -365,7 +365,7 @@ void WriteString(FileStream &File, const String &Str)
 }
 
 
-void WriteChunkString(FileStream &File, uint8_t Tag, const String &Str)
+void WriteChunkString(Stream &File, uint8_t Tag, const String &Str)
 {
 	if (Str.length() > MAX_EPG_TEXT_LENGTH)
 		throw EPGDataFile::Exception::FormatError;
@@ -426,7 +426,7 @@ bool EPGDataFile::Load()
 			(m_pEPGDatabase == nullptr) || m_FileName.empty() || !(m_OpenFlags & OpenFlag::Read)))
 		return false;
 
-	FileStream File;
+	BufferedFileStream File;
 
 	FileStream::OpenFlag FileOpenFlags =
 		FileStream::OpenFlag::Read |
@@ -546,7 +546,7 @@ bool EPGDataFile::Save()
 			(m_pEPGDatabase == nullptr) || m_FileName.empty() || !(m_OpenFlags & OpenFlag::Write)))
 		return false;
 
-	FileStream File;
+	BufferedFileStream File;
 
 	if (!File.Open(
 				m_FileName,
@@ -641,7 +641,7 @@ bool EPGDataFile::Save()
 }
 
 
-void EPGDataFile::LoadService(FileStream &File, ServiceInfo *pServiceInfo)
+void EPGDataFile::LoadService(Stream &File, ServiceInfo *pServiceInfo)
 {
 	EPGData::ServiceInfo ServiceHeader;
 	size_t Size;
@@ -676,7 +676,7 @@ void EPGDataFile::LoadService(FileStream &File, ServiceInfo *pServiceInfo)
 }
 
 
-void EPGDataFile::LoadEvent(FileStream &File, const ServiceInfo *pServiceInfo, EventInfo *pEvent)
+void EPGDataFile::LoadEvent(Stream &File, const ServiceInfo *pServiceInfo, EventInfo *pEvent)
 {
 	EPGData::EventInfo EventHeader;
 	size_t Size = sizeof(EPGData::EventInfo);
@@ -856,7 +856,7 @@ void EPGDataFile::LoadEvent(FileStream &File, const ServiceInfo *pServiceInfo, E
 
 
 void EPGDataFile::SaveService(
-	FileStream &File, const EPGDatabase::ServiceInfo &ServiceInfo,
+	Stream &File, const EPGDatabase::ServiceInfo &ServiceInfo,
 	uint16_t EventCount, const DateTime &EarliestTime)
 {
 	EPGData::ServiceInfo ServiceHeader;
@@ -878,7 +878,7 @@ void EPGDataFile::SaveService(
 }
 
 
-void EPGDataFile::SaveEvent(FileStream &File, const EventInfo &Event)
+void EPGDataFile::SaveEvent(Stream &File, const EventInfo &Event)
 {
 	EPGData::EventInfo EventHeader;
 

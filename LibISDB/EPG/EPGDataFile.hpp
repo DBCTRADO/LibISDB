@@ -29,7 +29,7 @@
 
 
 #include "../Base/ObjectBase.hpp"
-#include "../Base/FileStream.hpp"
+#include "../Base/Stream.hpp"
 #include "EPGDatabase.hpp"
 
 
@@ -86,12 +86,12 @@ namespace LibISDB
 			EPGDatabase::EventList EventList;
 		};
 
-		void LoadService(FileStream &File, ServiceInfo *pServiceInfo);
-		void LoadEvent(FileStream &File, const ServiceInfo *pServiceInfo, EventInfo *pEvent);
+		void LoadService(Stream &File, ServiceInfo *pServiceInfo);
+		void LoadEvent(Stream &File, const ServiceInfo *pServiceInfo, EventInfo *pEvent);
 		void SaveService(
-			FileStream &File, const EPGDatabase::ServiceInfo &ServiceInfo,
+			Stream &File, const EPGDatabase::ServiceInfo &ServiceInfo,
 			uint16_t EventCount, const DateTime &EarliestTime);
-		void SaveEvent(FileStream &File, const EventInfo &Event);
+		void SaveEvent(Stream &File, const EventInfo &Event);
 		void ExceptionLog(Exception Code);
 
 		EPGDatabase *m_pEPGDatabase;
