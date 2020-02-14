@@ -135,6 +135,15 @@ LIBISDB_PRAGMA_MSVC(warning(pop))
 	}
 #endif
 
+	template<typename T> inline void StringAppend(T *pDstString, std::size_t Length, const T *pAppend) {
+		const std::size_t Offset = StringLength(pDstString, Length);
+		if (Offset < Length)
+			StringCopy(pDstString + Offset, pAppend, Length - Offset);
+	}
+	template<typename T, std::size_t N> inline void StringAppend(T (&DstString)[N], const T *pAppend) {
+		StringAppend(DstString, N, pAppend);
+	}
+
 	inline char ToUpper(char c) { return static_cast<char>(std::toupper(c)); }
 	inline wchar_t ToUpper(wchar_t c) { return static_cast<wchar_t>(std::towupper(c)); }
 	inline char ToLower(char c) { return static_cast<char>(std::tolower(c)); }
