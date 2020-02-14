@@ -33,6 +33,8 @@
 #include "FileStreamGenericC.hpp"
 #ifdef LIBISDB_WINDOWS
 #include "FileStreamWindows.hpp"
+#else
+#include "FileStreamPOSIX.hpp"
 #endif
 
 
@@ -40,10 +42,12 @@ namespace LibISDB
 {
 
 #ifdef LIBISDB_WINDOWS
-	typedef FileStreamWindows FileStream;
+	typedef FileStreamWindows FileStreamNative;
 #else
-	typedef FileStreamGeneric FileStream;
+	typedef FileStreamPOSIX FileStreamNative;
 #endif
+	typedef FileStreamNative FileStream;
+	typedef FileStreamGenericC BufferedFileStream;
 
 }	// namespace LibISDB
 
