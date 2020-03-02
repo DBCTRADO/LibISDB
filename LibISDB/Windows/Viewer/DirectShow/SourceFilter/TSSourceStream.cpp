@@ -189,7 +189,7 @@ bool TSSourceStream::InputData(DataBuffer *pData)
 		}
 	} else {
 		long long VideoPTS = m_VideoPTS;
-		if (m_VideoPTSPrev >= 0 && _abs64(VideoPTS - m_VideoPTSPrev) >= ERR_PTS_DIFF) {
+		if (m_VideoPTSPrev >= 0 && std::llabs(VideoPTS - m_VideoPTSPrev) >= ERR_PTS_DIFF) {
 			if (VideoPTS < m_VideoPTSPrev) {
 				LIBISDB_TRACE(LIBISDB_STR("Video PTS wrap-around\n"));
 				VideoPTS += 0x200000000LL;

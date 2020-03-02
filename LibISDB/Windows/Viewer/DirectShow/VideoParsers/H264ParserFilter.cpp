@@ -289,7 +289,7 @@ HRESULT H264ParserFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
 						bReset = true;
 					} else {
 						LONGLONG Diff = (m_PrevTime + CalcFrameTime(m_SampleCount, m_Adjust1Seg)) - StartTime;
-						if (_abs64(Diff) > MAX_SAMPLE_TIME_JITTER) {
+						if (std::llabs(Diff) > MAX_SAMPLE_TIME_JITTER) {
 							bReset = true;
 							LIBISDB_TRACE(LIBISDB_STR("Reset H.264 sample time (Diff = %.5f)\n"),
 								  (double)Diff / (double)REFERENCE_TIME_SECOND);
