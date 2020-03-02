@@ -30,7 +30,6 @@
 
 #include "LibISDBBase.hpp"
 #include "LibISDBConsts.hpp"
-#include "LibISDBVersion.hpp"
 
 
 #endif	// ifndef LIBISDB_H
