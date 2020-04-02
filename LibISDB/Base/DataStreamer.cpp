@@ -136,7 +136,7 @@ bool DataStreamer::InputData(const uint8_t *pData, size_t DataSize)
 	bool Result;
 
 	if (m_InputBuffer) {
-		Result = m_InputBuffer->PushBack(pData, DataSize);
+		Result = m_InputBuffer->PushBack(pData, DataSize) == DataSize;
 	} else if (m_OutputCacheBuffer.GetBufferSize() > 0) {
 		Result = OutputDataWithCache(pData, DataSize);
 	} else if (IsOutputValid()) {
