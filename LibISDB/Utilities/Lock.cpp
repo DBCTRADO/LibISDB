@@ -217,7 +217,7 @@ void MutexLock::Unlock()
 
 bool MutexLock::TryLock()
 {
-	m_Mutex.try_lock();
+	return m_Mutex.try_lock();
 }
 
 
