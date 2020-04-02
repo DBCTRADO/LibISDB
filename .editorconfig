@@ -1,0 +1,12 @@
+root = true
+
+[{LibISDB,Samples,Tests}/**.{cpp,hpp}]
+charset = utf-8
+end_of_line = crlf
+indent_style = tab
+
+[Documents/**.txt]
+charset = utf-8
+end_of_line = crlf
+indent_style = space
+indent_size = 2
