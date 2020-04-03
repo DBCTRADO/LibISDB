@@ -26,6 +26,10 @@
       CMake 3.8 以降
       GCC 7 以降 又は Clang 3.9 以降
 
+  ・macOS
+      CMake 3.8 以降
+      Apple clang version 11.0.3 (clang-1103.0.32.29) 以降
+
 
 ◆ 試験資料構築(Windows)
 
@@ -56,11 +60,20 @@
   CMake でビルドすることができる。
   LibISDB のルートにディレクトリを作成して make する場合は以下のようになる。
 
-  mkdir build
-  cd build
-  cmake ..
-  make
+  cmake -S. -Bbuild
+  make -Cbuild -j$(nproc)
 
+
+◆ 試験資料構築(macOS)
+
+  CMake でビルドすることができる。
+  LibISDB のルートにディレクトリを作成して make する場合は以下のようになる。
+
+  cmake -S. -Bbuild -DCMAKE_CXX_FLAGS="-Wno-switch"
+  make -Cbuild -j$(nproc)
+
+  "-Wno-switch"を指定しなかった場合、ワーニングが表示されるが、ビルドには成功す
+  る。
 
 ◆ サンプルプログラム
 
