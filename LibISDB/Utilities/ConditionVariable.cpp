@@ -95,9 +95,7 @@ void ConditionVariable::Wait(MutexLock &Lock)
 
 bool ConditionVariable::WaitFor(MutexLock &Lock, const std::chrono::milliseconds &Timeout)
 {
-	std::unique_lock<std::recursive_timed_mutex> UniqueLock(Lock.Native(), std::adopt_lock);
-
-	return m_ConditionVariable.wait_for(UniqueLock, Timeout) == std::cv_status::no_timeout;
+	return m_ConditionVariable.wait_for(Lock.Native(), Timeout) == std::cv_status::no_timeout;
 }
 
 
