@@ -80,6 +80,8 @@ namespace LibISDB
 		typedef BOOL (WINAPI *GetSaveFilePath)(DWORD id, WCHAR *filePath, DWORD *filePathSize);
 		typedef BOOL (WINAPI *AddTSBuff)(DWORD id, BYTE *data, DWORD size, DWORD *writeSize);
 
+		void SetError(ErrorCode Code, const CharType* pText = nullptr, const CharType* pAdvise = nullptr, const CharType* pSystemMessage = nullptr) noexcept;
+
 		static ErrorCategory m_ErrorCategory;
 
 		HMODULE m_hLib;

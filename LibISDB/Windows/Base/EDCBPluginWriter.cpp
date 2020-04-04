@@ -250,6 +250,12 @@ bool EDCBPluginWriter::SetPreallocationUnit(SizeType PreallocationUnit)
 }
 
 
+void EDCBPluginWriter::SetError(ErrorCode Code, const CharType* pText, const CharType* pAdvise, const CharType* pSystemMessage) noexcept
+{
+	ErrorHandler::SetError(make_error_code(Code), pText, pAdvise, pSystemMessage);
+}
+
+
 std::string EDCBPluginWriter::ErrorCategory::message(int ev) const
 {
 	switch (static_cast<ErrorCode>(ev)) {
