@@ -194,7 +194,18 @@ namespace LibISDB
 		TickClock m_Clock;
 	};
 
+	inline std::error_code make_error_code(BonDriverSourceFilter::ErrorCode Code) noexcept
+	{
+		return std::error_code(static_cast<int>(Code), BonDriverSourceFilter::GetErrorCategory());
+	}
+
 }	// namespace LibISDB
+
+
+namespace std
+{
+	template <> struct is_error_code_enum<LibISDB::BonDriverSourceFilter::ErrorCode> : true_type {};
+}
 
 
 #endif	// ifndef LIBISDB_BON_DRIVER_SOURCE_FILTER_H

@@ -30,24 +30,8 @@
 #include "../../Base/DebugDef.hpp"
 
 
-namespace std
-{
-
-	template<> struct is_error_code_enum<LibISDB::EDCBPluginWriter::ErrorCode> : public true_type {};
-
-}
-
-
 namespace LibISDB
 {
-
-
-std::error_code make_error_code(EDCBPluginWriter::ErrorCode Code) noexcept
-{
-	return std::error_code(static_cast<int>(Code), EDCBPluginWriter::GetErrorCategory());
-}
-
-
 
 
 EDCBPluginWriter::ErrorCategory EDCBPluginWriter::m_ErrorCategory;

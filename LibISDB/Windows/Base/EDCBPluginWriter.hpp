@@ -97,7 +97,18 @@ namespace LibISDB
 		SizeType m_PreallocationUnit;
 	};
 
+	inline std::error_code make_error_code(EDCBPluginWriter::ErrorCode Code) noexcept
+	{
+		return std::error_code(static_cast<int>(Code), EDCBPluginWriter::GetErrorCategory());
+	}
+
 }	// namespace LibISDB
+
+
+namespace std
+{
+	template <> struct is_error_code_enum<LibISDB::EDCBPluginWriter::ErrorCode> : true_type {};
+}
 
 
 #endif	// ifndef LIBISDB_EDCB_PLUGIN_WRITER_H

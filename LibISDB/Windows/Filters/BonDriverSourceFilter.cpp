@@ -33,24 +33,8 @@
 #include "../../Base/DebugDef.hpp"
 
 
-namespace std
-{
-
-	template<> struct is_error_code_enum<LibISDB::BonDriverSourceFilter::ErrorCode> : public true_type {};
-
-}
-
-
 namespace LibISDB
 {
-
-
-std::error_code make_error_code(BonDriverSourceFilter::ErrorCode Code) noexcept
-{
-	return std::error_code(static_cast<int>(Code), BonDriverSourceFilter::GetErrorCategory());
-}
-
-
 
 
 BonDriverSourceFilter::ErrorCategory BonDriverSourceFilter::m_ErrorCategory;
