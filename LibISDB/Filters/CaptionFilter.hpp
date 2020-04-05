@@ -85,10 +85,10 @@ namespace LibISDB
 
 	protected:
 	// CaptionParser::CaptionHandler
-		void OnLanguageUpdate(CaptionParser *pParser);
+		void OnLanguageUpdate(CaptionParser *pParser) override;
 		void OnCaption(
 			CaptionParser *pParser, uint8_t Language, const CharType *pText,
-			const ARIBStringDecoder::FormatList *pFormatList);
+			const ARIBStringDecoder::FormatList *pFormatList) override;
 
 		int GetServiceIndexByID(uint16_t ServiceID) const;
 		CaptionParser * GetCurrentCaptionParser() const;

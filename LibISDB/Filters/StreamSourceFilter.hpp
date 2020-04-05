@@ -63,7 +63,7 @@ namespace LibISDB
 		bool CloseSource() override;
 		bool IsSourceOpen() const override;
 		bool FetchSource(size_t RequestSize) override;
-		SourceMode GetAvailableSourceModes() const noexcept { return SourceMode::Push | SourceMode::Pull; }
+		SourceMode GetAvailableSourceModes() const noexcept override { return SourceMode::Push | SourceMode::Pull; }
 		bool SetSourceMode(SourceMode Mode) override;
 
 	// StreamSourceFilter

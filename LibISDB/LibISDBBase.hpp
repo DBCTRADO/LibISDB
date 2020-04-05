@@ -43,6 +43,10 @@
 #define LIBISDB_WCHAR_IS_UNICODE
 #endif
 
+#if defined(__APPLE__) && defined(__x86_64__)
+#define LIBISDB_MACOS
+#endif
+
 #if defined(_M_IX86) || defined(__i386__)
 #define LIBISDB_X86
 #endif

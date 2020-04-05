@@ -79,6 +79,11 @@ ssize_t posix_write(int fd, const void *buffer, std::size_t count)
 
 #else	// LIBISDB_WINDOWS
 
+#ifdef LIBISDB_MACOS
+typedef off_t off64_t;
+inline off64_t lseek64(int fd, off64_t offset, int origin) { return ::lseek(fd, offset, origin); }
+#endif	// LIBISDB_MACOS
+
 inline int posix_close(int fd) { return ::close(fd); }
 inline ::off64_t tell64(int fd) { return ::lseek64(fd, 0, SEEK_CUR); }
 
