@@ -165,8 +165,6 @@ namespace LibISDB
 		void SetRequestTimeoutError();
 		void SetChannelWait();
 
-		void SetError(ErrorCode Code, const CharType* pText = nullptr, const CharType* pAdvise = nullptr, const CharType* pSystemMessage = nullptr) noexcept;
-
 		static ErrorCategory m_ErrorCategory;
 
 		BonDriver m_BonDriver;

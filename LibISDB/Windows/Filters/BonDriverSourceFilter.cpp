@@ -51,6 +51,11 @@ std::error_code make_error_code(BonDriverSourceFilter::ErrorCode Code) noexcept
 }
 
 
+template<>
+void ErrorHandler::SetError(BonDriverSourceFilter::ErrorCode Code, const CharType* pText, const CharType* pAdvise, const CharType* pSystemMessage) noexcept
+{
+	SetError(make_error_code(Code), pText, pAdvise, pSystemMessage);
+}
 
 
 BonDriverSourceFilter::ErrorCategory BonDriverSourceFilter::m_ErrorCategory;
@@ -227,7 +232,7 @@ bool BonDriverSourceFilter::LoadBonDriver(const CStringView &FileName)
 	}
 
 	if (FileName.empty()) {
-		ErrorHandler::SetError(std::errc::invalid_argument, LIBISDB_STR("ファイルが指定されていません。"));
+		SetError(std::errc::invalid_argument, LIBISDB_STR("ファイルが指定されていません。"));
 		return false;
 	}
 
@@ -238,7 +243,7 @@ bool BonDriverSourceFilter::LoadBonDriver(const CStringView &FileName)
 		CharType Text[MAX_PATH + 64];
 
 		StringPrintf(Text, LIBISDB_STR("\"%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\" が読み込めません。"), FileName.c_str());
-		ErrorHandler::SetError(ErrorCode, std::system_category(), Text);
+		SetError(ErrorCode, std::system_category(), Text);
 
 		switch (ErrorCode) {
 		case ERROR_MOD_NOT_FOUND:
@@ -342,7 +347,7 @@ bool BonDriverSourceFilter::OpenTuner()
 		// ストリーム受信スレッド起動
 		m_IsStreaming.store(false, std::memory_order_release);
 		if (!Start()) {
-			ErrorHandler::SetError(std::errc::resource_unavailable_try_again, LIBISDB_STR("ストリーム受信スレッドを作成できません。"));
+			SetError(std::errc::resource_unavailable_try_again, LIBISDB_STR("ストリーム受信スレッドを作成できません。"));
 			throw std::errc::resource_unavailable_try_again;
 		}
 	} catch (...) {
@@ -914,9 +919,9 @@ void BonDriverSourceFilter::SetRequestTimeoutError()
 			break;
 		}
 
-		ErrorHandler::SetError(std::errc::timed_out, pText);
+		SetError(std::errc::timed_out, pText);
 	} else {
-		ErrorHandler::SetError(std::errc::timed_out, LIBISDB_STR("ストリーム受信スレッドが応答しません。"));
+		SetError(std::errc::timed_out, LIBISDB_STR("ストリーム受信スレッドが応答しません。"));
 	}
 }
 
@@ -943,12 +948,6 @@ void BonDriverSourceFilter::SetChannelWait()
 	}
 
 	m_SetChannelCount++;
-}
-
-
-void BonDriverSourceFilter::SetError(ErrorCode Code, const CharType* pText, const CharType* pAdvise, const CharType* pSystemMessage) noexcept
-{
-	ErrorHandler::SetError(make_error_code(Code), pText, pAdvise, pSystemMessage);
 }
 
 

@@ -48,6 +48,11 @@ std::error_code make_error_code(EDCBPluginWriter::ErrorCode Code) noexcept
 }
 
 
+template<>
+void ErrorHandler::SetError(EDCBPluginWriter::ErrorCode Code, const CharType* pText, const CharType* pAdvise, const CharType* pSystemMessage) noexcept
+{
+	SetError(make_error_code(Code), pText, pAdvise, pSystemMessage);
+}
 
 
 EDCBPluginWriter::ErrorCategory EDCBPluginWriter::m_ErrorCategory;
@@ -247,12 +252,6 @@ bool EDCBPluginWriter::SetPreallocationUnit(SizeType PreallocationUnit)
 	m_PreallocationUnit = PreallocationUnit;
 
 	return true;
-}
-
-
-void EDCBPluginWriter::SetError(ErrorCode Code, const CharType* pText, const CharType* pAdvise, const CharType* pSystemMessage) noexcept
-{
-	ErrorHandler::SetError(make_error_code(Code), pText, pAdvise, pSystemMessage);
 }
 
 
