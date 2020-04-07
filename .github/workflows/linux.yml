@@ -1,0 +1,30 @@
+name: Linux
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install build-essential cmake
+          gcc --version
+          cmake --version
+      - uses: actions/checkout@v1
+      - name: Generate project files
+        run: |
+          cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: |
+          make -C build -j $(nproc)
+      - name: Run test
+        run: |
+          ./build/Tests/libisdbtest
