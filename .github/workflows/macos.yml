@@ -10,11 +10,11 @@ on:
 
 jobs:
   build:
-    runs-on: macOS-latest
+    runs-on: macos-latest
     steps:
       - name: Install deps
         run: |
-          brew install cmake
+          brew install coreutils cmake
           clang --version
           cmake --version
       - uses: actions/checkout@v1
