@@ -25,7 +25,7 @@
 ** Commercial non-GPL licensing of this software is possible.
 ** For more info contact Nero AG through Mpeg4AAClicense@nero.com.
 **
-** $Id: common.h,v 1.77 2009/02/05 00:51:03 menno Exp $
+** $Id: common.h,v 1.79 2015/01/26 17:48:53 knik Exp $
 **/
 
 #ifndef __COMMON_H__
@@ -91,8 +91,10 @@ extern "C" {
 /* Allow decoding of LD profile AAC */
 #define LD_DEC
 /* Allow decoding of Digital Radio Mondiale (DRM) */
-//#define DRM
-//#define DRM_PS
+#ifdef DRM_SUPPORT
+#define DRM
+#define DRM_PS
+#endif
 
 /* LD can't do without LTP */
 #ifdef LD_DEC
@@ -115,6 +117,7 @@ extern "C" {
   #undef MAIN_DEC
   #undef SSR_DEC
   #undef DRM
+  #undef DRM_PS
   #undef ALLOW_SMALL_FRAMELENGTH
   #undef ERROR_RESILIENCE
 #endif
@@ -313,10 +316,9 @@ char *strchr(), *strrchr();
   }
 
 
-  #if defined(_WIN32) && !defined(__MINGW32__)
+  #if defined(_WIN32) && defined(_M_IX86) && !defined(__MINGW32__)
     #ifndef HAVE_LRINTF
     #define HAS_LRINTF
-    #ifndef _WIN64
     static INLINE int lrintf(float f)
     {
         int i;
@@ -327,13 +329,6 @@ char *strchr(), *strrchr();
         }
         return i;
     }
-    #else
-    #include <xmmintrin.h>
-    static INLINE int lrintf(float f)
-    {
-        return _mm_cvtss_si32(_mm_load_ss(&f));
-    }
-    #endif /* _WIN64 */
     #endif /* HAVE_LRINTF */
   #elif (defined(__i386__) && defined(__GNUC__) && \
 	!defined(__CYGWIN__) && !defined(__MINGW32__))

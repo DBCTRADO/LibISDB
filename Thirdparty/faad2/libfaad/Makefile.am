@@ -1,11 +1,12 @@
-lib_LTLIBRARIES = libfaad.la
+lib_LTLIBRARIES = libfaad.la libfaad_drm.la
 
-AM_CFLAGS	= -iquote $(top_srcdir)/include
+AM_CPPFLAGS	= -iquote $(top_srcdir)/include
 include_HEADERS = $(top_srcdir)/include/faad.h \
 		  $(top_srcdir)/include/neaacdec.h
 
-libfaad_la_LDFLAGS = -version-info 2:0:0
+libfaad_la_LDFLAGS = -version-info 2:0:0 -no-undefined
 libfaad_la_LIBADD = -lm
+libfaad_la_CFLAGS = -fvisibility=hidden
 
 libfaad_la_SOURCES = bits.c cfft.c decoder.c drc.c \
 		     drm_dec.c error.c filtbank.c \
@@ -16,7 +17,7 @@ libfaad_la_SOURCES = bits.c cfft.c decoder.c drc.c \
 		     sbr_dct.c sbr_e_nf.c sbr_fbt.c sbr_hfadj.c sbr_hfgen.c \
 		     sbr_huff.c sbr_qmf.c sbr_syntax.c sbr_tf_grid.c sbr_dec.c \
 		     analysis.h bits.h cfft.h cfft_tab.h common.h \
-		     decoder.h drc.h drm_dec.h error.h fixed.h filtbank.h \
+		     drc.h drm_dec.h error.h fixed.h filtbank.h \
 		     huffman.h ic_predict.h iq_table.h is.h kbd_win.h lt_predict.h \
 		     mdct.h mdct_tab.h mp4.h ms.h output.h pns.h ps_dec.h ps_tables.h \
 		     pulse.h rvlc.h \
@@ -28,3 +29,13 @@ libfaad_la_SOURCES = bits.c cfft.c decoder.c drc.c \
 		     codebook/hcb_1.h codebook/hcb_2.h codebook/hcb_3.h codebook/hcb_4.h \
 		     codebook/hcb_5.h codebook/hcb_6.h codebook/hcb_7.h codebook/hcb_8.h \
 		     codebook/hcb_9.h codebook/hcb_10.h codebook/hcb_11.h codebook/hcb_sf.h
+
+libfaad_drm_la_LDFLAGS = ${libfaad_la_LDFLAGS}
+libfaad_drm_la_LIBADD = ${libfaad_la_LIBADD}
+libfaad_drm_la_CFLAGS = ${libfaad_la_CFLAGS} -DDRM_SUPPORT
+libfaad_drm_la_SOURCES = ${libfaad_la_SOURCES}
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = faad2.pc
+
+EXTRA_DIST = faad2.pc.in

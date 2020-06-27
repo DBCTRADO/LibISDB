@@ -25,7 +25,7 @@
 ** Commercial non-GPL licensing of this software is possible.
 ** For more info contact Nero AG through Mpeg4AAClicense@nero.com.
 **
-** $Id: specrec.c,v 1.62 2009/01/26 23:51:15 menno Exp $
+** $Id: specrec.c,v 1.63 2010/06/04 20:47:56 menno Exp $
 **/
 
 /*
@@ -938,6 +938,9 @@ uint8_t reconstruct_single_channel(NeAACDecStruct *hDecoder, ic_stream *ics,
         hDecoder->element_alloced[hDecoder->fr_ch_ele] = 1;
     }
 
+    /* sanity check, CVE-2018-20199, CVE-2018-20360 */
+    if(!hDecoder->time_out[sce->channel])
+        return 15;
 
     /* dequantisation and scaling */
     retval = quant_to_spec(hDecoder, ics, spec_data, spec_coef, hDecoder->frameLength);
@@ -1109,14 +1112,18 @@ uint8_t reconstruct_channel_pair(NeAACDecStruct *hDecoder, ic_stream *ics1, ic_s
 #ifdef PROFILE
     int64_t count = faad_get_ts();
 #endif
-    if (hDecoder->element_alloced[hDecoder->fr_ch_ele] == 0)
+    if (hDecoder->element_alloced[hDecoder->fr_ch_ele] != 2)
     {
         retval = allocate_channel_pair(hDecoder, cpe->channel, (uint8_t)cpe->paired_channel);
         if (retval > 0)
             return retval;
 
-        hDecoder->element_alloced[hDecoder->fr_ch_ele] = 1;
+        hDecoder->element_alloced[hDecoder->fr_ch_ele] = 2;
     }
+
+    /* sanity check, CVE-2018-20199, CVE-2018-20360 */
+    if(!hDecoder->time_out[cpe->channel])
+        return 15;
 
     /* dequantisation and scaling */
     retval = quant_to_spec(hDecoder, ics1, spec_data1, spec_coef1, hDecoder->frameLength);
@@ -1131,16 +1138,13 @@ uint8_t reconstruct_channel_pair(NeAACDecStruct *hDecoder, ic_stream *ics1, ic_s
     hDecoder->requant_cycles += count;
 #endif
 
-
     /* pns decoding */
     if (ics1->ms_mask_present)
     {
         pns_decode(ics1, ics2, spec_coef1, spec_coef2, hDecoder->frameLength, 1, hDecoder->object_type,
             &(hDecoder->__r1), &(hDecoder->__r2));
     } else {
-        pns_decode(ics1, NULL, spec_coef1, NULL, hDecoder->frameLength, 0, hDecoder->object_type,
-            &(hDecoder->__r1), &(hDecoder->__r2));
-        pns_decode(ics2, NULL, spec_coef2, NULL, hDecoder->frameLength, 0, hDecoder->object_type,
+        pns_decode(ics1, ics2, spec_coef1, spec_coef2, hDecoder->frameLength, 0, hDecoder->object_type,
             &(hDecoder->__r1), &(hDecoder->__r2));
     }
 

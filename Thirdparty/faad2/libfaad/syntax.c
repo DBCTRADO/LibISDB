@@ -344,6 +344,12 @@ static void decode_sce_lfe(NeAACDecStruct *hDecoder,
        can become 2 when some form of Parametric Stereo coding is used
     */
 
+    if (hDecoder->frame && hDecoder->element_id[hDecoder->fr_ch_ele] != id_syn_ele) {
+        /* element inconsistency */
+        hInfo->error = 21;
+        return;
+    }
+
     /* save the syntax element id */
     hDecoder->element_id[hDecoder->fr_ch_ele] = id_syn_ele;
 
@@ -390,6 +396,12 @@ static void decode_cpe(NeAACDecStruct *hDecoder, NeAACDecFrameInfo *hInfo, bitfi
         /* element_output_channels not set yet */
         hDecoder->element_output_channels[hDecoder->fr_ch_ele] = 2;
     } else if (hDecoder->element_output_channels[hDecoder->fr_ch_ele] != 2) {
+        /* element inconsistency */
+        hInfo->error = 21;
+        return;
+    }
+
+    if (hDecoder->frame && hDecoder->element_id[hDecoder->fr_ch_ele] != id_syn_ele) {
         /* element inconsistency */
         hInfo->error = 21;
         return;
@@ -2292,6 +2304,8 @@ static uint8_t excluded_channels(bitfile *ld, drc_info *drc)
     while ((drc->additional_excluded_chns[n-1] = faad_get1bit(ld
         DEBUGVAR(1,104,"excluded_channels(): additional_excluded_chns"))) == 1)
     {
+        if (i >= MAX_CHANNELS - num_excl_chan - 7)
+            return n;
         for (i = num_excl_chan; i < num_excl_chan+7; i++)
         {
             drc->exclude_mask[i] = faad_get1bit(ld
@@ -2630,5 +2644,5 @@ uint32_t faad_latm_frame(latm_header *latm, bitfile *ld)
             return (len*8)-(endpos-initpos);
         //faad_getbits(ld, initpos-endpos); //go back to initpos, but is valid a getbits(-N) ? 
     }
-    return -1U;
+    return 0xFFFFFFFF;
 }
