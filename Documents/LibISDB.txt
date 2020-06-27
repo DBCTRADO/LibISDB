@@ -81,6 +81,10 @@
   このライブラリは以下のライブラリに依存している。
   いずれも LibISDBWindows で利用される。
 
+  ・Fraunhofer FDK AAC
+      © Copyright  1995 - 2018 Fraunhofer-Gesellschaft zur Förderung der angewandten
+      Forschung e.V. All rights reserved.
+
   ・FAAD2
       Code from FAAD2 is copyright (c) Nero AG, www.nero.com
 
@@ -93,6 +97,9 @@
 
   ・DirectShow BaseClasses
       Copyright (c) Microsoft Corporation
+
+  Fraunhofer FDK AAC と FAAD2 は、ビルド時にどちらを利用するか選択する。
+  デフォルトは FDK AAC で、FAAD2 を利用する場合は LIBISDB_USE_FAAD2 を定義する。
 
 
 ◆ 特記事項

@@ -30,13 +30,12 @@
 
 #include "AudioDecoder.hpp"
 #include "../../../../MediaParsers/ADTSParser.hpp"
-#include "../../../../../Thirdparty/faad2/include/neaacdec.h"
 
 
 namespace LibISDB::DirectShow
 {
 
-	/** AAC デコーダクラス */
+	/** AAC デコーダ基底クラス */
 	class AACDecoder
 		: public AudioDecoder
 	{
@@ -47,7 +46,6 @@ namespace LibISDB::DirectShow
 	// AudioDecoder
 		bool Open() override;
 		void Close() override;
-		bool IsOpened() const override;
 		bool Reset() override;
 		bool Decode(const uint8_t *pData, size_t *pDataSize, ReturnArg<DecodeFrameInfo> Info) override;
 
@@ -55,19 +53,13 @@ namespace LibISDB::DirectShow
 		bool GetSPDIFFrameInfo(ReturnArg<SPDIFFrameInfo> Info) const override;
 		int GetSPDIFBurstPayload(uint8_t *pBuffer, size_t BufferSize) const override;
 
-		bool GetChannelMap(int Channels, int *pMap) const override;
-		bool GetDownmixInfo(ReturnArg<DownmixInfo> Info) const override;
-
-	private:
-		bool OpenDecoder();
-		void CloseDecoder();
+	protected:
+		virtual bool OpenDecoder() = 0;
+		virtual void CloseDecoder() = 0;
 		bool ResetDecoder();
-		bool DecodeFrame(const ADTSFrame *pFrame, ReturnArg<DecodeFrameInfo> Info);
+		virtual bool DecodeFrame(const ADTSFrame *pFrame, ReturnArg<DecodeFrameInfo> Info) = 0;
 
 		ADTSParser m_ADTSParser;
-		NeAACDecHandle m_hDecoder;
-		bool m_InitRequest;
-		uint8_t m_LastChannelConfig;
 		const ADTSFrame *m_pADTSFrame;
 		bool m_DecodeError;
 	};

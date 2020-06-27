@@ -162,9 +162,6 @@
     <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\VideoRenderer_EVRCustomPresenter.hpp">
       <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder.hpp">
-      <Filter>Viewer\DirectShow\AudioDecoders\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AC3Decoder.hpp">
       <Filter>Viewer\DirectShow\AudioDecoders\Header Files</Filter>
     </ClInclude>
@@ -231,6 +228,15 @@
     <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_OverlayMixer.hpp">
       <Filter>Viewer\DirectShow\VideoRenderers\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder_FDK.hpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder.hpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder_FAAD2.hpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\LibISDB\Windows\Base\BonDriver.cpp">
@@ -286,9 +292,6 @@
     </ClCompile>
     <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\VideoRenderer_EVRCustomPresenter.cpp">
       <Filter>Viewer\DirectShow\VideoRenderers\EVRCustomPresenter\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder.cpp">
-      <Filter>Viewer\DirectShow\AudioDecoders\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AC3Decoder.cpp">
       <Filter>Viewer\DirectShow\AudioDecoders\Source Files</Filter>
@@ -349,6 +352,15 @@
     </ClCompile>
     <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_OverlayMixer.cpp">
       <Filter>Viewer\DirectShow\VideoRenderers\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder_FDK.cpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder.cpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder_FAAD2.cpp">
+      <Filter>Viewer\DirectShow\AudioDecoders\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

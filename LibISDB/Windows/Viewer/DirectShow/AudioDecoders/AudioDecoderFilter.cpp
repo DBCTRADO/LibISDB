@@ -27,7 +27,11 @@
 #include "../../../../LibISDBPrivate.hpp"
 #include "../../../../LibISDBWindows.hpp"
 #include "AudioDecoderFilter.hpp"
-#include "AACDecoder.hpp"
+#ifdef LIBISDB_USE_FAAD2
+#include "AACDecoder_FAAD2.hpp"
+#else
+#include "AACDecoder_FDK.hpp"
+#endif
 #include "MPEGAudioDecoder.hpp"
 #include "AC3Decoder.hpp"
 #include <mmreg.h>
@@ -45,10 +49,10 @@ namespace
 constexpr int FREQUENCY = 48000;
 
 // フレーム当たりのサンプル数(最大)
-// AAC        : 1024
+// AAC        : 4096
 // MPEG Audio : 1152
 // AC-3       : 1536 == 256 * 6
-constexpr int SAMPLES_PER_FRAME = 256 * 6;
+constexpr int SAMPLES_PER_FRAME = 4096;
 
 // REFERENCE_TIMEの一秒
 constexpr REFERENCE_TIME REFERENCE_TIME_SECOND = 10000000LL;
@@ -1332,7 +1336,11 @@ AudioDecoder * AudioDecoderFilter::CreateDecoder(DecoderType Type)
 {
 	switch (Type) {
 	case DecoderType::AAC:
-		return new AACDecoder;
+#ifdef LIBISDB_USE_FAAD2
+		return new AACDecoder_FAAD2;
+#else
+		return new AACDecoder_FDK;
+#endif
 
 	case DecoderType::MPEGAudio:
 		return new MPEGAudioDecoder;
