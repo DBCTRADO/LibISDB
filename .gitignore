@@ -308,3 +308,6 @@ OpenCover/
 
 # LibISDB files
 LibISDBVersionHash.h
+!Thirdparty/faad2/utils/win32/
+!Thirdparty/fdk-aac/libFDK/include/x86/
+!Thirdparty/fdk-aac/win32/
