@@ -18,6 +18,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v1
+        with:
+          submodules: true
       - uses: microsoft/setup-msbuild@v1.0.0
       - name: Build
         # msbuildは成功するのに、なぜかexit codeが1になる。
