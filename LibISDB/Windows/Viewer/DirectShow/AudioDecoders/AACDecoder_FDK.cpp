@@ -187,7 +187,7 @@ bool AACDecoder_FDK::DecodeFrame(const ADTSFrame *pFrame, ReturnArg<DecodeFrameI
 		Err = ::aacDecoder_DecodeFrame(
 			m_hDecoder,
 			reinterpret_cast<INT_PCM *>(m_PCMBuffer.GetBuffer()),
-			static_cast<INT>(m_PCMBuffer.GetBufferSize()),
+			static_cast<INT>(m_PCMBuffer.GetBufferSize() / sizeof(int16_t)),
 			m_DecodeError ? AACDEC_INTR : 0);
 		if (Err == AAC_DEC_TRANSPORT_SYNC_ERROR || Err == AAC_DEC_NOT_ENOUGH_BITS)
 			continue;
