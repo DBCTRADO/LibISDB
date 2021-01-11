@@ -159,8 +159,19 @@ namespace LibISDB
 			std::vector<uint16_t> Frequency;
 		};
 
+		struct CableDeliverySystemInfo {
+			uint16_t TransportStreamID;
+			uint32_t Frequency;
+			uint8_t FrameType;
+			uint8_t FECOuter;
+			uint8_t Modulation;
+			uint32_t SymbolRate;
+			uint8_t FECInner;
+		};
+		
 		typedef std::vector<SatelliteDeliverySystemInfo> SatelliteDeliverySystemList;
 		typedef std::vector<TerrestrialDeliverySystemInfo> TerrestrialDeliverySystemList;
+		typedef std::vector<CableDeliverySystemInfo> CableDeliverySystemList;
 
 		typedef std::vector<uint16_t> EMMPIDList;
 
@@ -288,6 +299,7 @@ namespace LibISDB
 
 		bool GetSatelliteDeliverySystemList(ReturnArg<SatelliteDeliverySystemList> List) const;
 		bool GetTerrestrialDeliverySystemList(ReturnArg<TerrestrialDeliverySystemList> List) const;
+		bool GetCableDeliverySystemList(ReturnArg <CableDeliverySystemList> List) const;
 
 		bool GetEMMPIDList(ReturnArg<EMMPIDList> List) const;
 

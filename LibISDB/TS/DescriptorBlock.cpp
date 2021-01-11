@@ -157,6 +157,7 @@ DescriptorBase * DescriptorBlock::CreateDescriptorInstance(uint8_t Tag)
 	case NetworkNameDescriptor::TAG               : return new NetworkNameDescriptor;
 	case ServiceListDescriptor::TAG               : return new ServiceListDescriptor;
 	case SatelliteDeliverySystemDescriptor::TAG   : return new SatelliteDeliverySystemDescriptor;
+	case CableDeliverySystemDescriptor::TAG       : return new CableDeliverySystemDescriptor;
 	case ServiceDescriptor::TAG                   : return new ServiceDescriptor;
 	case LinkageDescriptor::TAG                   : return new LinkageDescriptor;
 	case ShortEventDescriptor::TAG                : return new ShortEventDescriptor;
