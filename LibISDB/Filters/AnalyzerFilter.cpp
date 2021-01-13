@@ -1667,21 +1667,25 @@ bool AnalyzerFilter::GetCableDeliverySystemList(ReturnArg<CableDeliverySystemLis
 
 	List->clear();
 
-	const NITMultiTable* pNITMultiTable =
+	const NITMultiTable *pNITMultiTable =
+
 		m_PIDMapManager.GetMapTarget<NITMultiTable>(PID_NIT);
 	if ((pNITMultiTable == nullptr) || !pNITMultiTable->IsNITComplete())
 		return false;
 
 	for (uint16_t SectionNo = 0; SectionNo < pNITMultiTable->GetNITSectionCount(); SectionNo++) {
-		const NITTable* pNITTable = pNITMultiTable->GetNITTable(SectionNo);
+		const NITTable *pNITTable = pNITMultiTable->GetNITTable(SectionNo);
+
 		if (pNITTable == nullptr)
 			continue;
 
 		for (int i = 0; i < pNITTable->GetTransportStreamCount(); i++) {
-			const DescriptorBlock* pDescBlock = pNITTable->GetItemDescriptorBlock(i);
+			const DescriptorBlock *pDescBlock = pNITTable->GetItemDescriptorBlock(i);
+
 
 			if (pDescBlock != nullptr) {
-				const CableDeliverySystemDescriptor* pCableDesc =
+				const CableDeliverySystemDescriptor *pCableDesc =
+
 					pDescBlock->GetDescriptor<CableDeliverySystemDescriptor>();
 
 				if (pCableDesc != nullptr) {

@@ -299,7 +299,8 @@ namespace LibISDB
 
 		bool GetSatelliteDeliverySystemList(ReturnArg<SatelliteDeliverySystemList> List) const;
 		bool GetTerrestrialDeliverySystemList(ReturnArg<TerrestrialDeliverySystemList> List) const;
-		bool GetCableDeliverySystemList(ReturnArg <CableDeliverySystemList> List) const;
+		bool GetCableDeliverySystemList(ReturnArg<CableDeliverySystemList> List) const;
+
 
 		bool GetEMMPIDList(ReturnArg<EMMPIDList> List) const;
 
