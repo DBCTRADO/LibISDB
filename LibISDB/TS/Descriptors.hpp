@@ -143,11 +143,9 @@ namespace LibISDB
 		CableDeliverySystemDescriptor();
 
 	// DescriptorBase
-
 		void Reset() override;
 
-	// SatelliteDeliverySystemDescriptor
-
+	// CableDeliverySystemDescriptor
 		uint32_t GetFrequency() const noexcept { return m_Frequency; }
 		uint8_t GetFrameType() const noexcept { return m_FrameType; }
 		uint8_t GetFECOuter() const noexcept { return m_FECOuter; }
@@ -157,7 +155,6 @@ namespace LibISDB
 
 	protected:
 		bool StoreContents(const uint8_t *pPayload) override;
-
 
 		uint32_t m_Frequency;       /**< frequency */
 		uint8_t m_FrameType;        /**< frame_type */

@@ -301,7 +301,6 @@ namespace LibISDB
 		bool GetTerrestrialDeliverySystemList(ReturnArg<TerrestrialDeliverySystemList> List) const;
 		bool GetCableDeliverySystemList(ReturnArg<CableDeliverySystemList> List) const;
 
-
 		bool GetEMMPIDList(ReturnArg<EMMPIDList> List) const;
 
 		bool AddEventListener(EventListener *pEventListener);

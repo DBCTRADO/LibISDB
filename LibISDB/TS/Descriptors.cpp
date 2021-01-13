@@ -235,7 +235,6 @@ void CableDeliverySystemDescriptor::Reset()
 
 
 bool CableDeliverySystemDescriptor::StoreContents(const uint8_t *pPayload)
-
 {
 	if (m_Tag != TAG)
 		return false;
