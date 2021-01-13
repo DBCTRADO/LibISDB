@@ -135,6 +135,35 @@ namespace LibISDB
 		uint8_t m_FECInner;         /**< FEC_inner */
 	};
 
+	/** 有線分配システム記述子クラス */
+	class CableDeliverySystemDescriptor
+		: public DescriptorTemplate<CableDeliverySystemDescriptor, 0x44>
+	{
+	public:
+		CableDeliverySystemDescriptor();
+
+	// DescriptorBase
+		void Reset() override;
+
+	// CableDeliverySystemDescriptor
+		uint32_t GetFrequency() const noexcept { return m_Frequency; }
+		uint8_t GetFrameType() const noexcept { return m_FrameType; }
+		uint8_t GetFECOuter() const noexcept { return m_FECOuter; }
+		uint8_t GetModulation() const noexcept { return m_Modulation; }
+		uint32_t GetSymbolRate() const noexcept { return m_SymbolRate; }
+		uint8_t GetFECInner() const noexcept { return m_FECInner; }
+
+	protected:
+		bool StoreContents(const uint8_t *pPayload) override;
+
+		uint32_t m_Frequency;       /**< frequency */
+		uint8_t m_FrameType;        /**< frame_type */
+		uint8_t m_FECOuter;         /**< FEC_outer */
+		uint8_t m_Modulation;       /**< modulation */
+		uint32_t m_SymbolRate;      /**< symbol_rate */
+		uint8_t m_FECInner;         /**< FEC_inner */
+	};
+
 	/** サービス記述子クラス */
 	class ServiceDescriptor
 		: public DescriptorTemplate<ServiceDescriptor, 0x48>

@@ -215,6 +215,45 @@ bool SatelliteDeliverySystemDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
+CableDeliverySystemDescriptor::CableDeliverySystemDescriptor()
+{
+	Reset();
+}
+
+
+void CableDeliverySystemDescriptor::Reset()
+{
+	DescriptorBase::Reset();
+
+	m_Frequency = 0;
+	m_FrameType = 0;
+	m_FECOuter = 0;
+	m_Modulation = 0;
+	m_SymbolRate = 0;
+	m_FECInner = 0;
+}
+
+
+bool CableDeliverySystemDescriptor::StoreContents(const uint8_t *pPayload)
+{
+	if (m_Tag != TAG)
+		return false;
+	if (m_Length != 11)
+		return false;
+
+	m_Frequency = GetBCD(&pPayload[0], 8);
+	m_FrameType = (pPayload[5] >> 4) & 0x0f;
+	m_FECOuter = pPayload[5] & 0x0f;
+	m_Modulation = pPayload[6];
+	m_SymbolRate = GetBCD(&pPayload[7], 7);
+	m_FECInner = pPayload[10] & 0x0F;
+
+	return true;
+}
+
+
+
+
 ServiceDescriptor::ServiceDescriptor()
 {
 	Reset();

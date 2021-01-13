@@ -1658,6 +1658,53 @@ bool AnalyzerFilter::GetTerrestrialDeliverySystemList(ReturnArg<TerrestrialDeliv
 }
 
 
+bool AnalyzerFilter::GetCableDeliverySystemList(ReturnArg<CableDeliverySystemList> List) const
+{
+	if (!List)
+		return false;
+
+	BlockLock Lock(m_FilterLock);
+
+	List->clear();
+
+	const NITMultiTable *pNITMultiTable =
+		m_PIDMapManager.GetMapTarget<NITMultiTable>(PID_NIT);
+	if ((pNITMultiTable == nullptr) || !pNITMultiTable->IsNITComplete())
+		return false;
+
+	for (uint16_t SectionNo = 0; SectionNo < pNITMultiTable->GetNITSectionCount(); SectionNo++) {
+		const NITTable *pNITTable = pNITMultiTable->GetNITTable(SectionNo);
+		if (pNITTable == nullptr)
+			continue;
+
+		for (int i = 0; i < pNITTable->GetTransportStreamCount(); i++) {
+			const DescriptorBlock *pDescBlock = pNITTable->GetItemDescriptorBlock(i);
+
+			if (pDescBlock != nullptr) {
+				const CableDeliverySystemDescriptor *pCableDesc =
+					pDescBlock->GetDescriptor<CableDeliverySystemDescriptor>();
+
+				if (pCableDesc != nullptr) {
+					CableDeliverySystemInfo Info;
+
+					Info.TransportStreamID = pNITTable->GetTransportStreamID(i);
+					Info.Frequency = pCableDesc->GetFrequency();
+					Info.FrameType = pCableDesc->GetFrameType();
+					Info.FECOuter = pCableDesc->GetFECOuter();
+					Info.Modulation = pCableDesc->GetModulation();
+					Info.SymbolRate = pCableDesc->GetSymbolRate();
+					Info.FECInner = pCableDesc->GetFECInner();
+
+					List->push_back(Info);
+				}
+			}
+		}
+	}
+
+	return !List->empty();
+}
+
+
 bool AnalyzerFilter::GetEMMPIDList(ReturnArg<EMMPIDList> List) const
 {
 	if (!List)
