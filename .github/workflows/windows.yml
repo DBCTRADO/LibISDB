@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v1
         with:
           submodules: true
-      - uses: microsoft/setup-msbuild@v1.0.0
+      - uses: microsoft/setup-msbuild@v1
       - name: Build
         # msbuildは成功するのに、なぜかexit codeが1になる。
         # 以下と類似の問題なのかもしれない。
