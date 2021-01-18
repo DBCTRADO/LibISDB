@@ -20,17 +20,10 @@ jobs:
       - uses: actions/checkout@v1
         with:
           submodules: true
-      - uses: microsoft/setup-msbuild@v1.0.0
+      - uses: microsoft/setup-msbuild@v1
       - name: Build
-        # msbuildは成功するのに、なぜかexit codeが1になる。
-        # 以下と類似の問題なのかもしれない。
-        # https://github.com/actions/virtual-environments/issues/606
-        #
-        # ビルドに失敗した場合、libisdbtest.exeは実行に失敗するはずなので、
-        # Buildステップのエラーを無視することにする。
-        continue-on-error: true
         run: |
-          msbuild Projects/LibISDB.sln /p:Configuration=${{ matrix.configuration }};Platform="x64"
+          msbuild Projects/LibISDB.sln /p:Configuration=${{ matrix.configuration }} /p:Platform=x64
       - name: Run test
         run: |
           ./Projects/x64/${{ matrix.configuration }}/libisdbtest.exe
