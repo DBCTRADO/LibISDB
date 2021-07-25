@@ -59,7 +59,7 @@ namespace LibISDB::DirectShow
 		bool SetVisible(bool Visible) override;
 
 	private:
-		VMR9Allocator *m_pAllocator;
+		COMPointer<VMR9Allocator> m_Allocator;
 	};
 
 }	// namespace LibISDB::DirectShow

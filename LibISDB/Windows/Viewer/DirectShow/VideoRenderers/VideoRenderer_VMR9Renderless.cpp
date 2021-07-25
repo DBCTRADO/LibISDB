@@ -704,14 +704,12 @@ bool VMR9Allocator::GetVideoPosition(RECT *pSrc, RECT *pDst)
 
 
 VideoRenderer_VMR9Renderless::VideoRenderer_VMR9Renderless()
-	: m_pAllocator(nullptr)
 {
 }
 
 
 VideoRenderer_VMR9Renderless::~VideoRenderer_VMR9Renderless()
 {
-	SafeRelease(m_pAllocator);
 }
 
 
@@ -756,10 +754,10 @@ bool VideoRenderer_VMR9Renderless::Initialize(
 		SetHRESULTError(hr, LIBISDB_STR("IVMRSurfaceAllocatorNotify9を取得できません。"));
 		return false;
 	}
-	m_pAllocator = new VMR9Allocator(&hr, hwndRender);
-	m_pAllocator->SetCrop1088To1080(m_Crop1088To1080);
-	pSurfaceAllocatorNotify->AdviseSurfaceAllocator(12345, m_pAllocator);
-	m_pAllocator->AdviseNotify(pSurfaceAllocatorNotify);
+	m_Allocator.Attach(new VMR9Allocator(&hr, hwndRender));
+	m_Allocator->SetCrop1088To1080(m_Crop1088To1080);
+	pSurfaceAllocatorNotify->AdviseSurfaceAllocator(12345, m_Allocator.Get());
+	m_Allocator->AdviseNotify(pSurfaceAllocatorNotify);
 	pSurfaceAllocatorNotify->Release();
 
 	IFilterGraph2 *pFilterGraph2;
@@ -786,7 +784,7 @@ bool VideoRenderer_VMR9Renderless::Initialize(
 
 bool VideoRenderer_VMR9Renderless::Finalize()
 {
-	SafeRelease(m_pAllocator);
+	m_Allocator.Release();
 
 	VideoRenderer::Finalize();
 
@@ -798,14 +796,14 @@ bool VideoRenderer_VMR9Renderless::SetVideoPosition(
 	int SourceWidth, int SourceHeight,const RECT &SourceRect,
 	const RECT &DestRect, const RECT &WindowRect)
 {
-	if (!m_Renderer || !m_pAllocator)
+	if (!m_Renderer || !m_Allocator)
 		return false;
 
 	RECT rcDest;
 
 	rcDest = DestRect;
 	::OffsetRect(&rcDest, WindowRect.left, WindowRect.top);
-	m_pAllocator->SetVideoPosition(SourceWidth, SourceHeight, &SourceRect, &rcDest, WindowRect);
+	m_Allocator->SetVideoPosition(SourceWidth, SourceHeight, &SourceRect, &rcDest, WindowRect);
 	::InvalidateRect(m_hwndRender, nullptr, TRUE);
 
 	return true;
@@ -814,10 +812,10 @@ bool VideoRenderer_VMR9Renderless::SetVideoPosition(
 
 bool VideoRenderer_VMR9Renderless::GetDestPosition(ReturnArg<RECT> Rect)
 {
-	if (!m_Renderer || !m_pAllocator || !Rect)
+	if (!m_Renderer || !m_Allocator || !Rect)
 		return false;
 
-	return m_pAllocator->GetVideoPosition(nullptr, &*Rect);
+	return m_Allocator->GetVideoPosition(nullptr, &*Rect);
 }
 
 
@@ -825,12 +823,12 @@ COMMemoryPointer<> VideoRenderer_VMR9Renderless::GetCurrentImage()
 {
 	BYTE *pDib = nullptr;
 
-	if (m_Renderer && m_pAllocator) {
-		if (m_pAllocator->SetCapture(true)) {
-			if (m_pAllocator->WaitCapture(1000)) {
+	if (m_Renderer && m_Allocator) {
+		if (m_Allocator->SetCapture(true)) {
+			if (m_Allocator->WaitCapture(1000)) {
 				IDirect3DSurface9 *pSurface;
 
-				if (m_pAllocator->GetCaptureSurface(&pSurface)) {
+				if (m_Allocator->GetCaptureSurface(&pSurface)) {
 					D3DSURFACE_DESC desc;
 
 					pSurface->GetDesc(&desc);
@@ -905,7 +903,7 @@ COMMemoryPointer<> VideoRenderer_VMR9Renderless::GetCurrentImage()
 				pSurface->Release();
 			}
 
-			m_pAllocator->SetCapture(false);
+			m_Allocator->SetCapture(false);
 		}
 	}
 
@@ -915,9 +913,9 @@ COMMemoryPointer<> VideoRenderer_VMR9Renderless::GetCurrentImage()
 
 bool VideoRenderer_VMR9Renderless::RepaintVideo(HWND hwnd,HDC hdc)
 {
-	if (!m_Renderer || !m_pAllocator)
+	if (!m_Renderer || !m_Allocator)
 		return false;
-	return m_pAllocator->RepaintVideo();
+	return m_Allocator->RepaintVideo();
 }
 
 
