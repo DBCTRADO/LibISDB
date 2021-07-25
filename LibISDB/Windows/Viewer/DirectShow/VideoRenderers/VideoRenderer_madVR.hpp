@@ -41,7 +41,7 @@ namespace LibISDB::DirectShow
 	public:
 		VideoRenderer_madVR();
 
-		RendererType GetRendererType() const noexcept { return RendererType::madVR; }
+		RendererType GetRendererType() const noexcept override { return RendererType::madVR; }
 		COMMemoryPointer<> GetCurrentImage() override;
 
 		static const CLSID & GetCLSID();

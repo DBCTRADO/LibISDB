@@ -40,7 +40,7 @@ namespace LibISDB::DirectShow
 		: public VideoRenderer_EVR
 	{
 	public:
-		RendererType GetRendererType() const noexcept { return RendererType::EVRCustomPresenter; }
+		RendererType GetRendererType() const noexcept override { return RendererType::EVRCustomPresenter; }
 		bool Finalize() override;
 		bool HasProperty() override { return false; }	// プロパティの数値が不定値になる
 

@@ -44,7 +44,7 @@ namespace LibISDB::DirectShow
 		VideoRenderer_VMR9Renderless();
 		~VideoRenderer_VMR9Renderless();
 
-		RendererType GetRendererType() const noexcept { return RendererType::VMR9Renderless; }
+		RendererType GetRendererType() const noexcept override { return RendererType::VMR9Renderless; }
 		bool Initialize(
 			IGraphBuilder *pGraphBuilder, IPin *pInputPin,
 			HWND hwndRender, HWND hwndMessageDrain) override;

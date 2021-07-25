@@ -337,7 +337,7 @@ namespace LibISDB::DirectShow
 	template <class T, bool NULLABLE = false> class ComPtrList : public LinkedList<T *>
 	{
 	public:
-		void Clear()
+		void Clear() override
 		{
 			LinkedList<T*>::Clear(ComAutoRelease());
 		}

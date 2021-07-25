@@ -97,7 +97,7 @@ namespace LibISDB::DirectShow
 		: public VideoRenderer
 	{
 	public:
-		RendererType GetRendererType() const noexcept { return RendererType::Default; }
+		RendererType GetRendererType() const noexcept override { return RendererType::Default; }
 		bool Initialize(
 			IGraphBuilder *pGraphBuilder, IPin *pInputPin,
 			HWND hwndRender, HWND hwndMessageDrain) override;

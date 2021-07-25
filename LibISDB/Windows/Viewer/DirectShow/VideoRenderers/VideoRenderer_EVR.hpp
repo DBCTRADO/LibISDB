@@ -49,7 +49,7 @@ namespace LibISDB::DirectShow
 		: public VideoRenderer
 	{
 	public:
-		RendererType GetRendererType() const noexcept { return RendererType::EVR; }
+		RendererType GetRendererType() const noexcept override { return RendererType::EVR; }
 		bool Initialize(
 			IGraphBuilder *pGraphBuilder, IPin *pInputPin,
 			HWND hwndRender, HWND hwndMessageDrain) override;
@@ -64,7 +64,7 @@ namespace LibISDB::DirectShow
 		bool DisplayModeChanged() override;
 		bool SetVisible(bool Visible) override;
 
-		bool SetClipToDevice(bool Clip);
+		bool SetClipToDevice(bool Clip) override;
 
 	protected:
 		virtual HRESULT InitializePresenter(IBaseFilter *pFilter) { return S_OK; }

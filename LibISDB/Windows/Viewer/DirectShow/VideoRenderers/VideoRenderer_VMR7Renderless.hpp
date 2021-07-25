@@ -78,7 +78,7 @@ namespace LibISDB::DirectShow
 		STDMETHODIMP PresentImage(DWORD_PTR dwUserID, VMRPRESENTATIONINFO* lpPresInfo) override;
 
 	// VideoRenderer
-		RendererType GetRendererType() const noexcept { return RendererType::VMR7Renderless; }
+		RendererType GetRendererType() const noexcept override { return RendererType::VMR7Renderless; }
 		bool Initialize(
 			IGraphBuilder *pGraphBuilder, IPin *pInputPin,
 			HWND hwndRender, HWND hwndMessageDrain) override;

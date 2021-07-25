@@ -79,7 +79,7 @@ public:
 	virtual const DWORD GetCurChannel() = 0;
 
 // IBonDriver
-	virtual void Release() = 0;
+	virtual void Release() override = 0;
 };
 
 /** IBonDriver3 インターフェース */
@@ -91,7 +91,7 @@ public:
 	virtual const BOOL SetLnbPower(const BOOL bEnable) = 0;
 
 // IBonDriver
-	virtual void Release() = 0;
+	virtual void Release() override = 0;
 };
 
 

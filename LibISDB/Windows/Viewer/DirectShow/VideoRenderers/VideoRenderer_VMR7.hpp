@@ -39,7 +39,7 @@ namespace LibISDB::DirectShow
 		: public VideoRenderer
 	{
 	public:
-		RendererType GetRendererType() const noexcept { return RendererType::VMR7; }
+		RendererType GetRendererType() const noexcept override { return RendererType::VMR7; }
 		bool Initialize(
 			IGraphBuilder *pGraphBuilder, IPin *pInputPin,
 			HWND hwndRender, HWND hwndMessageDrain) override;

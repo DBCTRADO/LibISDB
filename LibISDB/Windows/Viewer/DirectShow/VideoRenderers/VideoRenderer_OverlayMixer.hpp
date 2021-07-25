@@ -39,7 +39,7 @@ namespace LibISDB::DirectShow
 		: public VideoRenderer_Default
 	{
 	public:
-		RendererType GetRendererType() const noexcept { return RendererType::OverlayMixer; }
+		RendererType GetRendererType() const noexcept override { return RendererType::OverlayMixer; }
 		bool Initialize(
 			IGraphBuilder *pGraphBuilder, IPin *pInputPin,
 			HWND hwndRender, HWND hwndMessageDrain) override;
