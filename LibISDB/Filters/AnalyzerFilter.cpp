@@ -144,7 +144,7 @@ uint16_t AnalyzerFilter::GetServiceID(int Index) const
 				return SERVICE_ID_INVALID;
 			ServiceID = m_ServiceList[0].ServiceID;
 		}
-	} else if ((Index >= 0) && (static_cast<size_t>(Index) < m_ServiceList.size())) {
+	} else if (static_cast<size_t>(Index) < m_ServiceList.size()) {
 		ServiceID = m_ServiceList[Index].ServiceID;
 	}
 
