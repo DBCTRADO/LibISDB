@@ -751,9 +751,14 @@ bool VideoRenderer_VMR9Renderless::Initialize(
 
 	IVMRSurfaceAllocatorNotify9 *pSurfaceAllocatorNotify;
 	hr = m_Renderer.QueryInterface(&pSurfaceAllocatorNotify);
+	if (FAILED(hr)) {
+		m_Renderer.Release();
+		SetHRESULTError(hr, LIBISDB_STR("IVMRSurfaceAllocatorNotify9を取得できません。"));
+		return false;
+	}
 	m_pAllocator = new VMR9Allocator(&hr, hwndRender);
 	m_pAllocator->SetCrop1088To1080(m_Crop1088To1080);
-	hr = pSurfaceAllocatorNotify->AdviseSurfaceAllocator(12345, m_pAllocator);
+	pSurfaceAllocatorNotify->AdviseSurfaceAllocator(12345, m_pAllocator);
 	m_pAllocator->AdviseNotify(pSurfaceAllocatorNotify);
 	pSurfaceAllocatorNotify->Release();
 

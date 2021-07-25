@@ -352,6 +352,10 @@ bool VideoRenderer_VMR7Renderless::Initialize(
 
 	IVMRFilterConfig *pFilterConfig;
 	hr = m_Renderer.QueryInterface(&pFilterConfig);
+	if (FAILED(hr)) {
+		SetHRESULTError(hr, LIBISDB_STR("IVMRFilterConfigを取得できません。"));
+		return false;
+	}
 	pFilterConfig->SetRenderingMode(VMRMode_Renderless);
 	pFilterConfig->Release();
 	m_Renderer.QueryInterface(&m_SurfaceAllocatorNotify);
@@ -359,7 +363,7 @@ bool VideoRenderer_VMR7Renderless::Initialize(
 	m_SurfaceAllocatorNotify->AdviseSurfaceAllocator(1234, this);
 
 	IFilterGraph2 *pFilterGraph2;
-	hr=pGraphBuilder->QueryInterface(IID_PPV_ARGS(&pFilterGraph2));
+	hr = pGraphBuilder->QueryInterface(IID_PPV_ARGS(&pFilterGraph2));
 	if (FAILED(hr)) {
 		SetHRESULTError(hr, LIBISDB_STR("IFilterGraph2を取得できません。"));
 		return false;

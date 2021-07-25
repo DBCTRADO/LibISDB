@@ -723,13 +723,15 @@ HRESULT EVRPresenter::IsRateSupported(BOOL bThin, float fRate, float *pfNearestS
 		if (fRate < 0.0) {
 			fNearestRate = -fNearestRate;
 		}
+	} else {
+		hr = S_OK;
 	}
 
 	if (pfNearestSupportedRate != nullptr) {
 		*pfNearestSupportedRate = fNearestRate;
 	}
 
-	return S_OK;
+	return hr;
 }
 
 
@@ -860,9 +862,7 @@ HRESULT EVRPresenter::SetVideoPosition(const MFVideoNormalizedRect *pnrcSource, 
 
 	if (bChanged && m_Mixer) {
 		hr = RenegotiateMediaType();
-		if (hr == MF_E_TRANSFORM_TYPE_NOT_SET) {
-			hr = S_OK;
-		} else {
+		if (hr != MF_E_TRANSFORM_TYPE_NOT_SET) {
 			if (FAILED(hr)) {
 				return hr;
 			}
@@ -1474,7 +1474,7 @@ HRESULT EVRPresenter::IsMediaTypeSupported(IMFMediaType *pMediaType)
 	MFVideoInterlaceMode InterlaceMode = MFVideoInterlace_Unknown;
 
 	hr = mtProposed.GetInterlaceMode(&InterlaceMode);
-	if (InterlaceMode != MFVideoInterlace_Progressive) {
+	if (FAILED(hr) || InterlaceMode != MFVideoInterlace_Progressive) {
 		return MF_E_INVALIDMEDIATYPE;
 	}
 
