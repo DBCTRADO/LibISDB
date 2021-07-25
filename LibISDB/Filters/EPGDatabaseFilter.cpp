@@ -116,15 +116,14 @@ void EPGDatabaseFilter::OnEITSection(const PSITableBase *pTable, const PSISectio
 					const uint16_t NetworkID = pEITTable->GetOriginalNetworkID();
 					const uint16_t TransportStreamID = pEITTable->GetTransportStreamID();
 					const uint16_t ServiceID = pEITTable->GetServiceID();
-					EITPfScheduleTable *pTable;
 
-					pTable = m_PIDMapManager.GetMapTarget<EITPfScheduleTable>(PID_HEIT);
-					if (pTable != nullptr)
-						pTable->ResetScheduleService(NetworkID, TransportStreamID, ServiceID);
+					if (EITPfScheduleTable *pHEITTable = m_PIDMapManager.GetMapTarget<EITPfScheduleTable>(PID_HEIT);
+							pHEITTable != nullptr)
+						pHEITTable->ResetScheduleService(NetworkID, TransportStreamID, ServiceID);
 
-					pTable = m_PIDMapManager.GetMapTarget<EITPfScheduleTable>(PID_LEIT);
-					if (pTable != nullptr)
-						pTable->ResetScheduleService(NetworkID, TransportStreamID, ServiceID);
+					if (EITPfScheduleTable *pLEITTable = m_PIDMapManager.GetMapTarget<EITPfScheduleTable>(PID_LEIT);
+							pLEITTable != nullptr)
+						pLEITTable->ResetScheduleService(NetworkID, TransportStreamID, ServiceID);
 				}
 			}
 		}

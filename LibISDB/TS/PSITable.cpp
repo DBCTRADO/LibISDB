@@ -482,9 +482,9 @@ bool PSITableSet::OnPSISection(const PSISectionParser *pSectionParser, const PSI
 
 			const PSITable *pPSITable = dynamic_cast<const PSITable *>(pTable);
 			if (pPSITable != nullptr) {
-				const PSITableBase *pSection = pPSITable->GetLastUpdatedSection();
-				if (pSection != nullptr)
-					m_LastUpdatedTableUniqueID = pSection->GetUniqueID();
+				const PSITableBase *pLastSection = pPSITable->GetLastUpdatedSection();
+				if (pLastSection != nullptr)
+					m_LastUpdatedTableUniqueID = pLastSection->GetUniqueID();
 			}
 
 			if (m_SectionHandler)

@@ -141,10 +141,10 @@ bool DownloadInfoIndicationParser::ParseData(const uint8_t *pData, uint16_t Data
 	Message.TCDownloadScenario     = Load32(&pData[Pos + 12]);
 
 	// Compatibility Descriptor
-	const uint16_t DescLength      = Load16(&pData[Pos + 16]);
-	if (Pos + 18 + DescLength + 2 > DataSize)
+	const uint16_t CompatDescLength = Load16(&pData[Pos + 16]);
+	if (Pos + 18 + CompatDescLength + 2 > DataSize)
 		return false;
-	Pos += 18 + DescLength;
+	Pos += 18 + CompatDescLength;
 
 	const uint16_t NumberOfModules = Load16(&pData[Pos + 0]);
 	Pos += 2;

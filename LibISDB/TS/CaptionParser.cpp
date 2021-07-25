@@ -386,8 +386,8 @@ bool CaptionParser::ParseDRCSUnitData(const uint8_t *pData, uint32_t DataSize)
 						BitsPerPixel = 9;
 				}
 
-				const uint32_t DataSize = (Width * Height * BitsPerPixel + 7) >> 3;
-				if (LIBISDB_TRACE_ERROR_IF(RemainSize < DataSize))
+				const uint32_t BitmapDataSize = (Width * Height * BitsPerPixel + 7) >> 3;
+				if (LIBISDB_TRACE_ERROR_IF(RemainSize < BitmapDataSize))
 					return false;
 
 				if (j == 0) {
@@ -398,12 +398,12 @@ bool CaptionParser::ParseDRCSUnitData(const uint8_t *pData, uint32_t DataSize)
 					Bitmap.Depth        = Depth;
 					Bitmap.BitsPerPixel = BitsPerPixel;
 					Bitmap.pData        = pData;
-					Bitmap.DataSize     = DataSize;
+					Bitmap.DataSize     = BitmapDataSize;
 					m_pDRCSMap->SetDRCS(CharacterCode, &Bitmap);
 				}
 
-				pData += DataSize;
-				RemainSize -= DataSize;
+				pData += BitmapDataSize;
+				RemainSize -= BitmapDataSize;
 			} else {
 				// ジオメトリック(非対応)
 				if (LIBISDB_TRACE_ERROR_IF(RemainSize < 4))

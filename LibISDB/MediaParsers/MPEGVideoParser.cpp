@@ -104,12 +104,12 @@ bool MPEGVideoParserBase::ParseSequence(
 			}
 
 			// スタートコードをセットする
-			uint8_t StartCode[4];
-			StartCode[0] = static_cast<uint8_t>( SyncState >> 24);
-			StartCode[1] = static_cast<uint8_t>((SyncState >> 16) & 0xFF);
-			StartCode[2] = static_cast<uint8_t>((SyncState >>  8) & 0xFF);
-			StartCode[3] = static_cast<uint8_t>( SyncState        & 0xFF);
-			pSequenceData->SetData(StartCode, 4);
+			uint8_t StartCodeData[4];
+			StartCodeData[0] = static_cast<uint8_t>( SyncState >> 24);
+			StartCodeData[1] = static_cast<uint8_t>((SyncState >> 16) & 0xFF);
+			StartCodeData[2] = static_cast<uint8_t>((SyncState >>  8) & 0xFF);
+			StartCodeData[3] = static_cast<uint8_t>( SyncState        & 0xFF);
+			pSequenceData->SetData(StartCodeData, 4);
 
 			// シフトレジスタを初期化する
 			SyncState = 0xFFFFFFFF_u32;
