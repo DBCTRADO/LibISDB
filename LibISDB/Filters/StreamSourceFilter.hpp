@@ -106,7 +106,7 @@ namespace LibISDB
 
 		std::atomic<unsigned long long> m_InputBytes;
 
-		volatile bool m_IsStreaming;
+		std::atomic_bool m_IsStreaming;
 	};
 
 }	// namespace LibISDB
