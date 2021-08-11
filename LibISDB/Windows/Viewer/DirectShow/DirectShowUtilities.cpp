@@ -184,7 +184,7 @@ bool FilterFinder::FindFilters(
 	);
 
 	if (SUCCEEDED(hr)) {
-		hr = GetFilterInfoListFromEnumMoniker(pEnum, &m_FilterList);
+		OK = GetFilterInfoListFromEnumMoniker(pEnum, &m_FilterList);
 		pEnum->Release();
 	}
 
@@ -272,16 +272,17 @@ bool DeviceEnumerator::EnumDevice(const CLSID &clsidDeviceClass)
 	if (FAILED(hr))
 		return false;
 
+	bool OK = false;
 	IEnumMoniker *pEnumCategory;
 	hr = pDevEnum->CreateClassEnumerator(clsidDeviceClass, &pEnumCategory, 0);
 	if (hr == S_OK) {
-		hr = GetFilterInfoListFromEnumMoniker(pEnumCategory, &m_DeviceList);
+		OK = GetFilterInfoListFromEnumMoniker(pEnumCategory, &m_DeviceList);
 		pEnumCategory->Release();
 	}
 
 	pDevEnum->Release();
 
-	return true;
+	return OK;
 }
 
 
