@@ -36,6 +36,62 @@
 namespace LibISDB::DirectShow
 {
 
+namespace
+{
+
+
+bool GetFilterInfoListFromEnumMoniker(IEnumMoniker *pEnum, FilterInfoList *pFilterList)
+{
+	bool OK = false;
+	IMoniker *pMoniker;
+	ULONG cFetched;
+
+	while (pEnum->Next(1, &pMoniker, &cFetched) == S_OK) {
+		FilterInfo Info;
+
+		LPOLESTR pDisplayName;
+		HRESULT hr = pMoniker->GetDisplayName(nullptr, nullptr, &pDisplayName);
+		if (SUCCEEDED(hr)) {
+			Info.MonikerName = pDisplayName;
+			::CoTaskMemFree(pDisplayName);
+		}
+
+		IPropertyBag *pPropBag;
+
+		hr = pMoniker->BindToStorage(0, 0, IID_PPV_ARGS(&pPropBag));
+		if (SUCCEEDED(hr)) {
+			VARIANT var;
+
+			::VariantInit(&var);
+			hr = pPropBag->Read(L"FriendlyName", &var, 0);
+			if (SUCCEEDED(hr)) {
+				Info.FriendlyName = var.bstrVal;
+				::VariantClear(&var);
+
+				hr = pPropBag->Read(L"CLSID", &var, 0);
+				if (SUCCEEDED(hr)) {
+					::CLSIDFromString(var.bstrVal, &Info.clsid);
+					::VariantClear(&var);
+
+					pFilterList->emplace_back(std::move(Info));
+					OK = true;
+				}
+			}
+
+			pPropBag->Release();
+		}
+
+		pMoniker->Release();
+	}
+
+	return OK;
+}
+
+
+}	// namespace
+
+
+
 
 void FilterFinder::Clear()
 {
@@ -49,8 +105,21 @@ int FilterFinder::GetFilterCount() const
 }
 
 
+bool FilterFinder::GetFilterInfo(int Index, FilterInfo *pInfo) const
+{
+	if ((Index < 0) || (Index >= GetFilterCount()))
+		return false;
+	if (pInfo == nullptr)
+		return false;
+
+	*pInfo = m_FilterList[Index];
+
+	return true;
+}
+
+
 bool FilterFinder::GetFilterInfo(
-	int Index, CLSID *pClass, std::wstring *pFriendlyName) const
+	int Index, CLSID *pClass, std::wstring *pFriendlyName, std::wstring *pMonikerName) const
 {
 	if ((Index < 0) || (Index >= GetFilterCount()))
 		return false;
@@ -63,11 +132,14 @@ bool FilterFinder::GetFilterInfo(
 	if (pFriendlyName != nullptr)
 		*pFriendlyName = Info.FriendlyName;
 
+	if (pMonikerName != nullptr)
+		*pMonikerName = Info.MonikerName;
+
 	return true;
 }
 
 
-bool FilterFinder::GetFilterList(FilterList *pList) const
+bool FilterFinder::GetFilterList(FilterInfoList *pList) const
 {
 	if (pList == nullptr)
 		return false;
@@ -112,37 +184,7 @@ bool FilterFinder::FindFilters(
 	);
 
 	if (SUCCEEDED(hr)) {
-		IMoniker *pMoniker;
-		ULONG cFetched;
-
-		while (pEnum->Next(1, &pMoniker, &cFetched) == S_OK) {
-			IPropertyBag *pPropBag;
-
-			hr = pMoniker->BindToStorage(0, 0, IID_PPV_ARGS(&pPropBag));
-			if (SUCCEEDED(hr)) {
-				VARIANT varName, varID;
-
-				::VariantInit(&varName);
-				::VariantInit(&varID);
-				hr = pPropBag->Read(L"FriendlyName", &varName, 0);
-				if (SUCCEEDED(hr)) {
-					hr = pPropBag->Read(L"CLSID", &varID, 0);
-					if (SUCCEEDED(hr)) {
-						OK = true;
-						CLSID clsid;
-						::CLSIDFromString(varID.bstrVal, &clsid);
-						m_FilterList.emplace_back(clsid, varName.bstrVal);
-						::SysFreeString(varID.bstrVal);
-					}
-					::SysFreeString(varName.bstrVal);
-				}
-
-				pPropBag->Release();
-			}
-
-			pMoniker->Release();
-		}
-
+		hr = GetFilterInfoListFromEnumMoniker(pEnum, &m_FilterList);
 		pEnum->Release();
 	}
 
@@ -180,7 +222,7 @@ bool FilterFinder::FindFilters(
 
 bool FilterFinder::SetPreferredFilter(const CLSID &idFilter)
 {
-	FilterList TempList;
+	FilterInfoList TempList;
 
 	TempList.reserve(m_FilterList.size());
 
@@ -233,29 +275,7 @@ bool DeviceEnumerator::EnumDevice(const CLSID &clsidDeviceClass)
 	IEnumMoniker *pEnumCategory;
 	hr = pDevEnum->CreateClassEnumerator(clsidDeviceClass, &pEnumCategory, 0);
 	if (hr == S_OK) {
-		IMoniker *pMoniker;
-		ULONG cFetched;
-
-		while (pEnumCategory->Next(1, &pMoniker, &cFetched) == S_OK) {
-			IPropertyBag *pPropBag;
-
-			hr = pMoniker->BindToStorage(0, 0, IID_PPV_ARGS(&pPropBag));
-			if (SUCCEEDED(hr)) {
-				VARIANT varName;
-
-				::VariantInit(&varName);
-				hr = pPropBag->Read(L"FriendlyName", &varName, 0);
-				if (SUCCEEDED(hr)) {
-					m_DeviceList.emplace_back(varName.bstrVal);
-				}
-				::VariantClear(&varName);
-
-				pPropBag->Release();
-			}
-
-			pMoniker->Release();
-		}
-
+		hr = GetFilterInfoListFromEnumMoniker(pEnumCategory, &m_DeviceList);
 		pEnumCategory->Release();
 	}
 
@@ -299,8 +319,8 @@ bool DeviceEnumerator::CreateFilter(const CLSID &clsidDeviceClass, LPCWSTR pszFr
 						hr = pMoniker->BindToObject(nullptr, nullptr, IID_PPV_ARGS(ppFilter));
 						Found = true;
 					}
+					::VariantClear(&varName);
 				}
-				::VariantClear(&varName);
 
 				pPropBag->Release();
 			}
@@ -322,12 +342,27 @@ bool DeviceEnumerator::CreateFilter(const CLSID &clsidDeviceClass, LPCWSTR pszFr
 }
 
 
-LPCWSTR DeviceEnumerator::GetDeviceFriendlyName(int Index) const
+bool DeviceEnumerator::GetFilterInfo(int Index, FilterInfo *pInfo) const
 {
 	if ((Index < 0) || (Index >= GetDeviceCount()))
-		return nullptr;
+		return false;
+	if (pInfo == nullptr)
+		return false;
 
-	return m_DeviceList[Index].FriendlyName.c_str();
+	*pInfo = m_DeviceList[Index];
+
+	return true;
+}
+
+
+bool DeviceEnumerator::GetFilterList(FilterInfoList *pList) const
+{
+	if (pList == nullptr)
+		return false;
+
+	*pList = m_DeviceList;
+
+	return !pList->empty();
 }
 
 
@@ -577,6 +612,56 @@ HRESULT AppendFilterAndConnect(
 		pFilter->Release();
 
 	return S_OK;
+}
+
+
+HRESULT CreateFilterFromMonikerName(
+	LPCWSTR pszMonikerName, COMPointer<IBaseFilter> *pFilter, std::wstring *pFriendlyName)
+{
+	if (StringIsEmpty(pszMonikerName))
+		return E_INVALIDARG;
+	if (pFilter == nullptr)
+		return E_POINTER;
+
+	IBindCtx *pBindCtx;
+	HRESULT hr = ::CreateBindCtx(0, &pBindCtx);
+	if (FAILED(hr))
+		return hr;
+
+	IMoniker *pMoniker;
+	ULONG Eaten;
+	hr = ::MkParseDisplayName(pBindCtx, pszMonikerName, &Eaten, &pMoniker);
+	if (SUCCEEDED(hr)) {
+		IBaseFilter *pBaseFilter;
+		hr = pMoniker->BindToObject(nullptr, nullptr, IID_PPV_ARGS(&pBaseFilter));
+		if (SUCCEEDED(hr)) {
+			pFilter->Attach(pBaseFilter);
+
+			if (pFriendlyName != nullptr) {
+				pFriendlyName->clear();
+
+				IPropertyBag *pPropBag;
+				HRESULT hrName = pMoniker->BindToStorage(0, 0, IID_PPV_ARGS(&pPropBag));
+				if (SUCCEEDED(hrName)) {
+					VARIANT varName;
+					::VariantInit(&varName);
+					hrName = pPropBag->Read(L"FriendlyName", &varName, 0);
+					if (SUCCEEDED(hrName)) {
+						*pFriendlyName = varName.bstrVal;
+						::VariantClear(&varName);
+					}
+
+					pPropBag->Release();
+				}
+			}
+		}
+
+		pMoniker->Release();
+	}
+
+	pBindCtx->Release();
+
+	return hr;
 }
 
 

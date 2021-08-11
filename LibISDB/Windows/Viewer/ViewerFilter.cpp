@@ -575,7 +575,7 @@ bool ViewerFilter::OpenViewer(const OpenSettings &Settings)
 
 			// 検索
 			DirectShow::FilterFinder FilterFinder;
-			DirectShow::FilterFinder::FilterList FilterList;
+			DirectShow::FilterInfoList FilterList;
 
 			if (FilterFinder.FindFilters(&MEDIATYPE_Audio, &MEDIASUBTYPE_PCM)
 					&& FilterFinder.GetFilterList(&FilterList)) {
@@ -674,14 +674,26 @@ bool ViewerFilter::OpenViewer(const OpenSettings &Settings)
 		{
 			bool OK = false;
 
-			if (!StringIsEmpty(Settings.pszAudioDevice)) {
-				DirectShow::DeviceEnumerator DevEnum;
-
-				if (DevEnum.CreateFilter(CLSID_AudioRendererCategory, Settings.pszAudioDevice, m_AudioRenderer.GetPP())) {
-					m_AudioRendererName = Settings.pszAudioDevice;
+			if (!Settings.AudioDevice.MonikerName.empty()) {
+				hr = DirectShow::CreateFilterFromMonikerName(
+					Settings.AudioDevice.MonikerName.c_str(), &m_AudioRenderer, &m_AudioRendererName);
+				if (SUCCEEDED(hr)) {
 					OK = true;
 				}
 			}
+
+			if (!OK && !Settings.AudioDevice.FriendlyName.empty()) {
+				DirectShow::DeviceEnumerator DevEnum;
+
+				if (DevEnum.CreateFilter(
+						CLSID_AudioRendererCategory,
+						Settings.AudioDevice.FriendlyName.c_str(),
+						m_AudioRenderer.GetPP())) {
+					m_AudioRendererName = Settings.AudioDevice.FriendlyName;
+					OK = true;
+				}
+			}
+
 			if (!OK) {
 				hr = ::CoCreateInstance(
 					CLSID_DSoundRender, nullptr, CLSCTX_INPROC_SERVER,
@@ -691,13 +703,13 @@ bool ViewerFilter::OpenViewer(const OpenSettings &Settings)
 					OK = true;
 				}
 			}
+
 			if (OK) {
 				hr = DirectShow::AppendFilterAndConnect(
 					m_GraphBuilder.Get(), m_AudioRenderer.Get(), L"Audio Renderer", &OutputAudioPin);
 				if (SUCCEEDED(hr)) {
 #ifdef _DEBUG
-					if (!StringIsEmpty(Settings.pszAudioDevice))
-						LIBISDB_TRACE(LIBISDB_STR("音声デバイス %") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR(" を接続\n"), Settings.pszAudioDevice);
+					LIBISDB_TRACE(LIBISDB_STR("音声デバイス %") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR(" を接続\n"), m_AudioRendererName.c_str());
 #endif
 					if (m_UseAudioRendererClock) {
 						IMediaFilter *pMediaFilter;

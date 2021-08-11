@@ -56,27 +56,26 @@ DEFINE_GUID(MEDIASUBTYPE_HEVC,
 namespace LibISDB::DirectShow
 {
 
+	struct FilterInfo {
+		CLSID clsid = {};
+		std::wstring FriendlyName;
+		std::wstring MonikerName;
+	};
+
+	using FilterInfoList = std::vector<FilterInfo>;
+
 	/** DirectShow フィルタ検索クラス */
 	class FilterFinder
 	{
 	public:
-		struct FilterInfo {
-			CLSID clsid;
-			std::wstring FriendlyName;
-
-			FilterInfo(CLSID id, LPCWSTR pszFriendlyName)
-				: clsid(id)
-				, FriendlyName(pszFriendlyName)
-			{
-			}
-		};
-
-		typedef std::vector<FilterInfo> FilterList;
-
 		void Clear();
 		int GetFilterCount() const;
-		bool GetFilterInfo(int Index, CLSID *pClass, std::wstring *pFriendlyName = nullptr) const;
-		bool GetFilterList(FilterList *pList) const;
+		bool GetFilterInfo(int Index, FilterInfo *pInfo) const;
+		bool GetFilterInfo(
+			int Index, CLSID *pClass,
+			std::wstring *pFriendlyName = nullptr,
+			std::wstring *pMonikerName = nullptr) const;
+		bool GetFilterList(FilterInfoList *pList) const;
 		bool FindFilters(
 			const GUID *pInTypes, int InTypeCount,
 			const GUID *pOutTypes = nullptr, int OutTypeCount = 0,
@@ -88,7 +87,7 @@ namespace LibISDB::DirectShow
 		bool SetPreferredFilter(const CLSID &idFilter);
 
 	protected:
-		FilterList m_FilterList;
+		FilterInfoList m_FilterList;
 	};
 
 	/** DirectShow デバイス列挙クラス */
@@ -99,19 +98,11 @@ namespace LibISDB::DirectShow
 		int GetDeviceCount() const;
 		bool EnumDevice(const CLSID &clsidDeviceClass);
 		bool CreateFilter(const CLSID &clsidDeviceClass, LPCWSTR pszFriendlyName, IBaseFilter **ppFilter);
-		LPCWSTR GetDeviceFriendlyName(int Index) const;
+		bool GetFilterInfo(int Index, FilterInfo *pInfo) const;
+		bool GetFilterList(FilterInfoList *pList) const;
 
 	protected:
-		struct DeviceInfo {
-			std::wstring FriendlyName;
-
-			DeviceInfo(LPCWSTR pszFriendlyName)
-				: FriendlyName(pszFriendlyName)
-			{
-			}
-		};
-
-		std::vector<DeviceInfo> m_DeviceList;
+		FilterInfoList m_DeviceList;
 	};
 
 
@@ -131,6 +122,9 @@ namespace LibISDB::DirectShow
 		IGraphBuilder *pGraphBuilder,
 		const CLSID &clsidFilter, LPCWSTR pszFilterName, COMPointer<IBaseFilter> *pAppendedFilter,
 		COMPointer<IPin> *pOutputPin, bool Direct = false);
+
+	HRESULT CreateFilterFromMonikerName(
+		LPCWSTR pszMonikerName, COMPointer<IBaseFilter> *pFilter, std::wstring *pFriendlyName = nullptr);
 
 	RECT MapRect(const RECT &Rect, LONG XNum, LONG XDenom, LONG YNum, LONG YDenom);
 

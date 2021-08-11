@@ -74,7 +74,7 @@ namespace LibISDB
 			DirectShow::VideoRenderer::RendererType VideoRenderer = DirectShow::VideoRenderer::RendererType::Default;
 			uint8_t VideoStreamType = STREAM_TYPE_INVALID;
 			LPCWSTR pszVideoDecoder = nullptr;
-			LPCWSTR pszAudioDevice = nullptr;
+			DirectShow::FilterInfo AudioDevice;
 			std::vector<String> AudioFilterList;
 		};
 
