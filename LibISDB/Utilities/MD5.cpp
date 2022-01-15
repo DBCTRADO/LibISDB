@@ -49,9 +49,8 @@ template<typename TFunc> LIBISDB_FORCE_INLINE void MD5Step(
 	w += x;
 }
 
-void MD5Transform(uint32_t MD5[4], const uint8_t *pData)
+void MD5Transform(uint32_t MD5[4], const uint32_t *p)
 {
-	const uint32_t *p = reinterpret_cast<const uint32_t *>(pData);
 	uint32_t a, b, c, d;
 
 	a = MD5[0];
@@ -141,6 +140,7 @@ MD5Value CalcMD5(const uint8_t *pData, size_t DataSize) noexcept
 	const uint8_t *pSrc = pData;
 	MD5Value MD5;
 	const uint64_t BitsSize = (uint64_t)DataSize << 3;
+	uint32_t BlockData[16];
 
 	MD5.Value32[0] = 0x67452301_u32;
 	MD5.Value32[1] = 0xEFCDAB89_u32;
@@ -148,18 +148,19 @@ MD5Value CalcMD5(const uint8_t *pData, size_t DataSize) noexcept
 	MD5.Value32[3] = 0x10325476_u32;
 
 	while (DataSize >= 64) {
-		MD5Transform(MD5.Value32, pSrc);
+		std::memcpy(BlockData, pSrc, 64);
+		MD5Transform(MD5.Value32, BlockData);
 		pSrc += 64;
 		DataSize -= 64;
 	}
 
 	size_t PaddingSize;
-	uint8_t PaddingData[64];
+	uint32_t PaddingData[16];
 	uint8_t *p;
 
 	PaddingSize = DataSize & 0x3F;
 	std::memcpy(PaddingData, pSrc, DataSize);
-	p = PaddingData + PaddingSize;
+	p = reinterpret_cast<uint8_t *>(PaddingData) + PaddingSize;
 	*p++ = 0x80;
 	PaddingSize = 64 - 1 - PaddingSize;
 	if (PaddingSize < 8) {
@@ -169,7 +170,7 @@ MD5Value CalcMD5(const uint8_t *pData, size_t DataSize) noexcept
 	} else {
 		std::memset(p, 0, PaddingSize - 8);
 	}
-	reinterpret_cast<uint64_t *>(PaddingData)[7] = BitsSize;
+	std::memcpy(PaddingData + 14, &BitsSize, 8);
 	MD5Transform(MD5.Value32, PaddingData);
 
 	return MD5;
