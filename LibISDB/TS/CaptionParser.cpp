@@ -158,7 +158,7 @@ void CaptionParser::OnPESPacket(const PESParser *pParser, const PESPacket *pPack
 		ParseManagementData(&pData[Pos], DataGroupSize);
 	} else {
 		// 字幕データ
-		ParseCaptionData(&pData[Pos], DataGroupSize);
+		ParseCaptionData(&pData[Pos], DataGroupSize, (DataGroupID & 0x1F));
 	}
 }
 
@@ -228,7 +228,7 @@ bool CaptionParser::ParseManagementData(const uint8_t *pData, uint32_t DataSize)
 		uint32_t ReadSize = 0;
 		do {
 			uint32_t Size = UnitLoopLength - ReadSize;
-			if (!ParseUnitData(&pData[Pos + ReadSize], &Size))
+			if (!ParseUnitData(&pData[Pos + ReadSize], &Size, 0))
 				return false;
 			ReadSize += Size;
 		} while (ReadSize < UnitLoopLength);
@@ -238,7 +238,7 @@ bool CaptionParser::ParseManagementData(const uint8_t *pData, uint32_t DataSize)
 }
 
 
-bool CaptionParser::ParseCaptionData(const uint8_t *pData, uint32_t DataSize)
+bool CaptionParser::ParseCaptionData(const uint8_t *pData, uint32_t DataSize, uint8_t DataGroupIndex)
 {
 	// caption_data()
 
@@ -267,7 +267,7 @@ bool CaptionParser::ParseCaptionData(const uint8_t *pData, uint32_t DataSize)
 		uint32_t ReadSize = 0;
 		do {
 			uint32_t Size = UnitLoopLength - ReadSize;
-			if (!ParseUnitData(&pData[Pos + ReadSize], &Size))
+			if (!ParseUnitData(&pData[Pos + ReadSize], &Size, DataGroupIndex))
 				return false;
 			ReadSize += Size;
 		} while (ReadSize < UnitLoopLength);
@@ -277,7 +277,7 @@ bool CaptionParser::ParseCaptionData(const uint8_t *pData, uint32_t DataSize)
 }
 
 
-bool CaptionParser::ParseUnitData(const uint8_t *pData, uint32_t *pDataSize)
+bool CaptionParser::ParseUnitData(const uint8_t *pData, uint32_t *pDataSize, uint8_t DataGroupIndex)
 {
 	// data_unit()
 
@@ -303,13 +303,25 @@ bool CaptionParser::ParseUnitData(const uint8_t *pData, uint32_t *pDataSize)
 	}
 
 	if ((UnitSize > 0) && (m_pHandler != nullptr)) {
-		const ARIBStringDecoder::DecodeFlag Flags =
+		ARIBStringDecoder::DecodeFlag Flags =
 			m_1Seg ? ARIBStringDecoder::DecodeFlag::OneSeg : ARIBStringDecoder::DecodeFlag::None;
+		const int LangIndex =
+			DataGroupIndex != 0 ? GetLanguageIndexByTag(DataGroupIndex - 1) : m_LanguageList.empty() ? -1 : 0;
 		ARIBStringDecoder::FormatList FormatList;
 		String Text;
 
-		if (m_StringDecoder.DecodeCaption(&pData[5], UnitSize, &Text, Flags, &FormatList, m_pDRCSMap)) {
-			OnCaption(Text.c_str(), &FormatList);
+		// 原則として字幕管理の情報が必要。ただし1Segは運用によりパラメータ固定で送出頻度も低いため特別扱い
+		if ((LangIndex >= 0) || m_1Seg) {
+			if (LangIndex >= 0) {
+				const LanguageInfo &Info = m_LanguageList[LangIndex];
+				if (Info.TCS == 1)
+					Flags |= ARIBStringDecoder::DecodeFlag::UCS;
+				if ((Info.LanguageCode == LANGUAGE_CODE_POR) || (Info.LanguageCode == LANGUAGE_CODE_SPA))
+					Flags |= ARIBStringDecoder::DecodeFlag::Latin;
+			}
+			if (m_StringDecoder.DecodeCaption(&pData[5], UnitSize, &Text, Flags, &FormatList, m_pDRCSMap)) {
+				OnCaption(Text.c_str(), &FormatList);
+			}
 		}
 	}
 
