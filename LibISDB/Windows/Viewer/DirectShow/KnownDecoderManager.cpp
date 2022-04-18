@@ -96,6 +96,13 @@ HRESULT KnownDecoderManager::CreateInstance(const GUID &MediaSubType, IBaseFilte
 	pDecoder->SetNumThreads(m_VideoDecoderSettings.NumThreads);
 	pDecoder->SetEnableDXVA2(m_VideoDecoderSettings.bEnableDXVA2);
 
+	ITVTestVideoDecoder2 *pDecoder2;
+	if (SUCCEEDED(pDecoder->QueryInterface(IID_PPV_ARGS(&pDecoder2)))) {
+		pDecoder2->SetEnableD3D11(m_VideoDecoderSettings.bEnableD3D11);
+		pDecoder2->SetNumQueueFrames(m_VideoDecoderSettings.NumQueueFrames);
+		pDecoder2->Release();
+	}
+
 	pDecoder->Release();
 
 	return S_OK;
@@ -138,6 +145,13 @@ bool KnownDecoderManager::SaveVideoDecoderSettings(IBaseFilter *pFilter)
 	m_VideoDecoderSettings.Saturation = pDecoder->GetSaturation();
 	m_VideoDecoderSettings.NumThreads = pDecoder->GetNumThreads();
 	m_VideoDecoderSettings.bEnableDXVA2 = pDecoder->GetEnableDXVA2() != FALSE;
+
+	ITVTestVideoDecoder2 *pDecoder2;
+	if (SUCCEEDED(pDecoder->QueryInterface(IID_PPV_ARGS(&pDecoder2)))) {
+		m_VideoDecoderSettings.bEnableD3D11 = pDecoder2->GetEnableD3D11();
+		m_VideoDecoderSettings.NumQueueFrames = pDecoder2->GetNumQueueFrames();
+		pDecoder2->Release();
+	}
 
 	pDecoder->Release();
 

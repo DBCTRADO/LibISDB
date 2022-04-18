@@ -29,7 +29,7 @@
 
 
 #include <dshow.h>
-#include "ITVTestVideoDecoder.hpp"
+#include "ITVTestVideoDecoder.h"
 
 
 namespace LibISDB::DirectShow
@@ -51,6 +51,8 @@ namespace LibISDB::DirectShow
 			int Saturation = 0;
 			int NumThreads = 0;
 			bool bEnableDXVA2 = true;
+			bool bEnableD3D11 = true;
+			UINT NumQueueFrames = 2;
 		};
 
 		KnownDecoderManager() noexcept;
