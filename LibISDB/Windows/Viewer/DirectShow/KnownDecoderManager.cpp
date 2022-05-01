@@ -1,6 +1,6 @@
 /*
   LibISDB
-  Copyright(c) 2017-2020 DBCTRADO
+  Copyright(c) 2017-2022 DBCTRADO
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -84,23 +84,41 @@ HRESULT KnownDecoderManager::CreateInstance(const GUID &MediaSubType, IBaseFilte
 		return hr;
 	}
 
-	pDecoder->SetEnableDeinterlace(m_VideoDecoderSettings.bEnableDeinterlace);
-	pDecoder->SetDeinterlaceMethod(m_VideoDecoderSettings.DeinterlaceMethod);
-	pDecoder->SetAdaptProgressive(m_VideoDecoderSettings.bAdaptProgressive);
-	pDecoder->SetAdaptTelecine(m_VideoDecoderSettings.bAdaptTelecine);
-	pDecoder->SetInterlacedFlag(m_VideoDecoderSettings.bSetInterlacedFlag);
-	pDecoder->SetBrightness(m_VideoDecoderSettings.Brightness);
-	pDecoder->SetContrast(m_VideoDecoderSettings.Contrast);
-	pDecoder->SetHue(m_VideoDecoderSettings.Hue);
-	pDecoder->SetSaturation(m_VideoDecoderSettings.Saturation);
-	pDecoder->SetNumThreads(m_VideoDecoderSettings.NumThreads);
-	pDecoder->SetEnableDXVA2(m_VideoDecoderSettings.bEnableDXVA2);
+	if (!m_VideoDecoderSettings.Properties.empty()) {
+		IPropertyBag2 *pPropertyBag2;
+		if (SUCCEEDED(pDecoder->QueryInterface(IID_PPV_ARGS(&pPropertyBag2)))) {
+			std::vector<PROPBAG2> PropBag2(m_VideoDecoderSettings.Properties.size());
+			std::vector<VARIANT> Values(m_VideoDecoderSettings.Properties.size());
 
-	ITVTestVideoDecoder2 *pDecoder2;
-	if (SUCCEEDED(pDecoder->QueryInterface(IID_PPV_ARGS(&pDecoder2)))) {
-		pDecoder2->SetEnableD3D11(m_VideoDecoderSettings.bEnableD3D11);
-		pDecoder2->SetNumQueueFrames(m_VideoDecoderSettings.NumQueueFrames);
-		pDecoder2->Release();
+			for (size_t i = 0; i < m_VideoDecoderSettings.Properties.size(); i++) {
+				const VideoDecoderProperty &Property = m_VideoDecoderSettings.Properties[i];
+				PropBag2[i].pstrName = const_cast<LPOLESTR>(Property.Name.c_str());
+				Values[i] = Property.Value;
+			}
+
+			pPropertyBag2->Write(static_cast<ULONG>(Values.size()), PropBag2.data(), Values.data());
+
+			pPropertyBag2->Release();
+		}
+	} else {
+		pDecoder->SetEnableDeinterlace(m_VideoDecoderSettings.bEnableDeinterlace);
+		pDecoder->SetDeinterlaceMethod(m_VideoDecoderSettings.DeinterlaceMethod);
+		pDecoder->SetAdaptProgressive(m_VideoDecoderSettings.bAdaptProgressive);
+		pDecoder->SetAdaptTelecine(m_VideoDecoderSettings.bAdaptTelecine);
+		pDecoder->SetInterlacedFlag(m_VideoDecoderSettings.bSetInterlacedFlag);
+		pDecoder->SetBrightness(m_VideoDecoderSettings.Brightness);
+		pDecoder->SetContrast(m_VideoDecoderSettings.Contrast);
+		pDecoder->SetHue(m_VideoDecoderSettings.Hue);
+		pDecoder->SetSaturation(m_VideoDecoderSettings.Saturation);
+		pDecoder->SetNumThreads(m_VideoDecoderSettings.NumThreads);
+		pDecoder->SetEnableDXVA2(m_VideoDecoderSettings.bEnableDXVA2);
+
+		ITVTestVideoDecoder2 *pDecoder2;
+		if (SUCCEEDED(pDecoder->QueryInterface(IID_PPV_ARGS(&pDecoder2)))) {
+			pDecoder2->SetEnableD3D11(m_VideoDecoderSettings.bEnableD3D11);
+			pDecoder2->SetNumQueueFrames(m_VideoDecoderSettings.NumQueueFrames);
+			pDecoder2->Release();
+		}
 	}
 
 	pDecoder->Release();
@@ -134,23 +152,53 @@ bool KnownDecoderManager::SaveVideoDecoderSettings(IBaseFilter *pFilter)
 	if (FAILED(hr))
 		return false;
 
-	m_VideoDecoderSettings.bEnableDeinterlace = pDecoder->GetEnableDeinterlace() != FALSE;
-	m_VideoDecoderSettings.DeinterlaceMethod = pDecoder->GetDeinterlaceMethod();
-	m_VideoDecoderSettings.bAdaptProgressive = pDecoder->GetAdaptProgressive() != FALSE;
-	m_VideoDecoderSettings.bAdaptTelecine = pDecoder->GetAdaptTelecine() != FALSE;
-	m_VideoDecoderSettings.bSetInterlacedFlag = pDecoder->GetInterlacedFlag() != FALSE;
-	m_VideoDecoderSettings.Brightness = pDecoder->GetBrightness();
-	m_VideoDecoderSettings.Contrast = pDecoder->GetContrast();
-	m_VideoDecoderSettings.Hue = pDecoder->GetHue();
-	m_VideoDecoderSettings.Saturation = pDecoder->GetSaturation();
-	m_VideoDecoderSettings.NumThreads = pDecoder->GetNumThreads();
-	m_VideoDecoderSettings.bEnableDXVA2 = pDecoder->GetEnableDXVA2() != FALSE;
+	IPropertyBag2 *pPropertyBag2;
+	if (SUCCEEDED(pDecoder->QueryInterface(IID_PPV_ARGS(&pPropertyBag2)))) {
+		ULONG Count = 0;
+		if (SUCCEEDED(pPropertyBag2->CountProperties(&Count)) && Count > 0) {
+			std::vector<PROPBAG2> PropBag2(Count);
 
-	ITVTestVideoDecoder2 *pDecoder2;
-	if (SUCCEEDED(pDecoder->QueryInterface(IID_PPV_ARGS(&pDecoder2)))) {
-		m_VideoDecoderSettings.bEnableD3D11 = pDecoder2->GetEnableD3D11();
-		m_VideoDecoderSettings.NumQueueFrames = pDecoder2->GetNumQueueFrames();
-		pDecoder2->Release();
+			HRESULT hr = pPropertyBag2->GetPropertyInfo(0, Count, PropBag2.data(), &Count);
+			if (SUCCEEDED(hr)) {
+				std::vector<VARIANT> Values(Count);
+				std::vector<HRESULT> Errors(Count);
+
+				hr = pPropertyBag2->Read(Count, PropBag2.data(), nullptr, Values.data(), Errors.data());
+				if (SUCCEEDED(hr)) {
+					m_VideoDecoderSettings.Properties.resize(Count);
+
+					for (ULONG i = 0; i < Count; i++) {
+						VideoDecoderProperty &Property = m_VideoDecoderSettings.Properties[i];
+						Property.Name = PropBag2[i].pstrName;
+						Property.Value = Values[i];
+					}
+				}
+
+				for (PROPBAG2 &Prop : PropBag2)
+					::CoTaskMemFree(Prop.pstrName);
+			}
+		}
+
+		pPropertyBag2->Release();
+	} else {
+		m_VideoDecoderSettings.bEnableDeinterlace = pDecoder->GetEnableDeinterlace() != FALSE;
+		m_VideoDecoderSettings.DeinterlaceMethod = pDecoder->GetDeinterlaceMethod();
+		m_VideoDecoderSettings.bAdaptProgressive = pDecoder->GetAdaptProgressive() != FALSE;
+		m_VideoDecoderSettings.bAdaptTelecine = pDecoder->GetAdaptTelecine() != FALSE;
+		m_VideoDecoderSettings.bSetInterlacedFlag = pDecoder->GetInterlacedFlag() != FALSE;
+		m_VideoDecoderSettings.Brightness = pDecoder->GetBrightness();
+		m_VideoDecoderSettings.Contrast = pDecoder->GetContrast();
+		m_VideoDecoderSettings.Hue = pDecoder->GetHue();
+		m_VideoDecoderSettings.Saturation = pDecoder->GetSaturation();
+		m_VideoDecoderSettings.NumThreads = pDecoder->GetNumThreads();
+		m_VideoDecoderSettings.bEnableDXVA2 = pDecoder->GetEnableDXVA2() != FALSE;
+	
+		ITVTestVideoDecoder2 *pDecoder2;
+		if (SUCCEEDED(pDecoder->QueryInterface(IID_PPV_ARGS(&pDecoder2)))) {
+			m_VideoDecoderSettings.bEnableD3D11 = pDecoder2->GetEnableD3D11() != FALSE;
+			m_VideoDecoderSettings.NumQueueFrames = pDecoder2->GetNumQueueFrames();
+			pDecoder2->Release();
+		}
 	}
 
 	pDecoder->Release();

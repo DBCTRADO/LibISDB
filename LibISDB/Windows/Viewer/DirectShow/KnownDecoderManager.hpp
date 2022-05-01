@@ -1,6 +1,6 @@
 /*
   LibISDB
-  Copyright(c) 2017-2020 DBCTRADO
+  Copyright(c) 2017-2022 DBCTRADO
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 
 
 #include <dshow.h>
+#include <vector>
 #include "ITVTestVideoDecoder.h"
 
 
@@ -39,7 +40,24 @@ namespace LibISDB::DirectShow
 	class KnownDecoderManager
 	{
 	public:
+		struct VideoDecoderProperty {
+			std::wstring Name;
+			VARIANT Value;
+
+			VideoDecoderProperty()
+			{
+				::VariantInit(&Value);
+			}
+
+			~VideoDecoderProperty()
+			{
+				::VariantClear(&Value);
+			}
+		};
+
 		struct VideoDecoderSettings {
+			std::vector<VideoDecoderProperty> Properties;
+
 			bool bEnableDeinterlace = true;
 			TVTVIDEODEC_DeinterlaceMethod DeinterlaceMethod = TVTVIDEODEC_DEINTERLACE_BLEND;
 			bool bAdaptProgressive = true;
