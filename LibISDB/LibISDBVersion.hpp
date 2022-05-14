@@ -29,7 +29,7 @@
 
 
 #define LIBISDB_VERSION_MAJOR 0
-#define LIBISDB_VERSION_MINOR 0
+#define LIBISDB_VERSION_MINOR 1
 #define LIBISDB_VERSION_REV   0
 
 #define LIBISDB_MAKE_VERSION(major, minor, rev) \
