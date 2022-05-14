@@ -1,7 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.0
-MinimumVisualStudioVersion = 15.0.27130.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32428.217
+MinimumVisualStudioVersion = 16.0.32428.217
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibISDB", "LibISDB.vcxproj", "{55037A54-F0FB-446C-B81F-424C5D0FA3D9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibISDBWindows", "LibISDBWindows.vcxproj", "{990EB6F3-1222-41F1-B364-323F5BD4E1A7}"
