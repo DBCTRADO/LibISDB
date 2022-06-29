@@ -806,6 +806,12 @@ namespace LibISDB
 		: public DescriptorTemplate<TSInformationDescriptor, 0xCD>
 	{
 	public:
+		/** 伝送階層の情報 */
+		struct TransmissionLayerInfo {
+			uint8_t TransmissionTypeInfo;        /**< transmission_type_info */
+			std::vector<uint16_t> ServiceIDList; /**< service_id */
+		};
+
 		TSInformationDescriptor();
 
 	// DescriptorBase
@@ -814,12 +820,16 @@ namespace LibISDB
 	// TSInformationDescriptor
 		uint8_t GetRemoteControlKeyID() const noexcept { return m_RemoteControlKeyID; }
 		bool GetTSName(ReturnArg<ARIBString> Name) const;
+		uint8_t GetTransmissionTypeCount() const noexcept { return m_TransmissionTypeCount; }
+		bool GetTransmissionLayerInfo(uint8_t Index, ReturnArg<TransmissionLayerInfo> Info) const;
 
 	protected:
 		bool StoreContents(const uint8_t *pPayload) override;
 
-		uint8_t m_RemoteControlKeyID; /**< remote_control_key_id */
-		ARIBString m_TSName;          /**< ts_name_char */
+		uint8_t m_RemoteControlKeyID;                    /**< remote_control_key_id */
+		ARIBString m_TSName;                             /**< ts_name_char */
+		uint8_t m_TransmissionTypeCount;                 /**< transmission_type_count */
+		TransmissionLayerInfo m_TransmissionInfoList[3];
 	};
 
 	/** 拡張ブロードキャスタ記述子クラス */

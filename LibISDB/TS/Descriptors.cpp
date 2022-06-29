@@ -1406,6 +1406,12 @@ void TSInformationDescriptor::Reset()
 
 	m_RemoteControlKeyID = 0;
 	m_TSName.clear();
+	m_TransmissionTypeCount = 0;
+
+	for (TransmissionLayerInfo &Info : m_TransmissionInfoList) {
+		Info.TransmissionTypeInfo = 0;
+		Info.ServiceIDList.clear();
+	}
 }
 
 
@@ -1420,6 +1426,19 @@ bool TSInformationDescriptor::GetTSName(ReturnArg<ARIBString> Name) const
 }
 
 
+bool TSInformationDescriptor::GetTransmissionLayerInfo(uint8_t Index, ReturnArg<TransmissionLayerInfo> Info) const
+{
+	if (Index >= m_TransmissionTypeCount)
+		return false;
+	if (!Info)
+		return false;
+
+	*Info = m_TransmissionInfoList[Index];
+
+	return true;
+}
+
+
 bool TSInformationDescriptor::StoreContents(const uint8_t *pPayload)
 {
 	if (m_Tag != TAG)
@@ -1430,11 +1449,30 @@ bool TSInformationDescriptor::StoreContents(const uint8_t *pPayload)
 	m_RemoteControlKeyID = pPayload[0];
 
 	m_TSName.clear();
-	const uint8_t Length = pPayload[1] >> 2;
-	if (2 + Length > m_Length)
+	const uint8_t TSNameLength = pPayload[1] >> 2;
+	if (2 + TSNameLength > m_Length)
 		return false;
-	if (Length > 0)
-		m_TSName.assign(&pPayload[2], Length);
+	if (TSNameLength > 0)
+		m_TSName.assign(&pPayload[2], TSNameLength);
+
+	m_TransmissionTypeCount = pPayload[1] & 0x03;
+
+	size_t Pos = 2 + TSNameLength;
+
+	for (uint8_t i = 0; i < m_TransmissionTypeCount; i++) {
+		if (Pos + 2 > m_Length)
+			return false;
+		m_TransmissionInfoList[i].TransmissionTypeInfo = pPayload[Pos + 0];
+		const uint8_t NumOfService = pPayload[Pos + 1];
+		Pos += 2;
+		if (Pos + 2 * NumOfService > m_Length)
+			return false;
+		m_TransmissionInfoList[i].ServiceIDList.resize(NumOfService);
+		for (uint8_t j = 0; j < NumOfService; j++) {
+			m_TransmissionInfoList[i].ServiceIDList[j] = Load16(&pPayload[Pos]);
+			Pos += 2;
+		}
+	}
 
 	return true;
 }
