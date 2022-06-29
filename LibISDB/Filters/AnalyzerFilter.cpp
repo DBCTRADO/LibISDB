@@ -2020,7 +2020,7 @@ void AnalyzerFilter::UpdateSDTServiceList(const SDTTable *pSDTTable, ReturnArg<S
 void AnalyzerFilter::UpdateSDTStreamMap(const SDTTable *pSDTTable, SDTStreamMap *pStreamMap)
 {
 	const uint16_t TransportStreamID = pSDTTable->GetTransportStreamID();
-	const uint16_t NetworkID = pSDTTable->GetNetworkID();
+	const uint16_t NetworkID = pSDTTable->GetOriginalNetworkID();
 
 	auto Result = pStreamMap->emplace(
 		std::piecewise_construct,
@@ -2056,10 +2056,10 @@ void AnalyzerFilter::OnSDTSection(const PSITableBase *pTable, const PSISection *
 		// ここで引っ掛かる場合、PAT と SDT で transport_stream_id が違っている
 		LIBISDB_ASSERT((m_TransportStreamID == TRANSPORT_STREAM_ID_INVALID) || (m_TransportStreamID == pSDTTable->GetTransportStreamID()));
 		// ここで引っ掛かる場合、NIT と SDT で network_id が違っている
-		LIBISDB_ASSERT((m_NetworkID == NETWORK_ID_INVALID) || (m_NetworkID == pSDTTable->GetNetworkID()));
+		LIBISDB_ASSERT((m_NetworkID == NETWORK_ID_INVALID) || (m_NetworkID == pSDTTable->GetOriginalNetworkID()));
 
 		m_TransportStreamID = pSDTTable->GetTransportStreamID();
-		m_NetworkID = pSDTTable->GetNetworkID();
+		m_NetworkID = pSDTTable->GetOriginalNetworkID();
 
 		LIBISDB_TRACE(LIBISDB_STR("transport_stream_id : %04X\n"), m_TransportStreamID);
 		LIBISDB_TRACE(LIBISDB_STR("network_id          : %04X\n"), m_NetworkID);

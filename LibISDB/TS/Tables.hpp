@@ -152,7 +152,8 @@ namespace LibISDB
 	// SDTTable
 		uint8_t GetTableID() const;
 		uint16_t GetTransportStreamID() const;
-		uint16_t GetNetworkID() const;
+		[[deprecated("Replaced with GetOriginalNetworkID()")]] uint16_t GetNetworkID() const;
+		uint16_t GetOriginalNetworkID() const;
 		int GetServiceCount() const;
 		int GetServiceIndexByID(uint16_t ServiceID) const;
 		uint16_t GetServiceID(int Index) const;
@@ -183,7 +184,7 @@ namespace LibISDB
 		};
 
 		uint8_t m_TableID;
-		uint16_t m_NetworkID;
+		uint16_t m_OriginalNetworkID;
 		std::vector<SDTItem> m_ServiceList;
 	};
 

@@ -345,7 +345,7 @@ void SDTTable::Reset()
 {
 	PSISingleTable::Reset();
 
-	m_NetworkID = NETWORK_ID_INVALID;
+	m_OriginalNetworkID = NETWORK_ID_INVALID;
 	m_ServiceList.clear();
 }
 
@@ -364,7 +364,13 @@ uint16_t SDTTable::GetTransportStreamID() const
 
 uint16_t SDTTable::GetNetworkID() const
 {
-	return m_NetworkID;
+	return m_OriginalNetworkID;
+}
+
+
+uint16_t SDTTable::GetOriginalNetworkID() const
+{
+	return m_OriginalNetworkID;
 }
 
 
@@ -477,7 +483,7 @@ bool SDTTable::OnTableUpdate(const PSISection *pCurSection, const PSISection *pO
 	if (pCurSection->GetTableID() != m_TableID)
 		return false;
 
-	m_NetworkID = Load16(&pData[0]);
+	m_OriginalNetworkID = Load16(&pData[0]);
 
 	m_ServiceList.clear();
 
