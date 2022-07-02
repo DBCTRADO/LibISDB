@@ -175,6 +175,8 @@ namespace LibISDB
 		static constexpr uint8_t AudioChannelCount_DualMono = DirectShow::AudioDecoderFilter::ChannelCount_DualMono;
 		static constexpr uint8_t AudioChannelCount_Invalid  = DirectShow::AudioDecoderFilter::ChannelCount_Invalid;
 		uint8_t GetAudioChannelCount() const;
+		using AudioInfo = DirectShow::AudioDecoderFilter::AudioInfo;
+		bool GetAudioInfo(ReturnArg<AudioInfo> Info) const;
 		bool SetDualMonoMode(DirectShow::AudioDecoderFilter::DualMonoMode Mode);
 		DirectShow::AudioDecoderFilter::DualMonoMode GetDualMonoMode() const;
 		bool SetStereoMode(DirectShow::AudioDecoderFilter::StereoMode Mode);

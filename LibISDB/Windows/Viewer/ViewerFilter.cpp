@@ -1495,6 +1495,14 @@ uint8_t ViewerFilter::GetAudioChannelCount() const
 }
 
 
+bool ViewerFilter::GetAudioInfo(ReturnArg<AudioInfo> Info) const
+{
+	if (m_AudioDecoder)
+		return m_AudioDecoder->GetAudioInfo(Info);
+	return false;
+}
+
+
 bool ViewerFilter::SetDualMonoMode(DirectShow::AudioDecoderFilter::DualMonoMode Mode)
 {
 	if (m_AudioDecoder)

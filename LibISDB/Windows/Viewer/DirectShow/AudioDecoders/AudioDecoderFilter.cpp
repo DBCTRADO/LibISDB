@@ -549,6 +549,17 @@ uint8_t AudioDecoderFilter::GetCurrentChannelCount() const
 }
 
 
+bool AudioDecoderFilter::GetAudioInfo(ReturnArg<AudioInfo> Info) const
+{
+	CAutoLock AutoLock(&m_cPropLock);
+
+	if (!m_Decoder)
+		return false;
+
+	return m_Decoder->GetAudioInfo(Info);
+}
+
+
 bool AudioDecoderFilter::SetDualMonoMode(DualMonoMode Mode)
 {
 	CAutoLock AutoLock(&m_cPropLock);

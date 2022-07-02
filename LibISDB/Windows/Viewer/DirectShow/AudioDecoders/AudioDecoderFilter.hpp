@@ -128,8 +128,11 @@ namespace LibISDB::DirectShow
 			virtual void OnSamples(short *pData, size_t Length, int Channels) = 0;
 		};
 
+		using AudioInfo = AudioDecoder::AudioInfo;
+
 		bool SetDecoderType(DecoderType Type);
 		uint8_t GetCurrentChannelCount() const;
+		bool GetAudioInfo(ReturnArg<AudioInfo> Info) const;
 		bool SetDualMonoMode(DualMonoMode Mode);
 		DualMonoMode GetDualMonoMode() const noexcept { return m_DualMonoMode; }
 		bool SetStereoMode(StereoMode Mode);
