@@ -84,6 +84,7 @@ template<typename T> constexpr int16_t ClampSample16(T v)
 AudioDecoderFilter::AudioDecoderFilter(LPUNKNOWN pUnk, HRESULT *phr)
 	: CTransformFilter(TEXT("Audio Decoder Filter"), pUnk, __uuidof(AudioDecoderFilter))
 	, m_DecoderType(DecoderType::Invalid)
+	, m_OutChannelNum(0)
 	, m_CurChannelNum(0)
 	, m_DualMono(false)
 
@@ -549,6 +550,20 @@ uint8_t AudioDecoderFilter::GetCurrentChannelCount() const
 }
 
 
+uint8_t AudioDecoderFilter::GetOutputChannelCount() const
+{
+	CAutoLock AutoLock(&m_cPropLock);
+
+	if (m_CurChannelNum == 0)
+		return ChannelCount_Invalid;
+	if (m_Passthrough)
+		return m_CurChannelNum;
+	if (m_OutChannelNum == 0)
+		return ChannelCount_Invalid;
+	return m_OutChannelNum;
+}
+
+
 bool AudioDecoderFilter::GetAudioInfo(ReturnArg<AudioInfo> Info) const
 {
 	CAutoLock AutoLock(&m_cPropLock);
@@ -886,6 +901,8 @@ HRESULT AudioDecoderFilter::ProcessPCM(
 	} else {
 		std::memset(pOutBuff, 0, BuffSize);
 	}
+
+	m_OutChannelNum = static_cast<uint8_t>(OutChannels);
 
 	if (m_pSampleCallback) {
 		m_pSampleCallback->OnSamples(reinterpret_cast<int16_t *>(pOutBuff), Samples, OutChannels);

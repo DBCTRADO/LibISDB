@@ -1495,6 +1495,14 @@ uint8_t ViewerFilter::GetAudioChannelCount() const
 }
 
 
+uint8_t ViewerFilter::GetAudioOutputChannelCount() const
+{
+	if (m_AudioDecoder)
+		return m_AudioDecoder->GetOutputChannelCount();
+	return AudioChannelCount_Invalid;
+}
+
+
 bool ViewerFilter::GetAudioInfo(ReturnArg<AudioInfo> Info) const
 {
 	if (m_AudioDecoder)

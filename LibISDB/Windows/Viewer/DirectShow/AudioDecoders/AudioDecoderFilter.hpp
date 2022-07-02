@@ -132,6 +132,7 @@ namespace LibISDB::DirectShow
 
 		bool SetDecoderType(DecoderType Type);
 		uint8_t GetCurrentChannelCount() const;
+		uint8_t GetOutputChannelCount() const;
 		bool GetAudioInfo(ReturnArg<AudioInfo> Info) const;
 		bool SetDualMonoMode(DualMonoMode Mode);
 		DualMonoMode GetDualMonoMode() const noexcept { return m_DualMonoMode; }
@@ -197,6 +198,7 @@ namespace LibISDB::DirectShow
 		mutable CCritSec m_cPropLock;
 		CMediaType m_MediaType;
 		SSEDataBuffer m_OutData;
+		uint8_t m_OutChannelNum;
 		uint8_t m_CurChannelNum;
 		bool m_DualMono;
 
