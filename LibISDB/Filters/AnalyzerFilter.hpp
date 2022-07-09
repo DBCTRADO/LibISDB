@@ -202,7 +202,7 @@ namespace LibISDB
 
 		int GetVideoESCount(int Index) const;
 		bool GetVideoESList(int Index, ReturnArg<ESInfoList> ESList) const;
-		bool GetVideoESInfo(int Index, int VideoIndex, ReturnArg<ESInfo> ESInfo) const;
+		bool GetVideoESInfo(int Index, int VideoIndex, ReturnArg<ESInfo> Info) const;
 		uint16_t GetVideoESPID(int Index, int VideoIndex) const;
 		uint8_t GetVideoStreamType(int Index, int VideoIndex) const;
 		uint8_t GetVideoComponentTag(int Index, int VideoIndex) const;
@@ -210,7 +210,7 @@ namespace LibISDB
 
 		int GetAudioESCount(int Index) const;
 		bool GetAudioESList(int Index, ReturnArg<ESInfoList> ESList) const;
-		bool GetAudioESInfo(int Index, int AudioIndex, ReturnArg<ESInfo> ESInfo) const;
+		bool GetAudioESInfo(int Index, int AudioIndex, ReturnArg<ESInfo> Info) const;
 		uint16_t GetAudioESPID(int Index, int AudioIndex) const;
 		uint8_t GetAudioStreamType(int Index, int AudioIndex) const;
 		uint8_t GetAudioComponentTag(int Index, int AudioIndex) const;

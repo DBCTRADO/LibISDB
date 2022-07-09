@@ -290,9 +290,9 @@ bool AnalyzerFilter::GetVideoESList(int Index, ReturnArg<ESInfoList> ESList) con
 }
 
 
-bool AnalyzerFilter::GetVideoESInfo(int Index, int VideoIndex, ReturnArg<ESInfo> ESInfo) const
+bool AnalyzerFilter::GetVideoESInfo(int Index, int VideoIndex, ReturnArg<ESInfo> Info) const
 {
-	if (!ESInfo)
+	if (!Info)
 		return false;
 
 	BlockLock Lock(m_FilterLock);
@@ -301,7 +301,7 @@ bool AnalyzerFilter::GetVideoESInfo(int Index, int VideoIndex, ReturnArg<ESInfo>
 			|| (static_cast<unsigned int>(VideoIndex) >= m_ServiceList[Index].VideoESList.size()))
 		return false;
 
-	*ESInfo = m_ServiceList[Index].VideoESList[VideoIndex];
+	*Info = m_ServiceList[Index].VideoESList[VideoIndex];
 
 	return true;
 }
@@ -386,9 +386,9 @@ bool AnalyzerFilter::GetAudioESList(int Index, ReturnArg<ESInfoList> ESList) con
 }
 
 
-bool AnalyzerFilter::GetAudioESInfo(int Index, int AudioIndex, ReturnArg<ESInfo> ESInfo) const
+bool AnalyzerFilter::GetAudioESInfo(int Index, int AudioIndex, ReturnArg<ESInfo> Info) const
 {
-	if (!ESInfo)
+	if (!Info)
 		return false;
 
 	BlockLock Lock(m_FilterLock);
@@ -397,7 +397,7 @@ bool AnalyzerFilter::GetAudioESInfo(int Index, int AudioIndex, ReturnArg<ESInfo>
 			|| (static_cast<unsigned int>(AudioIndex) >= m_ServiceList[Index].AudioESList.size()))
 		return false;
 
-	*ESInfo = m_ServiceList[Index].AudioESList[AudioIndex];
+	*Info = m_ServiceList[Index].AudioESList[AudioIndex];
 
 	return true;
 }
