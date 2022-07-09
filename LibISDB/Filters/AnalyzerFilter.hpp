@@ -196,6 +196,10 @@ namespace LibISDB
 		bool Is1SegService(int Index) const;
 		uint16_t GetPMTPID(int Index) const;
 
+		int GetESCount(int Index) const;
+		bool GetESList(int Index, ReturnArg<ESInfoList> List) const;
+		bool GetESInfo(int Index, int ESIndex, ReturnArg<ESInfo> Info) const;
+
 		int GetVideoESCount(int Index) const;
 		bool GetVideoESList(int Index, ReturnArg<ESInfoList> ESList) const;
 		bool GetVideoESInfo(int Index, int VideoIndex, ReturnArg<ESInfo> ESInfo) const;

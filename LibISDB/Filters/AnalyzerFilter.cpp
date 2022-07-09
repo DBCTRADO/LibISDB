@@ -219,6 +219,50 @@ uint16_t AnalyzerFilter::GetPMTPID(int Index) const
 }
 
 
+int AnalyzerFilter::GetESCount(int Index) const
+{
+	BlockLock Lock(m_FilterLock);
+
+	if (static_cast<unsigned int>(Index) >= m_ServiceList.size())
+		return 0;
+
+	return static_cast<int>(m_ServiceList[Index].ESList.size());
+}
+
+
+bool AnalyzerFilter::GetESList(int Index, ReturnArg<ESInfoList> List) const
+{
+	if (!List)
+		return false;
+
+	BlockLock Lock(m_FilterLock);
+
+	if (static_cast<unsigned int>(Index) >= m_ServiceList.size())
+		return false;
+
+	*List = m_ServiceList[Index].ESList;
+
+	return true;
+}
+
+
+bool AnalyzerFilter::GetESInfo(int Index, int ESIndex, ReturnArg<ESInfo> Info) const
+{
+	if (!Info)
+		return false;
+
+	BlockLock Lock(m_FilterLock);
+
+	if ((static_cast<unsigned int>(Index) >= m_ServiceList.size())
+			|| (static_cast<unsigned int>(ESIndex) >= m_ServiceList[Index].ESList.size()))
+		return false;
+
+	*Info = m_ServiceList[Index].ESList[ESIndex];
+
+	return true;
+}
+
+
 int AnalyzerFilter::GetVideoESCount(int Index) const
 {
 	BlockLock Lock(m_FilterLock);
