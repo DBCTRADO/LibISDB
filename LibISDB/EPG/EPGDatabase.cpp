@@ -576,6 +576,13 @@ bool EPGDatabase::UpdateSection(const EITPfScheduleTable *pScheduleTable, const 
 					continue;
 			}
 
+			if (auto itEvent = Service.EventMap.find(pEventInfo->EventID);
+					itEvent != Service.EventMap.end()) {
+				// 既存のデータの方が新しい場合は除外する
+				if (itEvent->second.UpdatedTime > m_CurTOTSeconds)
+					continue;
+			}
+
 			TimeEventInfo TimeEvent(pEventInfo->StartTime);
 			TimeEvent.Duration = pEventInfo->Duration;
 			TimeEvent.EventID = pEventInfo->EventID;
@@ -591,9 +598,6 @@ bool EPGDatabase::UpdateSection(const EITPfScheduleTable *pScheduleTable, const 
 				std::forward_as_tuple());
 			EventInfo *pEvent = &EventResult.first->second;
 			if (!EventResult.second) {
-				if (pEvent->UpdatedTime > m_CurTOTSeconds)
-					continue;
-
 				if (pEvent->StartTime != pEventInfo->StartTime) {
 					// 開始時刻が変わった
 					auto it = Service.TimeMap.find(TimeEventInfo(pEvent->StartTime));
@@ -892,6 +896,13 @@ bool EPGDatabase::MergeEventMap(const ServiceInfo &Info, ServiceEventMap &Map, M
 				&& (Time.StartTime + Time.Duration <= CurTime))
 			continue;
 
+		if (auto itEvent = Service.EventMap.find(Event.first);
+				itEvent != Service.EventMap.end()) {
+			// 既存のデータの方が新しい場合は除外する
+			if (itEvent->second.UpdatedTime > Time.UpdatedTime)
+				continue;
+		}
+
 		if (UpdateTimeMap(Service, Time, &IsUpdated)) {
 			// イベントを追加 or 既存のイベントを取得
 			auto EventResult = Service.EventMap.emplace(
@@ -903,10 +914,6 @@ bool EPGDatabase::MergeEventMap(const ServiceInfo &Info, ServiceEventMap &Map, M
 
 			if (!EventResult.second) {
 				// 既に番組情報がある場合
-
-				// 既存のデータの方が新しい場合は除外する
-				if (CurEvent.UpdatedTime > Time.UpdatedTime)
-					continue;
 
 				// 開始時刻が変わった場合、古い開始時刻のマップを削除する
 				if (CurEvent.StartTime != Event.second.StartTime) {
