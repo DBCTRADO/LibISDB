@@ -131,6 +131,8 @@ namespace LibISDB
 			DiscardOldEvents   = 0x0001U,
 			DiscardEndedEvents = 0x0002U,
 			Database           = 0x0004U,
+			MergeBasicExtended = 0x0008U,
+			SetServiceUpdated  = 0x0010U,
 		};
 
 		EPGDatabase() noexcept;
@@ -171,11 +173,15 @@ namespace LibISDB
 
 		bool SetServiceEventList(const ServiceInfo &Info, EventList &&List);
 
-		bool Merge(EPGDatabase *pSrcDatabase, MergeFlag Flags = MergeFlag::None);
+		bool Merge(
+			EPGDatabase *pSrcDatabase,
+			MergeFlag Flags = MergeFlag::None,
+			std::optional<EventInfo::SourceIDType> SourceID = std::nullopt);
 		bool MergeService(
 			EPGDatabase *pSrcDatabase,
 			uint16_t NetworkID, uint16_t TransportStreamID, uint16_t ServiceID,
-			MergeFlag Flags = MergeFlag::None);
+			MergeFlag Flags = MergeFlag::None,
+			std::optional<EventInfo::SourceIDType> SourceID = std::nullopt);
 
 		bool IsScheduleComplete(
 			uint16_t NetworkID, uint16_t TransportStreamID, uint16_t ServiceID,
@@ -198,7 +204,9 @@ namespace LibISDB
 		bool AddEventListener(EventListener *pEventListener);
 		bool RemoveEventListener(EventListener *pEventListener);
 
-		bool UpdateSection(const EITPfScheduleTable *pScheduleTable, const EITTable *pEITTable);
+		bool UpdateSection(
+			const EITPfScheduleTable *pScheduleTable, const EITTable *pEITTable,
+			EventInfo::SourceIDType SourceID = 0);
 		bool UpdateTOT(const TOTTable *pTOTTable);
 		void ResetTOTTime();
 
@@ -239,6 +247,7 @@ namespace LibISDB
 
 		struct ServiceEventMap {
 			EventMapType EventMap;
+			EventMapType EventExtendedMap;
 			TimeEventMap TimeMap;
 			bool IsUpdated = false;
 			ScheduleInfo Schedule;
@@ -248,6 +257,7 @@ namespace LibISDB
 		typedef std::map<ServiceInfo, ServiceEventMap> ServiceMap;
 
 		ServiceMap m_ServiceMap;
+		ServiceMap m_PendingServiceMap;
 		mutable MutexLock m_Lock;
 		bool m_IsUpdated;
 		bool m_ScheduleOnly;
@@ -258,12 +268,19 @@ namespace LibISDB
 		unsigned long long m_CurTOTSeconds;
 		EventListenerList<EventListener> m_EventListenerList;
 
-		bool MergeEventMap(const ServiceInfo &Info, ServiceEventMap &Map, MergeFlag Flags);
+		bool MergeEventMap(
+			const ServiceInfo &Info, ServiceEventMap &Map,
+			MergeFlag Flags = MergeFlag::None,
+			std::optional<EventInfo::SourceIDType> SourceID = std::nullopt);
+		bool MergeEventMapEvent(
+			ServiceEventMap &Service, EventInfo &&NewEvent,
+			MergeFlag Flags = MergeFlag::None);
 		bool UpdateTimeMap(ServiceEventMap &Service, const TimeEventInfo &Time, bool *pIsUpdated);
 		const EventInfo * GetEventInfoByIDs(
 			uint16_t NetworkID, uint16_t TransportStreamID, uint16_t ServiceID, uint16_t EventID) const;
 		bool SetCommonEventInfo(EventInfo *pInfo) const;
 		bool CopyEventExtendedText(EventInfo *pDstInfo, const EventInfo &SrcInfo) const;
+		bool MergeEventExtendedInfo(ServiceEventMap &Service, EventInfo *pEvent);
 
 		static bool RemoveEvent(EventMapType &Map, uint16_t EventID);
 	};

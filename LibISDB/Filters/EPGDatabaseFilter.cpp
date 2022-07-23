@@ -37,6 +37,7 @@ namespace LibISDB
 
 EPGDatabaseFilter::EPGDatabaseFilter()
 	: m_pEPGDatabase(nullptr)
+	, m_SourceID()
 {
 	Reset();
 }
@@ -91,6 +92,20 @@ EPGDatabase * EPGDatabaseFilter::GetEPGDatabase() const
 }
 
 
+void EPGDatabaseFilter::SetSourceID(EventInfo::SourceIDType ID)
+{
+	BlockLock Lock(m_FilterLock);
+
+	m_SourceID = ID;
+}
+
+
+EventInfo::SourceIDType EPGDatabaseFilter::GetSourceID() const
+{
+	return m_SourceID;
+}
+
+
 void EPGDatabaseFilter::OnScheduleStatusReset(
 	EPGDatabase *pEPGDatabase,
 	uint16_t NetworkID, uint16_t TransportStreamID, uint16_t ServiceID)
@@ -110,7 +125,7 @@ void EPGDatabaseFilter::OnEITSection(const PSITableBase *pTable, const PSISectio
 			if (pEITTable != nullptr) {
 				m_ResetTable = false;
 
-				m_pEPGDatabase->UpdateSection(pEITScheduleTable, pEITTable);
+				m_pEPGDatabase->UpdateSection(pEITScheduleTable, pEITTable, m_SourceID);
 
 				if (m_ResetTable) {
 					const uint16_t NetworkID = pEITTable->GetOriginalNetworkID();

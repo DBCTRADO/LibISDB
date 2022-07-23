@@ -189,6 +189,8 @@ namespace LibISDB
 			Database  = 0x0010U,
 		};
 
+		typedef unsigned int SourceIDType;
+
 		uint16_t NetworkID;
 		uint16_t TransportStreamID;
 		uint16_t ServiceID;
@@ -208,6 +210,7 @@ namespace LibISDB
 		CommonEventInfo CommonEvent;
 		TypeFlag Type = TypeFlag::None;
 		unsigned long long UpdatedTime = 0;
+		SourceIDType SourceID = 0;
 
 		bool operator == (const EventInfo &rhs) const noexcept;
 		bool operator != (const EventInfo &rhs) const noexcept { return !(*this == rhs); }

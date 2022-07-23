@@ -384,6 +384,7 @@ EPGDataFile::EPGDataFile() noexcept
 	: m_pEPGDatabase(nullptr)
 	, m_OpenFlags(OpenFlag::None)
 	, m_UpdateCount(0)
+	, m_SourceID()
 {
 }
 
@@ -472,8 +473,14 @@ bool EPGDataFile::Load()
 
 				LoadService(File, &Service);
 
-				if (!Service.EventList.empty())
+				if (!Service.EventList.empty()) {
+					if (m_SourceID != 0) {
+						for (EventInfo &Event : Service.EventList)
+							Event.SourceID = m_SourceID;
+					}
+
 					m_pEPGDatabase->SetServiceEventList(Service.Info, std::move(Service.EventList));
+				}
 			} else {
 				if (ChunkHeader.Size > 0) {
 					if (!File.SetPos(ChunkHeader.Size, Stream::SetPosType::Current))
@@ -508,7 +515,7 @@ bool EPGDataFile::LoadMerged()
 		return false;
 	File.Close();
 
-	m_pEPGDatabase->Merge(&Database, EPGDatabase::MergeFlag::Database);
+	m_pEPGDatabase->Merge(&Database, EPGDatabase::MergeFlag::Database, m_SourceID);
 
 	return true;
 }

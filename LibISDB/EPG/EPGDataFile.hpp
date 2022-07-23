@@ -79,6 +79,8 @@ namespace LibISDB
 		const String & GetFileName() const noexcept { return m_FileName; }
 		OpenFlag GetOpenFlags() const noexcept { return m_OpenFlags; }
 		uint64_t GetUpdateCount() const noexcept { return m_UpdateCount; }
+		void SetSourceID(EventInfo::SourceIDType ID) noexcept { m_SourceID = ID; }
+		EventInfo::SourceIDType GetSourceID() const noexcept { return m_SourceID; }
 
 	protected:
 		struct ServiceInfo {
@@ -98,6 +100,7 @@ namespace LibISDB
 		String m_FileName;
 		OpenFlag m_OpenFlags;
 		uint64_t m_UpdateCount;
+		EventInfo::SourceIDType m_SourceID;
 	};
 
 	LIBISDB_ENUM_FLAGS(EPGDataFile::OpenFlag)

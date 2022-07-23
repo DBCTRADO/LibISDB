@@ -58,11 +58,14 @@ namespace LibISDB
 	// EPGDatabaseFilter
 		void SetEPGDatabase(EPGDatabase *pDatabase);
 		EPGDatabase * GetEPGDatabase() const;
+		void SetSourceID(EventInfo::SourceIDType ID);
+		EventInfo::SourceIDType GetSourceID() const;
 
 	protected:
 		PIDMapManager m_PIDMapManager;
 		EPGDatabase *m_pEPGDatabase;
 		bool m_ResetTable;
+		EventInfo::SourceIDType m_SourceID;
 
 	private:
 	// EPGDatabase::EventListener

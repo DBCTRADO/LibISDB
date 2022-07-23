@@ -38,7 +38,8 @@ bool EventInfo::operator == (const EventInfo &rhs) const noexcept
 {
 	return IsEqual(rhs)
 		&& (Type == rhs.Type)
-		&& (UpdatedTime == rhs.UpdatedTime);
+		&& (UpdatedTime == rhs.UpdatedTime)
+		&& (SourceID == rhs.SourceID);
 }
 
 

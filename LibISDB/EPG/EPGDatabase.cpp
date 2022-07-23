@@ -76,6 +76,7 @@ void EPGDatabase::Clear()
 	BlockLock Lock(m_Lock);
 
 	m_ServiceMap.clear();
+	m_PendingServiceMap.clear();
 }
 
 
@@ -404,7 +405,9 @@ bool EPGDatabase::SetServiceEventList(const ServiceInfo &Info, EventList &&List)
 }
 
 
-bool EPGDatabase::Merge(EPGDatabase *pSrcDatabase, MergeFlag Flags)
+bool EPGDatabase::Merge(
+	EPGDatabase *pSrcDatabase,
+	MergeFlag Flags, std::optional<EventInfo::SourceIDType> SourceID)
 {
 	if (LIBISDB_TRACE_ERROR_IF(pSrcDatabase == nullptr))
 		return false;
@@ -412,7 +415,7 @@ bool EPGDatabase::Merge(EPGDatabase *pSrcDatabase, MergeFlag Flags)
 	BlockLock Lock(m_Lock);
 
 	for (auto &SrcService : pSrcDatabase->m_ServiceMap) {
-		MergeEventMap(SrcService.first, SrcService.second, Flags);
+		MergeEventMap(SrcService.first, SrcService.second, Flags, SourceID);
 	}
 
 	return true;
@@ -422,7 +425,7 @@ bool EPGDatabase::Merge(EPGDatabase *pSrcDatabase, MergeFlag Flags)
 bool EPGDatabase::MergeService(
 	EPGDatabase *pSrcDatabase,
 	uint16_t NetworkID, uint16_t TransportStreamID, uint16_t ServiceID,
-	MergeFlag Flags)
+	MergeFlag Flags, std::optional<EventInfo::SourceIDType> SourceID)
 {
 	if (LIBISDB_TRACE_ERROR_IF(pSrcDatabase == nullptr))
 		return false;
@@ -434,7 +437,7 @@ bool EPGDatabase::MergeService(
 
 	BlockLock Lock(m_Lock);
 
-	MergeEventMap(itSrcService->first, itSrcService->second, Flags);
+	MergeEventMap(itSrcService->first, itSrcService->second, Flags, SourceID);
 
 	return true;
 }
@@ -511,7 +514,9 @@ bool EPGDatabase::RemoveEventListener(EventListener *pEventListener)
 }
 
 
-bool EPGDatabase::UpdateSection(const EITPfScheduleTable *pScheduleTable, const EITTable *pEITTable)
+bool EPGDatabase::UpdateSection(
+	const EITPfScheduleTable *pScheduleTable, const EITTable *pEITTable,
+	EventInfo::SourceIDType SourceID)
 {
 	if (LIBISDB_TRACE_ERROR_IF(pEITTable == nullptr))
 		return false;
@@ -531,19 +536,15 @@ bool EPGDatabase::UpdateSection(const EITPfScheduleTable *pScheduleTable, const 
 		pEITTable->GetOriginalNetworkID(),
 		pEITTable->GetTransportStreamID(),
 		pEITTable->GetServiceID());
-	auto itService = m_ServiceMap.find(Key);
-	if (itService == m_ServiceMap.end()) {
-		itService = m_ServiceMap.emplace(
-			std::piecewise_construct,
-			std::forward_as_tuple(Key),
-			std::forward_as_tuple()).first;
-		ServiceEventMap &Service = itService->second;
-
+	auto [itService, ServiceInserted] = m_ServiceMap.emplace(
+		std::piecewise_construct,
+		std::forward_as_tuple(Key),
+		std::forward_as_tuple());
+	ServiceEventMap &Service = itService->second;
+	if (ServiceInserted) {
 		Service.EventMap.rehash(300);
 		Service.ScheduleUpdatedTime = m_CurTOTTime;
 	}
-
-	ServiceEventMap &Service = itService->second;
 
 	DateTime CurSysTime;
 	if (m_NoPastEvents)
@@ -576,37 +577,99 @@ bool EPGDatabase::UpdateSection(const EITPfScheduleTable *pScheduleTable, const 
 					continue;
 			}
 
+			bool IsPending = false, IsExtendedOnly = false;
+
 			if (auto itEvent = Service.EventMap.find(pEventInfo->EventID);
 					itEvent != Service.EventMap.end()) {
 				// 既存のデータの方が新しい場合は除外する
-				if (itEvent->second.UpdatedTime > m_CurTOTSeconds)
-					continue;
+				if (itEvent->second.UpdatedTime > m_CurTOTSeconds) {
+					if (m_CurTOTSeconds != 0)
+						continue;
+
+					// TOT がまだ来ていない場合は保留
+					IsPending = true;
+				}
+
+				if (IsExtended
+						&& (!(itEvent->second.Type & EventInfo::TypeFlag::Basic)
+							|| (itEvent->second.SourceID != SourceID)))
+					IsExtendedOnly = true;
+			} else {
+				if (IsExtended)
+					IsExtendedOnly = true;
 			}
 
-			TimeEventInfo TimeEvent(pEventInfo->StartTime);
-			TimeEvent.Duration = pEventInfo->Duration;
-			TimeEvent.EventID = pEventInfo->EventID;
-			TimeEvent.UpdatedTime = m_CurTOTSeconds;
+			ServiceEventMap *pService = &Service;
+			ServiceEventMap *pPendingService = nullptr;
+			if (m_CurTOTSeconds == 0) {
+				pPendingService = &m_PendingServiceMap.emplace(
+					std::piecewise_construct,
+					std::forward_as_tuple(Key),
+					std::forward_as_tuple()).first->second;
+				if (IsPending) {
+					pService = pPendingService;
 
-			if (!UpdateTimeMap(Service, TimeEvent, &IsUpdated))
-				continue;
+					IsExtendedOnly = false;
+					if (auto itEvent = pPendingService->EventMap.find(pEventInfo->EventID);
+							itEvent != pPendingService->EventMap.end()) {
+						if (IsExtended
+								&& (!(itEvent->second.Type & EventInfo::TypeFlag::Basic)
+									|| (itEvent->second.SourceID != SourceID)))
+							IsExtendedOnly = true;
+					} else {
+						if (IsExtended)
+							IsExtendedOnly = true;
+					}
+				}
+			}
+
+			EventMapType &EventMap = IsExtendedOnly ? pService->EventExtendedMap : pService->EventMap;
+
+			if (!IsExtendedOnly) {
+				TimeEventInfo TimeEvent(pEventInfo->StartTime);
+				TimeEvent.Duration = pEventInfo->Duration;
+				TimeEvent.EventID = pEventInfo->EventID;
+				TimeEvent.UpdatedTime = m_CurTOTSeconds;
+
+				bool TimeUpdated = false;
+				if (!UpdateTimeMap(*pService, TimeEvent, &TimeUpdated))
+					continue;
+				if (TimeUpdated && !IsPending)
+					IsUpdated = true;
+			}
 
 			// イベントを追加 or 既存のイベントを取得
-			auto EventResult = Service.EventMap.emplace(
+			auto EventResult = EventMap.emplace(
 				std::piecewise_construct,
 				std::forward_as_tuple(pEventInfo->EventID),
 				std::forward_as_tuple());
 			EventInfo *pEvent = &EventResult.first->second;
 			if (!EventResult.second) {
+				// 既に番組情報がある場合
+
+				bool IsReset = false;
+
 				if (pEvent->StartTime != pEventInfo->StartTime) {
 					// 開始時刻が変わった
-					auto it = Service.TimeMap.find(TimeEventInfo(pEvent->StartTime));
-					if ((it != Service.TimeMap.end()) && (it->EventID == pEventInfo->EventID))
-						Service.TimeMap.erase(it);
+					if (!IsExtendedOnly) {
+						auto it = pService->TimeMap.find(TimeEventInfo(pEvent->StartTime));
+						if ((it != pService->TimeMap.end()) && (it->EventID == pEventInfo->EventID))
+							pService->TimeMap.erase(it);
+					}
+
+					IsReset = true;
 				}
+
+				// 別ソースの情報はマージしない
+				if (pEvent->SourceID != SourceID)
+					IsReset = true;
+
+				if (IsReset)
+					*pEvent = EventInfo();
 			}
 
 			pEvent->UpdatedTime       = m_CurTOTSeconds;
+			pEvent->SourceID          = SourceID;
 			pEvent->NetworkID         = NetworkID;
 			pEvent->TransportStreamID = TransportStreamID;
 			pEvent->ServiceID         = ServiceID;
@@ -631,6 +694,9 @@ bool EPGDatabase::UpdateSection(const EITPfScheduleTable *pScheduleTable, const 
 					((TableID == 0x4E) ? EventInfo::TypeFlag::Present : EventInfo::TypeFlag::Following);
 			}
 
+			// extended のみが ServiceEventMap::EventMap に追加されることは無い
+			LIBISDB_ASSERT(!!(pEvent->Type & EventInfo::TypeFlag::Basic) || &EventMap == &pService->EventExtendedMap);
+
 			const DescriptorBlock *pDescBlock = &pEventInfo->Descriptors;
 
 			// 短形式イベント記述子
@@ -644,7 +710,10 @@ bool EPGDatabase::UpdateSection(const EITPfScheduleTable *pScheduleTable, const 
 			}
 
 			// 拡張形式イベント記述子
-			GetEventExtendedTextList(pDescBlock, m_StringDecoder, m_StringDecodeFlags, &pEvent->ExtendedText);
+			if (!GetEventExtendedTextList(pDescBlock, m_StringDecoder, m_StringDecodeFlags, &pEvent->ExtendedText)) {
+				if (!IsExtended)
+					MergeEventExtendedInfo(*pService, pEvent);
+			}
 
 			// コンポーネント記述子
 			if (pDescBlock->GetDescriptorByTag(ComponentDescriptor::TAG) != nullptr) {
@@ -728,7 +797,12 @@ bool EPGDatabase::UpdateSection(const EITPfScheduleTable *pScheduleTable, const 
 					});
 			}
 
-			IsUpdated = true;
+			if (!IsPending && !IsExtendedOnly) {
+				IsUpdated = true;
+
+				if (pPendingService != nullptr)
+					MergeEventMapEvent(*pPendingService, EventInfo(*pEvent), MergeFlag::MergeBasicExtended);
+			}
 		}
 	} else {
 		// このセグメントで開始するイベントが無い場合
@@ -824,6 +898,23 @@ bool EPGDatabase::UpdateTOT(const TOTTable *pTOTTable)
 	m_CurTOTTime = Time;
 	m_CurTOTSeconds = Time.GetLinearSeconds();
 
+	// TOT が来るまで保留にしていた情報をマージする
+	if (m_CurTOTSeconds != 0 && !m_PendingServiceMap.empty()) {
+		for (auto &Service : m_PendingServiceMap) {
+			LIBISDB_TRACE(LIBISDB_STR("Merge pending events...\n"));
+
+			for (auto &Event : Service.second.EventMap)
+				Event.second.UpdatedTime = m_CurTOTSeconds;
+			for (auto &Event : Service.second.EventExtendedMap)
+				Event.second.UpdatedTime = m_CurTOTSeconds;
+			Service.second.ScheduleUpdatedTime = m_CurTOTTime;
+
+			MergeEventMap(Service.first, Service.second, MergeFlag::MergeBasicExtended | MergeFlag::SetServiceUpdated);
+		}
+
+		m_PendingServiceMap.clear();
+	}
+
 	return true;
 }
 
@@ -835,10 +926,17 @@ void EPGDatabase::ResetTOTTime()
 }
 
 
-bool EPGDatabase::MergeEventMap(const ServiceInfo &Info, ServiceEventMap &Map, MergeFlag Flags)
+bool EPGDatabase::MergeEventMap(
+	const ServiceInfo &Info, ServiceEventMap &Map,
+	MergeFlag Flags, std::optional<EventInfo::SourceIDType> SourceID)
 {
 	if (Map.EventMap.empty())
 		return false;
+
+	if (SourceID) {
+		for (auto &Event : Map.EventMap)
+			Event.second.SourceID = *SourceID;
+	}
 
 	auto itService = m_ServiceMap.find(Info);
 	if (itService == m_ServiceMap.end()) {
@@ -903,48 +1001,87 @@ bool EPGDatabase::MergeEventMap(const ServiceInfo &Info, ServiceEventMap &Map, M
 				continue;
 		}
 
-		if (UpdateTimeMap(Service, Time, &IsUpdated)) {
-			// イベントを追加 or 既存のイベントを取得
-			auto EventResult = Service.EventMap.emplace(
-				std::piecewise_construct,
-				std::forward_as_tuple(Event.first),
-				std::forward_as_tuple());
-			EventInfo &CurEvent = EventResult.first->second;
-			bool DatabaseFlag = !!(Flags & MergeFlag::Database);
+		if (MergeEventMapEvent(Service, std::move(Event.second), Flags))
+			IsUpdated = true;
+	}
 
-			if (!EventResult.second) {
-				// 既に番組情報がある場合
+	if (IsUpdated) {
+		m_IsUpdated = true;
 
-				// 開始時刻が変わった場合、古い開始時刻のマップを削除する
-				if (CurEvent.StartTime != Event.second.StartTime) {
-					auto it = Service.TimeMap.find(TimeEventInfo(CurEvent.StartTime));
-					if ((it != Service.TimeMap.end()) && (it->EventID == CurEvent.EventID))
-						Service.TimeMap.erase(it);
-				}
+		if (!!(Flags & MergeFlag::SetServiceUpdated))
+			Service.IsUpdated = true;
+	}
 
-				// 新しい番組情報に拡張テキストが無い場合、古い番組情報からコピーする
-				if (!Event.second.HasExtended()
-						&& CurEvent.HasExtended()
-						&& (Event.second.StartTime == CurEvent.StartTime)) {
-					if (CopyEventExtendedText(&Event.second, CurEvent)) {
-						DatabaseFlag = true;
+	return true;
+}
+
+
+bool EPGDatabase::MergeEventMapEvent(ServiceEventMap &Service, EventInfo &&NewEvent, MergeFlag Flags)
+{
+	bool IsUpdated = false;
+
+	if (!UpdateTimeMap(Service, NewEvent, &IsUpdated))
+		return false;
+
+	// イベントを追加 or 既存のイベントを取得
+	auto EventResult = Service.EventMap.emplace(
+		std::piecewise_construct,
+		std::forward_as_tuple(NewEvent.EventID),
+		std::forward_as_tuple());
+	EventInfo &CurEvent = EventResult.first->second;
+	bool Overwrite = true;
+	bool DatabaseFlag = !!(Flags & MergeFlag::Database);
+
+	if (!EventResult.second) {
+		// 既に番組情報がある場合
+
+		// 開始時刻が変わった場合、古い開始時刻のマップを削除する
+		if (CurEvent.StartTime != NewEvent.StartTime) {
+			auto it = Service.TimeMap.find(TimeEventInfo(CurEvent.StartTime));
+			if ((it != Service.TimeMap.end()) && (it->EventID == CurEvent.EventID))
+				Service.TimeMap.erase(it);
+		}
+
+		if (!!(Flags & MergeFlag::MergeBasicExtended)) {
+			// schedule basic と extended のマージ
+			if ((NewEvent.SourceID == CurEvent.SourceID)
+					&& (NewEvent.StartTime == CurEvent.StartTime)) {
+				if (!(CurEvent.Type & EventInfo::TypeFlag::Extended) && !!(NewEvent.Type & EventInfo::TypeFlag::Extended)) {
+					if (!NewEvent.ExtendedText.empty()) {
+						CurEvent.ExtendedText = std::move(NewEvent.ExtendedText);
+						CurEvent.Type |= EventInfo::TypeFlag::Extended;
+					}
+					CurEvent.UpdatedTime = NewEvent.UpdatedTime;
+					Overwrite = false;
+				} else if (!!(CurEvent.Type & EventInfo::TypeFlag::Extended) && !(NewEvent.Type & EventInfo::TypeFlag::Extended)) {
+					if (!CurEvent.ExtendedText.empty()) {
+						NewEvent.ExtendedText = std::move(CurEvent.ExtendedText);
+						NewEvent.Type |= EventInfo::TypeFlag::Extended;
 					}
 				}
 			}
-
-			CurEvent = std::move(Event.second);
-
-			if (DatabaseFlag)
-				CurEvent.Type |= EventInfo::TypeFlag::Database;
-			else
-				CurEvent.Type &= ~EventInfo::TypeFlag::Database;
-
-			IsUpdated = true;
+		} else {
+			// 新しい番組情報に拡張テキストが無い場合、古い番組情報からコピーする
+			if (!NewEvent.HasExtended()
+					&& CurEvent.HasExtended()
+					&& (NewEvent.SourceID == CurEvent.SourceID)
+					&& (NewEvent.StartTime == CurEvent.StartTime)) {
+				if (CopyEventExtendedText(&NewEvent, CurEvent)) {
+					DatabaseFlag = true;
+				}
+			}
 		}
 	}
 
-	if (IsUpdated)
-		m_IsUpdated = true;
+	if (Overwrite)
+		CurEvent = std::move(NewEvent);
+
+	MergeEventExtendedInfo(Service, &CurEvent);
+
+	if (DatabaseFlag)
+		CurEvent.Type |= EventInfo::TypeFlag::Database;
+	else
+		CurEvent.Type &= ~EventInfo::TypeFlag::Database;
 
 	return true;
 }
@@ -1084,6 +1221,40 @@ bool EPGDatabase::CopyEventExtendedText(EventInfo *pDstInfo, const EventInfo &Sr
 	}
 
 	return false;
+}
+
+
+bool EPGDatabase::MergeEventExtendedInfo(ServiceEventMap &Service, EventInfo *pEvent)
+{
+	auto itEvent = Service.EventExtendedMap.find(pEvent->EventID);
+	if (itEvent == Service.EventExtendedMap.end())
+		return false;
+
+	EventInfo &ExtendedInfo = itEvent->second;
+
+	if ((pEvent->SourceID != ExtendedInfo.SourceID)
+			|| (pEvent->StartTime != ExtendedInfo.StartTime))
+		return false;
+
+	if (!pEvent->ExtendedText.empty() && (pEvent->UpdatedTime > ExtendedInfo.UpdatedTime)) {
+		Service.EventExtendedMap.erase(itEvent);
+		return false;
+	}
+
+	LIBISDB_TRACE(
+		LIBISDB_STR("Merge extended info : [%04x] %d/%d/%d %d:%02d:%02d\n"),
+		pEvent->EventID,
+		pEvent->StartTime.Year, pEvent->StartTime.Month, pEvent->StartTime.Day,
+		pEvent->StartTime.Hour, pEvent->StartTime.Minute, pEvent->StartTime.Second);
+
+	pEvent->ExtendedText = std::move(ExtendedInfo.ExtendedText);
+	pEvent->Type |= EventInfo::TypeFlag::Extended;
+	if (pEvent->UpdatedTime < ExtendedInfo.UpdatedTime)
+		pEvent->UpdatedTime = ExtendedInfo.UpdatedTime;
+
+	Service.EventExtendedMap.erase(itEvent);
+
+	return true;
 }
 
 
