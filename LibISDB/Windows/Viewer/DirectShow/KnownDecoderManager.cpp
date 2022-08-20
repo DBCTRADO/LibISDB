@@ -84,6 +84,8 @@ HRESULT KnownDecoderManager::CreateInstance(const GUID &MediaSubType, IBaseFilte
 		return hr;
 	}
 
+	bool UsePropertyBag = false;
+
 	if (!m_VideoDecoderSettings.Properties.empty()) {
 		IPropertyBag2 *pPropertyBag2;
 		if (SUCCEEDED(pDecoder->QueryInterface(IID_PPV_ARGS(&pPropertyBag2)))) {
@@ -99,8 +101,12 @@ HRESULT KnownDecoderManager::CreateInstance(const GUID &MediaSubType, IBaseFilte
 			pPropertyBag2->Write(static_cast<ULONG>(Values.size()), PropBag2.data(), Values.data());
 
 			pPropertyBag2->Release();
+
+			UsePropertyBag = true;
 		}
-	} else {
+	}
+
+	if (!UsePropertyBag) {
 		pDecoder->SetEnableDeinterlace(m_VideoDecoderSettings.bEnableDeinterlace);
 		pDecoder->SetDeinterlaceMethod(m_VideoDecoderSettings.DeinterlaceMethod);
 		pDecoder->SetAdaptProgressive(m_VideoDecoderSettings.bAdaptProgressive);
