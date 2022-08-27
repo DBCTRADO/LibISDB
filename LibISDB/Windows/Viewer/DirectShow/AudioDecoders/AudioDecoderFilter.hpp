@@ -101,10 +101,7 @@ namespace LibISDB::DirectShow
 			SPDIFOptions() = default;
 			SPDIFOptions(SPDIFMode mode, UINT channels) noexcept
 				: Mode(mode), PassthroughChannels(channels) {}
-			bool operator == (const SPDIFOptions &rhs) const noexcept {
-				return (Mode == rhs.Mode) && (PassthroughChannels == rhs.PassthroughChannels);
-			}
-			bool operator != (const SPDIFOptions &rhs) const noexcept { return !(*this == rhs); }
+			bool operator == (const SPDIFOptions &rhs) const noexcept = default;
 		};
 
 		struct SurroundMixingMatrix {

@@ -81,17 +81,7 @@ namespace LibISDB
 			{
 			}
 
-			bool operator == (const ServiceInfo &rhs) const noexcept
-			{
-				return (NetworkID == rhs.NetworkID)
-					&& (TransportStreamID == rhs.TransportStreamID)
-					&& (ServiceID == rhs.ServiceID);
-			}
-
-			bool operator != (const ServiceInfo &rhs) const noexcept
-			{
-				return !(*this == rhs);
-			}
+			bool operator == (const ServiceInfo &rhs) const noexcept = default;
 
 			bool operator < (const ServiceInfo &rhs) const noexcept
 			{

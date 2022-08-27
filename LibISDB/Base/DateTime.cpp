@@ -94,19 +94,6 @@ DateTime::DateTime(const std::tm &Src) noexcept
 }
 
 
-bool DateTime::operator == (const DateTime &rhs) const noexcept
-{
-	return (Year == rhs.Year)
-		&& (Month == rhs.Month)
-		&& (Day == rhs.Day)
-		&& (DayOfWeek == rhs.DayOfWeek)
-		&& (Hour == rhs.Hour)
-		&& (Minute == rhs.Minute)
-		&& (Second == rhs.Second)
-		&& (Millisecond == rhs.Millisecond);
-}
-
-
 bool DateTime::operator < (const DateTime &rhs) const noexcept
 {
 	return Compare(rhs) < 0;

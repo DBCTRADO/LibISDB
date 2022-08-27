@@ -50,18 +50,7 @@ namespace LibISDB
 			uint8_t TCS;
 			uint8_t RollupMode;
 
-			bool operator == (const LanguageInfo &rhs) const noexcept
-			{
-				return (LanguageTag == rhs.LanguageTag)
-					&& (DMF == rhs.DMF)
-					&& (DC == rhs.DC)
-					&& (LanguageCode == rhs.LanguageCode)
-					&& (Format == rhs.Format)
-					&& (TCS == rhs.TCS)
-					&& (RollupMode == rhs.RollupMode);
-			}
-
-			bool operator != (const LanguageInfo &rhs) const noexcept { return !(*this == rhs); }
+			bool operator == (const LanguageInfo &rhs) const noexcept = default;
 		};
 
 		struct TimeInfo {

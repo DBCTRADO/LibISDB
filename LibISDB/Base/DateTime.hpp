@@ -54,8 +54,7 @@ namespace LibISDB
 		DateTime() noexcept;
 		DateTime(const std::tm &Src) noexcept;
 
-		bool operator == (const DateTime &rhs) const noexcept;
-		bool operator != (const DateTime &rhs) const noexcept { return !(*this == rhs); }
+		bool operator == (const DateTime &rhs) const noexcept = default;
 		bool operator < (const DateTime &rhs) const noexcept;
 		bool operator <= (const DateTime &rhs) const noexcept;
 		bool operator > (const DateTime &rhs) const noexcept;

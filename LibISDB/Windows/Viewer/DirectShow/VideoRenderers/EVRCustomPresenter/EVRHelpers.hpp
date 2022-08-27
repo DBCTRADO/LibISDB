@@ -95,15 +95,7 @@ namespace LibISDB::DirectShow
 
 			Position() = default;
 
-			bool operator == (const Position &rhs) const noexcept
-			{
-				return pNode == rhs.pNode;
-			}
-
-			bool operator != (const Position &rhs) const noexcept
-			{
-				return pNode != rhs.pNode;
-			}
+			bool operator == (const Position &rhs) const noexcept = default;
 
 		private:
 			const Node *pNode = nullptr;

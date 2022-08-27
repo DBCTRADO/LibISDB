@@ -43,16 +43,7 @@ namespace LibISDB
 			String Description;
 			String Text;
 
-			bool operator == (const ExtendedTextInfo &rhs) const noexcept
-			{
-				return (Description == rhs.Description)
-					&& (Text == rhs.Text);
-			}
-
-			bool operator != (const ExtendedTextInfo &rhs) const noexcept
-			{
-				return !(*this == rhs);
-			}
+			bool operator == (const ExtendedTextInfo &rhs) const noexcept = default;
 		};
 
 		struct VideoInfo {
@@ -62,19 +53,7 @@ namespace LibISDB
 			uint32_t LanguageCode = LANGUAGE_CODE_INVALID;
 			String Text;
 
-			bool operator == (const VideoInfo &rhs) const noexcept
-			{
-				return (StreamContent == rhs.StreamContent)
-					&& (ComponentType == rhs.ComponentType)
-					&& (ComponentTag == rhs.ComponentTag)
-					&& (LanguageCode == rhs.LanguageCode)
-					&& (Text == rhs.Text);
-			}
-
-			bool operator != (const VideoInfo &rhs) const noexcept
-			{
-				return !(*this == rhs);
-			}
+			bool operator == (const VideoInfo &rhs) const noexcept = default;
 		};
 
 		struct AudioInfo {
@@ -90,25 +69,7 @@ namespace LibISDB
 			uint32_t LanguageCode2;
 			String Text;
 
-			bool operator == (const AudioInfo &rhs) const noexcept
-			{
-				return (StreamContent == rhs.StreamContent)
-					&& (ComponentType == rhs.ComponentType)
-					&& (ComponentTag == rhs.ComponentTag)
-					&& (SimulcastGroupTag == rhs.SimulcastGroupTag)
-					&& (ESMultiLingualFlag == rhs.ESMultiLingualFlag)
-					&& (MainComponentFlag == rhs.MainComponentFlag)
-					&& (QualityIndicator == rhs.QualityIndicator)
-					&& (SamplingRate == rhs.SamplingRate)
-					&& (LanguageCode == rhs.LanguageCode)
-					&& (LanguageCode2 == rhs.LanguageCode2)
-					&& (Text == rhs.Text);
-			}
-
-			bool operator != (const AudioInfo &rhs) const noexcept
-			{
-				return !(*this == rhs);
-			}
+			bool operator == (const AudioInfo &rhs) const noexcept = default;
 		};
 
 		struct ContentNibbleInfo {
@@ -126,43 +87,20 @@ namespace LibISDB
 				}
 				return false;
 			}
-
-			bool operator != (const ContentNibbleInfo &rhs) const noexcept
-			{
-				return !(*this == rhs);
-			}
 		};
 
 		struct EventGroupInfo {
 			uint8_t GroupType = EventGroupDescriptor::GROUP_TYPE_UNDEFINED;
 			std::vector<EventGroupDescriptor::EventInfo> EventList;
 
-			bool operator == (const EventGroupInfo &rhs) const noexcept
-			{
-				return (GroupType == rhs.GroupType)
-					&& (EventList == rhs.EventList);
-			}
-
-			bool operator != (const EventGroupInfo &rhs) const noexcept
-			{
-				return !(*this == rhs);
-			}
+			bool operator == (const EventGroupInfo &rhs) const noexcept = default;
 		};
 
 		struct CommonEventInfo {
 			uint16_t ServiceID = SERVICE_ID_INVALID;
 			uint16_t EventID = EVENT_ID_INVALID;
 
-			bool operator == (const CommonEventInfo &rhs) const noexcept
-			{
-				return (ServiceID == rhs.ServiceID)
-					&& (EventID == rhs.EventID);
-			}
-
-			bool operator != (const CommonEventInfo &rhs) const noexcept
-			{
-				return !(*this == rhs);
-			}
+			bool operator == (const CommonEventInfo &rhs) const noexcept = default;
 		};
 
 		struct SeriesInfo {
@@ -213,7 +151,6 @@ namespace LibISDB
 		SourceIDType SourceID = 0;
 
 		bool operator == (const EventInfo &rhs) const noexcept;
-		bool operator != (const EventInfo &rhs) const noexcept { return !(*this == rhs); }
 
 		bool IsEqual(const EventInfo &Op) const noexcept;
 

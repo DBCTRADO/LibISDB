@@ -60,16 +60,7 @@ private:
 		std::uint16_t PID;
 		std::uint8_t StreamType;
 
-		bool operator == (const ESInfo &rhs) const noexcept
-		{
-			return (PID == rhs.PID)
-				&& (StreamType == rhs.StreamType);
-		}
-
-		bool operator != (const ESInfo &rhs) const noexcept
-		{
-			return !(*this == rhs);
-		}
+		bool operator == (const ESInfo &rhs) const noexcept = default;
 	};
 
 	struct ServicePIDInfo {

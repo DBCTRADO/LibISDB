@@ -87,19 +87,7 @@ namespace LibISDB
 			uint8_t BackColorIndex;   /**< 背景色 */
 			uint8_t RasterColorIndex; /**< ラスタ色 */
 
-			bool operator == (const FormatInfo &rhs) const noexcept
-			{
-				return (Pos == rhs.Pos)
-					&& (Size == rhs.Size)
-					&& (CharColorIndex == rhs.CharColorIndex)
-					&& (BackColorIndex == rhs.BackColorIndex)
-					&& (RasterColorIndex == rhs.RasterColorIndex);
-			}
-
-			bool operator != (const FormatInfo &rhs) const noexcept
-			{
-				return !(*this == rhs);
-			}
+			bool operator == (const FormatInfo &rhs) const noexcept = default;
 		};
 
 		typedef std::vector<FormatInfo> FormatList;

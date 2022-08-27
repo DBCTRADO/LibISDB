@@ -43,7 +43,6 @@ namespace LibISDB
 		PSISection(size_t BufferSize);
 
 		bool operator == (const PSISection &rhs) const noexcept;
-		bool operator != (const PSISection &rhs) const noexcept { return !(*this == rhs); }
 
 		bool ParseHeader(bool IsExtended = true, bool IgnoreSectionNumber = false);
 		void Reset();
@@ -74,7 +73,6 @@ namespace LibISDB
 			uint8_t LastSectionNumber;
 
 			bool operator == (const PSIHeader &rhs) const noexcept;
-			bool operator != (const PSIHeader &rhs) const noexcept { return !(*this == rhs); }
 		};
 
 		PSIHeader m_Header;

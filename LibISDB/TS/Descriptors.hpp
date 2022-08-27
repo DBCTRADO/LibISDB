@@ -326,18 +326,7 @@ namespace LibISDB
 			uint8_t UserNibble1;         /**< user_nibble */
 			uint8_t UserNibble2;         /**< user_nibble */
 
-			bool operator == (const NibbleInfo &rhs) const noexcept
-			{
-				return (ContentNibbleLevel1 == rhs.ContentNibbleLevel1)
-					&& (ContentNibbleLevel2 == rhs.ContentNibbleLevel2)
-					&& (UserNibble1 == rhs.UserNibble1)
-					&& (UserNibble2 == rhs.UserNibble2);
-			}
-
-			bool operator != (const NibbleInfo &rhs) const noexcept
-			{
-				return !(*this == rhs);
-			}
+			bool operator == (const NibbleInfo &rhs) const noexcept = default;
 		};
 
 		ContentDescriptor();
@@ -971,18 +960,7 @@ namespace LibISDB
 			uint16_t NetworkID;         /**< original_network_id */
 			uint16_t TransportStreamID; /**< transport_stream_id */
 
-			bool operator == (const EventInfo &rhs) const noexcept
-			{
-				return (ServiceID == rhs.ServiceID)
-					&& (EventID == rhs.EventID)
-					&& (NetworkID == rhs.NetworkID)
-					&& (TransportStreamID == rhs.TransportStreamID);
-			}
-
-			bool operator != (const EventInfo &rhs) const noexcept
-			{
-				return !(*this == rhs);
-			}
+			bool operator == (const EventInfo &rhs) const noexcept = default;
 		};
 
 		EventGroupDescriptor();

@@ -131,15 +131,7 @@ namespace LibISDB
 			return *this;
 		}
 
-		bool operator == (const COMPointer &rhs) const noexcept
-		{
-			return m_pObject == rhs.m_pObject;
-		}
-
-		bool operator != (const COMPointer &rhs) const noexcept
-		{
-			return m_pObject != rhs.m_pObject;
-		}
+		bool operator == (const COMPointer &rhs) const noexcept = default;
 
 		T * operator -> () const noexcept
 		{

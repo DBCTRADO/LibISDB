@@ -50,7 +50,6 @@ namespace LibISDB
 		DataBuffer & operator = (DataBuffer &&Src) noexcept;
 
 		bool operator == (const DataBuffer &rhs) const noexcept;
-		bool operator != (const DataBuffer &rhs) const noexcept { return !(*this == rhs); }
 
 		uint8_t * GetData() noexcept;
 		const uint8_t * GetData() const noexcept;
