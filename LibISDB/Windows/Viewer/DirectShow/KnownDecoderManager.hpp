@@ -69,7 +69,7 @@ namespace LibISDB::DirectShow
 			int Saturation = 0;
 			int NumThreads = 0;
 			bool bEnableDXVA2 = true;
-			bool bEnableD3D11 = true;
+			bool bEnableD3D11 = false;
 			UINT NumQueueFrames = 2;
 		};
 
