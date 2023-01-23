@@ -384,7 +384,6 @@
     <ClCompile Include="..\Thirdparty\fdk-aac\libSBRdec\src\sbrdecoder.cpp" />
     <ClCompile Include="..\Thirdparty\fdk-aac\libSBRdec\src\sbrdec_drc.cpp" />
     <ClCompile Include="..\Thirdparty\fdk-aac\libSBRdec\src\sbrdec_freq_sca.cpp" />
-    <ClCompile Include="..\Thirdparty\fdk-aac\libSBRdec\src\sbr_crc.cpp" />
     <ClCompile Include="..\Thirdparty\fdk-aac\libSBRdec\src\sbr_dec.cpp" />
     <ClCompile Include="..\Thirdparty\fdk-aac\libSBRdec\src\sbr_ram.cpp" />
     <ClCompile Include="..\Thirdparty\fdk-aac\libSBRdec\src\sbr_rom.cpp" />
@@ -543,7 +542,6 @@
     <ClInclude Include="..\Thirdparty\fdk-aac\libSBRdec\src\pvc_dec.h" />
     <ClInclude Include="..\Thirdparty\fdk-aac\libSBRdec\src\sbrdec_drc.h" />
     <ClInclude Include="..\Thirdparty\fdk-aac\libSBRdec\src\sbrdec_freq_sca.h" />
-    <ClInclude Include="..\Thirdparty\fdk-aac\libSBRdec\src\sbr_crc.h" />
     <ClInclude Include="..\Thirdparty\fdk-aac\libSBRdec\src\sbr_deb.h" />
     <ClInclude Include="..\Thirdparty\fdk-aac\libSBRdec\src\sbr_dec.h" />
     <ClInclude Include="..\Thirdparty\fdk-aac\libSBRdec\src\sbr_ram.h" />
