@@ -69,8 +69,8 @@ bool FileStreamGeneric::Open(const CStringView &FileName, OpenFlag Flags)
 		Mode |= std::ios_base::trunc;
 
 	LIBISDB_TRACE(
-		LIBISDB_STR("FileStreamGeneric::Open() : Open file \"%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\"\n"),
-		FileName.c_str());
+		LIBISDB_STR("FileStreamGeneric::Open() : Open file \"{}\"\n"),
+		FileName);
 	m_Stream.exceptions(std::ios_base::failbit);
 	try {
 		m_Stream.open(FileName.c_str(), Mode);

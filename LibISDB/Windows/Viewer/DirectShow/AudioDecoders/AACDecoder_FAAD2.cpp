@@ -191,7 +191,7 @@ bool AACDecoder_FAAD2::DecodeFrame(const ADTSFrame *pFrame, ReturnArg<DecodeFram
 		if (!m_InitRequest) {
 			// チャンネル設定が変化した、デコーダリセット
 			LIBISDB_TRACE(
-				LIBISDB_STR("AACDecoder_FAAD2::DecodeFrame() Channel config changed %d -> %d\n"),
+				LIBISDB_STR("AACDecoder_FAAD2::DecodeFrame() Channel config changed {} -> {}\n"),
 				m_LastChannelConfig,
 				pFrame->GetChannelConfig());
 			if (!ResetDecoder())
@@ -242,7 +242,7 @@ bool AACDecoder_FAAD2::DecodeFrame(const ADTSFrame *pFrame, ReturnArg<DecodeFram
 	} else {
 		// エラー発生
 		LIBISDB_TRACE(
-			LIBISDB_STR("NeAACDecDecode() error \"%") LIBISDB_STR(LIBISDB_PRIs) LIBISDB_STR("\"\n"),
+			"NeAACDecDecode() error \"{}\"\n",
 			NeAACDecGetErrorMessage(FrameInfo.error));
 
 		// リセットする

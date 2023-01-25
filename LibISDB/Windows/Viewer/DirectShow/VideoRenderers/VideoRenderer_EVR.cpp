@@ -175,9 +175,9 @@ bool VideoRenderer_EVR::Initialize(
 			DXVA2_VideoProcessorCaps Caps;
 
 			if (SUCCEEDED(pVideoProcessor->GetVideoProcessorCaps(&pProcessingModes[i], &Caps))) {
-				LIBISDB_TRACE(LIBISDB_STR("EVR Video Processor %u\n"), i);
+				LIBISDB_TRACE(LIBISDB_STR("EVR Video Processor {}\n"), i);
 				LIBISDB_TRACE(
-					LIBISDB_STR("DeviceCaps : %") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\n"),
+					LIBISDB_STR("DeviceCaps : {}\n"),
 					Caps.DeviceCaps == DXVA2_VPDev_EmulatedDXVA1 ?
 						LIBISDB_STR("DXVA2_VPDev_EmulatedDXVA1"):
 					Caps.DeviceCaps == DXVA2_VPDev_HardwareDevice ?
@@ -467,9 +467,7 @@ HRESULT VideoRenderer_EVR::UpdateRenderingPrefs(IMFVideoDisplayControl *pDisplay
 	DWORD RenderingPrefs;
 	HRESULT hr = pDisplayControl->GetRenderingPrefs(&RenderingPrefs);
 	if (SUCCEEDED(hr)) {
-		LIBISDB_TRACE(
-			LIBISDB_STR("ClipToDevice = %") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\n"),
-			m_ClipToDevice ? LIBISDB_STR("true") : LIBISDB_STR("false"));
+		LIBISDB_TRACE(LIBISDB_STR("ClipToDevice = {}\n"), m_ClipToDevice);
 		if (!m_ClipToDevice)
 			RenderingPrefs |= MFVideoRenderPrefs_DoNotClipToDevice;
 		else

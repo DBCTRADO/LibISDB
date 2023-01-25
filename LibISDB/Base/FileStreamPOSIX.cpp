@@ -186,9 +186,8 @@ bool FileStreamPOSIX::Open(const CStringView &FileName, OpenFlag Flags)
 	}
 
 	LIBISDB_TRACE(
-		LIBISDB_STR("FileStreamPOSIX::Open() : Open file \"%")
-			LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\" %x %x\n"),
-		FileName.c_str(), OFlags, Share);
+		LIBISDB_STR("FileStreamPOSIX::Open() : Open file \"{}\" {:x} {:x}\n"),
+		FileName, OFlags, Share);
 
 	const ::errno_t Err =
 #ifdef LIBISDB_WCHAR
@@ -226,9 +225,8 @@ bool FileStreamPOSIX::Open(const CStringView &FileName, OpenFlag Flags)
 		OFlags |= O_APPEND;
 
 	LIBISDB_TRACE(
-		LIBISDB_STR("FileStreamPOSIX::Open() : Open file \"%")
-			LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\" %x\n"),
-		FileName.c_str(), OFlags);
+		LIBISDB_STR("FileStreamPOSIX::Open() : Open file \"{}\" {:x}\n"),
+		FileName, OFlags);
 
 	m_File = ::open(FileName.c_str(), OFlags);
 	if (m_File < 0) {

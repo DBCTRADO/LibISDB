@@ -76,7 +76,7 @@ H264ParserFilter::H264ParserFilter(LPUNKNOWN pUnk, HRESULT *phr)
 	, m_AdjustFrameRate(false)
 	, m_Adjust1Seg(false)
 {
-	LIBISDB_TRACE(LIBISDB_STR("H264ParserFilter::H264ParserFilter() %p\n"),this);
+	LIBISDB_TRACE(LIBISDB_STR("H264ParserFilter::H264ParserFilter() {}\n"), static_cast<void *>(this));
 
 	m_MediaType.InitMediaType();
 	m_MediaType.SetType(&MEDIATYPE_Video);
@@ -291,8 +291,9 @@ HRESULT H264ParserFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
 						LONGLONG Diff = (m_PrevTime + CalcFrameTime(m_SampleCount, m_Adjust1Seg)) - StartTime;
 						if (std::llabs(Diff) > MAX_SAMPLE_TIME_JITTER) {
 							bReset = true;
-							LIBISDB_TRACE(LIBISDB_STR("Reset H.264 sample time (Diff = %.5f)\n"),
-								  (double)Diff / (double)REFERENCE_TIME_SECOND);
+							LIBISDB_TRACE(
+								LIBISDB_STR("Reset H.264 sample time (Diff = {:.5f})\n"),
+								(double)Diff / (double)REFERENCE_TIME_SECOND);
 						}
 					}
 					if (bReset) {
@@ -509,7 +510,7 @@ void H264ParserFilter::OnAccessUnit(const H264Parser *pParser, const H264AccessU
 		m_VideoInfo = Info;
 
 		LIBISDB_TRACE(
-			LIBISDB_STR("H.264 access unit %d x %d [SAR %d:%d (DAR %d:%d)] %d/%d\n"),
+			LIBISDB_STR("H.264 access unit {} x {} [SAR {}:{} (DAR {}:{})] {}/{}\n"),
 			OrigWidth, OrigHeight, SARX, SARY, AspectX, AspectY,
 			Info.FrameRate.Num, Info.FrameRate.Denom);
 
@@ -563,7 +564,7 @@ H264ParserFilter::SampleDataPool::SampleDataPool()
 H264ParserFilter::SampleDataPool::~SampleDataPool()
 {
 	LIBISDB_TRACE(
-		LIBISDB_STR("H264ParserFilter::SampleDataPool::~SampleDataPool() Data count %zu / %zu\n"),
+		LIBISDB_STR("H264ParserFilter::SampleDataPool::~SampleDataPool() Data count {} / {}\n"),
 		m_DataCount, m_MaxData);
 
 	Clear();

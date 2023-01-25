@@ -251,29 +251,6 @@ namespace LibISDB
 #define LIBISDB_CHAR(c) c
 #endif
 
-#ifdef LIBISDB_WINDOWS
-#define LIBISDB_PRIs "hs"
-#define LIBISDB_PRIc "hc"
-#else
-#define LIBISDB_PRIs "s"
-#define LIBISDB_PRIc "c"
-#endif
-#define LIBISDB_PRIls "ls"
-#define LIBISDB_PRIlc "lc"
-
-#if defined(LIBISDB_WINDOWS) && (!defined(LIBISDB_WCHAR) || !defined(_CRT_STDIO_ISO_WIDE_SPECIFIERS))
-#define LIBISDB_PRIS "s"
-#define LIBISDB_PRIC "c"
-#else
-#ifdef LIBISDB_WCHAR
-#define LIBISDB_PRIS LIBISDB_PRIls
-#define LIBISDB_PRIC LIBISDB_PRIlc
-#else
-#define LIBISDB_PRIS LIBISDB_PRIs
-#define LIBISDB_PRIC LIBISDB_PRIc
-#endif
-#endif
-
 #ifndef LIBISDB_NEWLINE
 #define LIBISDB_NEWLINE "\n"
 #endif

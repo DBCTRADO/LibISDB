@@ -116,7 +116,7 @@ void LogoDataModule::OnComplete(const uint8_t *pData, uint32_t ModuleSize)
 
 		Info.ServiceList.resize(NumberOfServices);
 
-		LIBISDB_TRACE(LIBISDB_STR("[%d/%d] Logo ID %04X / %d Services\n"), i + 1, NumberOfLoop, Info.LogoID, NumberOfServices);
+		LIBISDB_TRACE(LIBISDB_STR("[{}/{}] Logo ID {:04X} / {} Services\n"), i + 1, NumberOfLoop, Info.LogoID, NumberOfServices);
 
 		for (uint8_t j = 0; j < NumberOfServices; j++) {
 			Info.ServiceList[j].NetworkID         = Load16(&pData[Pos + 0]);
@@ -125,7 +125,7 @@ void LogoDataModule::OnComplete(const uint8_t *pData, uint32_t ModuleSize)
 			Pos += 6;
 
 			LIBISDB_TRACE(
-				LIBISDB_STR("[%d:%2d/%2d] Network ID %04X / TSID %04X / Service ID %04X\n"),
+				LIBISDB_STR("[{}:{:2}/{:2}] Network ID {:04X} / TSID {:04X} / Service ID {:04X}\n"),
 				i + 1, j + 1, NumberOfServices,
 				Info.ServiceList[j].NetworkID,
 				Info.ServiceList[j].TransportStreamID,
@@ -260,7 +260,7 @@ void DSMCCSection::OnDataModule(
 
 #ifdef LIBISDB_ENABLE_TRACE
 	LIBISDB_TRACE(
-		LIBISDB_STR("DII Logo Data [PID %04x] : Download ID %08") LIBISDB_STR(PRIx32) LIBISDB_STR(" / Module ID %04X / Module size %") LIBISDB_STR(PRIu32) LIBISDB_STR("\n"),
+		LIBISDB_STR("DII Logo Data [PID {:04x}] : Download ID {:08x} / Module ID {:04X} / Module size {}\n"),
 		m_PID,
 		pMessageInfo->DownloadID,
 		pModuleInfo->ModuleID,
@@ -430,7 +430,7 @@ void LogoDownloaderFilter::OnSDTTSection(const PSITableBase *pTable, const PSISe
 					if (pDownloadContentDesc != nullptr) {
 						const uint32_t DownloadID = pDownloadContentDesc->GetDownloadID();
 						LIBISDB_TRACE(
-							LIBISDB_STR("Download version 0x%") LIBISDB_STR(PRIx32) LIBISDB_STR(" = 0x%03") LIBISDB_STR(PRIx32) LIBISDB_STR("\n"),
+							LIBISDB_STR("Download version {:#x} = {:#03x}\n"),
 							DownloadID, pInfo->NewVersion);
 						std::map<uint32_t, uint16_t>::iterator itVersion = m_VersionMap.find(DownloadID);
 						if ((itVersion == m_VersionMap.end())
@@ -592,7 +592,7 @@ bool LogoDownloaderFilter::MapDataES(int Index)
 	ServiceInfo &Info = m_ServiceList[Index];
 
 	LIBISDB_TRACE(
-		LIBISDB_STR("LogoDownloaderFilter::MapDataES() : SID %04X / %zu stream(s)\n"),
+		LIBISDB_STR("LogoDownloaderFilter::MapDataES() : SID {:04X} / {} stream(s)\n"),
 		Info.ServiceID, Info.ESList.size());
 
 	for (uint16_t PID : Info.ESList) {

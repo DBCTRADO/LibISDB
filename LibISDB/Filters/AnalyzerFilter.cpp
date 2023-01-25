@@ -1828,11 +1828,11 @@ void AnalyzerFilter::OnPATSection(const PSITableBase *pTable, const PSISection *
 	}
 
 #ifdef LIBISDB_ENABLE_TRACE
-	LIBISDB_TRACE(LIBISDB_STR("transport_stream_id : %04X\n"), m_TransportStreamID);
+	LIBISDB_TRACE(LIBISDB_STR("transport_stream_id : {:04X}\n"), m_TransportStreamID);
 	for (size_t i = 0; i < m_ServiceList.size(); i++) {
 		const ServiceInfo &Info = m_ServiceList[i];
 		LIBISDB_TRACE(
-			LIBISDB_STR("Service[%2zu] : service_id %04X / PMT PID  %04X\n"),
+			LIBISDB_STR("Service[{:2}] : service_id {:04X} / PMT PID {:04X}\n"),
 			i, Info.ServiceID, Info.PMTPID);
 	}
 #endif
@@ -2010,10 +2010,10 @@ void AnalyzerFilter::OnPMTSection(const PSITableBase *pTable, const PSISection *
 	}
 
 #ifdef LIBISDB_ENABLE_TRACE
-	LIBISDB_TRACE(LIBISDB_STR("service_id : %04X\n"), Info.ServiceID);
+	LIBISDB_TRACE(LIBISDB_STR("service_id : {:04X}\n"), Info.ServiceID);
 	for (size_t i = 0; i < Info.ESList.size(); i++) {
 		const ESInfo &ES = Info.ESList[i];
-		LIBISDB_TRACE(LIBISDB_STR("ES[%2zu] : PID %04X / stream_type %02X\n"), i, ES.PID, ES.StreamType);
+		LIBISDB_TRACE(LIBISDB_STR("ES[{:2}] : PID {:04X} / stream_type {:02X}\n"), i, ES.PID, ES.StreamType);
 	}
 #endif
 
@@ -2105,8 +2105,8 @@ void AnalyzerFilter::OnSDTSection(const PSITableBase *pTable, const PSISection *
 		m_TransportStreamID = pSDTTable->GetTransportStreamID();
 		m_NetworkID = pSDTTable->GetOriginalNetworkID();
 
-		LIBISDB_TRACE(LIBISDB_STR("transport_stream_id : %04X\n"), m_TransportStreamID);
-		LIBISDB_TRACE(LIBISDB_STR("network_id          : %04X\n"), m_NetworkID);
+		LIBISDB_TRACE(LIBISDB_STR("transport_stream_id : {:04X}\n"), m_TransportStreamID);
+		LIBISDB_TRACE(LIBISDB_STR("network_id          : {:04X}\n"), m_NetworkID);
 
 		UpdateSDTServiceList(pSDTTable, &m_SDTServiceList);
 
@@ -2164,7 +2164,7 @@ void AnalyzerFilter::OnNITSection(const PSITableBase *pTable, const PSISection *
 
 	m_NetworkID = pNITTable->GetNetworkID();
 
-	LIBISDB_TRACE(LIBISDB_STR("network_id : %04X\n"), m_NetworkID);
+	LIBISDB_TRACE(LIBISDB_STR("network_id : {:04X}\n"), m_NetworkID);
 
 	// ネットワーク情報取得
 	{

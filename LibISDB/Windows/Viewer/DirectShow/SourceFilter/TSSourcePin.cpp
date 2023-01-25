@@ -52,7 +52,7 @@ TSSourcePin::TSSourcePin(HRESULT *phr, TSSourceFilter *pFilter)
 	, m_InputTimeout(false)
 	, m_NewSegment(true)
 {
-	LIBISDB_TRACE(LIBISDB_STR("TSSourcePin::TSSourcePin() %p\n"), this);
+	LIBISDB_TRACE(LIBISDB_STR("TSSourcePin::TSSourcePin() {}\n"), static_cast<void *>(this));
 
 	*phr = S_OK;
 }
@@ -180,7 +180,7 @@ bool TSSourcePin::InputData(DataBuffer *pData)
 			if (!m_SrcStream.IsBufferFull())
 				break;
 			if (static_cast<DWORD>(::GetTickCount() - BeginTime) >= Wait) {
-				LIBISDB_TRACE(LIBISDB_STR("TSSourcePin::InputMedia() : Timeout %u ms\n"), Wait);
+				LIBISDB_TRACE(LIBISDB_STR("TSSourcePin::InputMedia() : Timeout {} ms\n"), Wait);
 				m_InputTimeout = true;
 				return false;
 			}

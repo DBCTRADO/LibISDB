@@ -65,7 +65,7 @@ COMMemoryPointer<> VideoRenderer_madVR::GetCurrentImage()
 #ifdef LIBISDB_ENABLE_TRACE
 					const BITMAPINFOHEADER *pbmih = static_cast<const BITMAPINFOHEADER *>(pDIB);
 					LIBISDB_TRACE(
-						LIBISDB_STR("IMadVRFrameGrabber::GrabFrame() %d x %d (%d)\n"),
+						LIBISDB_STR("IMadVRFrameGrabber::GrabFrame() {} x {} ({})\n"),
 						pbmih->biWidth, pbmih->biHeight, pbmih->biBitCount);
 #endif
 
@@ -79,7 +79,7 @@ COMMemoryPointer<> VideoRenderer_madVR::GetCurrentImage()
 				::LocalFree(pDIB);
 			}
 
-			LIBISDB_TRACE(LIBISDB_STR("IMadVRFrameGrabber::GrabFrame() Failed %x\n"), hr);
+			LIBISDB_TRACE(LIBISDB_STR("IMadVRFrameGrabber::GrabFrame() Failed {:x}\n"), hr);
 		}
 #ifdef LIBISDB_ENABLE_TRACE
 		else {

@@ -40,6 +40,8 @@
 #endif	// !def _MSC_VER
 #endif	// LIBISDB_DEBUG
 
+#include <format>
+
 
 namespace LibISDB
 {
@@ -53,8 +55,16 @@ namespace LibISDB
 		Error,
 	};
 
-	void DebugTrace(TraceType Type, const CharType *pFormat, ...);
-	void DebugTraceV(TraceType Type, const CharType *pFormat, std::va_list Args);
+	void DebugTraceV(TraceType Type, std::string_view Format, std::format_args Args);
+	void DebugTraceV(TraceType Type, std::wstring_view Format, std::wformat_args Args);
+	template<typename... TArgs> void DebugTrace(TraceType Type, std::string_view Format, const TArgs&... Args)
+	{
+		DebugTraceV(Type, Format, std::make_format_args(Args...));
+	}
+	template<typename... TArgs> void DebugTrace(TraceType Type, std::wstring_view Format, const TArgs&... Args)
+	{
+		DebugTraceV(Type, Format, std::make_wformat_args(Args...));
+	}
 
 #if !defined(LIBISDB_ENABLE_TRACE) && !defined(LIBISDB_NO_TRACE) && defined(LIBISDB_DEBUG)
 #define LIBISDB_ENABLE_TRACE

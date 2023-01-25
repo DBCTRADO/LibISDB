@@ -193,7 +193,7 @@ bool MPEGAudioDecoder::DecodeFrame(const uint8_t *pData, size_t *pDataSize, Retu
 		if (MAD_RECOVERABLE(m_MadStream.error))
 			return true;
 		LIBISDB_TRACE(
-			LIBISDB_STR("libmad error : ") LIBISDB_STR(LIBISDB_PRIs) LIBISDB_STR("\n"),
+			"libmad error : {}\n",
 			mad_stream_errorstr(&m_MadStream));
 		ResetDecoder();
 		return false;

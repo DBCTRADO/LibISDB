@@ -49,8 +49,11 @@ namespace LibISDB
 		Logger * GetLogger() const noexcept { return m_pLogger; }
 
 	protected:
-		void Log(Logger::LogType Type, const CharType *pFormat, ...);
-		void LogV(Logger::LogType Type, const CharType *pFormat, std::va_list Args);
+		template<typename... TArgs> void Log(Logger::LogType Type, StringView Format, const TArgs&... Args)
+		{
+			LogV(Type, Format, MakeFormatArgs(Args...));
+		}
+		void LogV(Logger::LogType Type, StringView Format, FormatArgs Args);
 		void LogRaw(Logger::LogType Type, const CharType *pText);
 
 		Logger *m_pLogger;

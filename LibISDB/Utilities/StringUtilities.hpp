@@ -49,25 +49,6 @@ namespace LibISDB
 	inline std::size_t StringLength(const char *pString, std::size_t Length) { return ::strnlen(pString, Length); }
 	inline std::size_t StringLength(const wchar_t *pString, std::size_t Length) { return ::wcsnlen(pString, Length); }
 
-	template<typename... TArgs> inline int StringPrintf(char *pString, std::size_t Length, const char *pFormat, TArgs... Args) {
-		return std::snprintf(pString, Length, pFormat, Args...);
-	}
-	template<typename... TArgs> inline int StringPrintf(wchar_t *pString, std::size_t Length, const wchar_t *pFormat, TArgs... Args) {
-		return std::swprintf(pString, Length, pFormat, Args...);
-	}
-	inline int StringPrintfV(char *pString, std::size_t Length, const char *pFormat, std::va_list Args) {
-		return std::vsnprintf(pString, Length, pFormat, Args);
-	}
-	inline int StringPrintfV(wchar_t *pString, std::size_t Length, const wchar_t *pFormat, std::va_list Args) {
-		return std::vswprintf(pString, Length, pFormat, Args);
-	}
-	template<typename T, std::size_t N, typename... TArgs> inline int StringPrintf(T (&String)[N], const T *pFormat, TArgs... Args) {
-		return StringPrintf(String, N, pFormat, Args...);
-	}
-	template<typename T, std::size_t N> inline int StringPrintfV(T (&String)[N], const T *pFormat, std::va_list Args) {
-		return StringPrintfV(String, N, pFormat, Args);
-	}
-
 LIBISDB_PRAGMA_MSVC(warning(push))
 LIBISDB_PRAGMA_MSVC(warning(disable:4996))
 	inline void StringCopy(char *pDstString, const char *pSrcString) { std::strcpy(pDstString, pSrcString); }
@@ -83,10 +64,10 @@ LIBISDB_PRAGMA_MSVC(warning(pop))
 	}
 #else
 	inline void StringCopy(char *pDstString, const char *pSrcString, std::size_t Length) {
-		StringPrintf(pDstString, Length, "%s", pSrcString);
+		std::snprintf(pDstString, Length, "%s", pSrcString);
 	}
 	inline void StringCopy(wchar_t *pDstString, const wchar_t *pSrcString, std::size_t Length) {
-		StringPrintf(pDstString, Length, L"%ls", pSrcString);
+		std::swprintf(pDstString, Length, L"%ls", pSrcString);
 	}
 #endif
 

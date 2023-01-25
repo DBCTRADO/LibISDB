@@ -28,6 +28,9 @@
 #define LIBISDB_LOGGER_H
 
 
+#include "../Utilities/StringFormat.hpp"
+
+
 namespace LibISDB
 {
 
@@ -44,8 +47,11 @@ namespace LibISDB
 
 		static constexpr size_t MAX_LENGTH = 1024;
 
-		void Log(LogType Type, const CharType *pFormat, ...);
-		void LogV(LogType Type, const CharType *pFormat, std::va_list Args);
+		template<typename... TArgs> void Log(LogType Type, StringView Format, const TArgs&... Args)
+		{
+			LogV(Type, Format, MakeFormatArgs(Args));
+		}
+		void LogV(LogType Type, StringView Format, FormatArgs Args);
 		void LogRaw(LogType Type, const CharType *pText);
 
 	protected:

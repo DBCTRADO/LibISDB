@@ -47,7 +47,7 @@ MPEG2ParserFilter::MPEG2ParserFilter(LPUNKNOWN pUnk, HRESULT *phr)
 	, m_MPEG2Parser(this)
 	, m_pOutSample(nullptr)
 {
-	LIBISDB_TRACE(LIBISDB_STR("MPEG2ParserFilter::MPEG2ParserFilter() %p\n"), this);
+	LIBISDB_TRACE(LIBISDB_STR("MPEG2ParserFilter::MPEG2ParserFilter() {}\n"), static_cast<void *>(this));
 
 	*phr = S_OK;
 }
@@ -324,7 +324,7 @@ void MPEG2ParserFilter::OnMPEG2Sequence(const MPEG2VideoParser *pParser, const M
 		m_VideoInfo = Info;
 
 		LIBISDB_TRACE(
-			LIBISDB_STR("MPEG2 sequence %d x %d [%d x %d (%d=%d:%d)]\n"),
+			LIBISDB_STR("MPEG2 sequence {} x {} [{} x {} ({}={}:{})]\n"),
 			OrigWidth, OrigHeight, DisplayWidth, DisplayHeight,
 			pSequence->GetAspectRatioInfo(), AspectX, AspectY);
 

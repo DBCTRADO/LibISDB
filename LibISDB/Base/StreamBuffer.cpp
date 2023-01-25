@@ -53,7 +53,7 @@ bool StreamBuffer::Create(
 	DataStorageManager *pDataStorageManager)
 {
 	LIBISDB_TRACE(
-		LIBISDB_STR("StreamBuffer::Create() : %zu bytes (%zu - %zu blocks)\n"),
+		LIBISDB_STR("StreamBuffer::Create() : {} bytes ({} - {} blocks)\n"),
 		BlockSize, MinBlockCount, MaxBlockCount);
 
 	if (!CheckBufferSize(BlockSize, MinBlockCount, MaxBlockCount))
@@ -106,7 +106,7 @@ void StreamBuffer::Clear()
 bool StreamBuffer::SetSize(size_t BlockSize, size_t MinBlockCount, size_t MaxBlockCount, bool Discard)
 {
 	LIBISDB_TRACE(
-		LIBISDB_STR("StreamBuffer::SetSize() : %zu bytes (%zu - %zu blocks)\n"),
+		LIBISDB_STR("StreamBuffer::SetSize() : {} bytes ({} - {} blocks)\n"),
 		BlockSize, MinBlockCount, MaxBlockCount);
 
 	if (!CheckBufferSize(BlockSize, MinBlockCount, MaxBlockCount))
@@ -248,7 +248,7 @@ size_t StreamBuffer::PushBack(const uint8_t *pData, size_t DataSize)
 		QueueBlock Block;
 
 		if (m_Queue.size() < m_MaxBlockCount) {
-			//LIBISDB_TRACE_VERBOSE(LIBISDB_STR("Create DataStorage [%zu] %lld\n"), m_Queue.size(), m_SerialPos);
+			//LIBISDB_TRACE_VERBOSE(LIBISDB_STR("Create DataStorage [{}] {}\n"), m_Queue.size(), m_SerialPos);
 			DataStorage *pStorage = m_DataStorageManager->CreateDataStorage();
 
 			if (pStorage == nullptr)
@@ -261,7 +261,7 @@ size_t StreamBuffer::PushBack(const uint8_t *pData, size_t DataSize)
 		} else {
 			if (IsBlockLocked(m_Queue.front()))
 				break;
-			//LIBISDB_TRACE_VERBOSE(LIBISDB_STR("Reuse DataStorage [%zu] %lld\n"), m_Queue.size() - 1, m_SerialPos);
+			//LIBISDB_TRACE_VERBOSE(LIBISDB_STR("Reuse DataStorage [{}] {}\n"), m_Queue.size() - 1, m_SerialPos);
 			Block = std::move(m_Queue.front());
 			m_Queue.pop_front();
 			Block.Reuse();
@@ -438,7 +438,7 @@ size_t StreamBuffer::Read(PosType *pPos, void *pBuffer, size_t Size)
 		const size_t CopySize = it->Read(Offset, pDst + ReadSize, Size - ReadSize);
 		/*
 		LIBISDB_TRACE_VERBOSE(
-			LIBISDB_STR("Block read [%zu] %lld+%zu: %zu / %zu (%zu / %zu)\n"),
+			LIBISDB_STR("Block read [{}] {}+{}: {} / {} ({} / {})\n"),
 			it - m_Queue.begin(), it->GetSerialPos(), Offset, CopySize, Size - ReadSize, it->GetDataSize(), it->GetCapacity());
 		*/
 		ReadSize += CopySize;

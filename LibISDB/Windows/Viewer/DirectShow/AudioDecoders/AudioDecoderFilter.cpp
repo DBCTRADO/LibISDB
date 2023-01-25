@@ -111,7 +111,7 @@ AudioDecoderFilter::AudioDecoderFilter(LPUNKNOWN pUnk, HRESULT *phr)
 
 	, m_pSampleCallback(nullptr)
 {
-	LIBISDB_TRACE(LIBISDB_STR("AudioDecoderFilter::AudioDecoderFilter %p\n"), this);
+	LIBISDB_TRACE(LIBISDB_STR("AudioDecoderFilter::AudioDecoderFilter {}\n"), static_cast<void *>(this));
 
 	*phr = S_OK;
 
@@ -356,14 +356,14 @@ HRESULT AudioDecoderFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
 			} else if ((m_StartTime >= 0)
 					&& (std::llabs(rtStart - m_StartTime) > MAX_JITTER)) {
 				LIBISDB_TRACE(
-					LIBISDB_STR("Resync audio stream time (%lld -> %lld [%f])\n"),
+					LIBISDB_STR("Resync audio stream time ({} -> {} [{}])\n"),
 					m_StartTime, rtStart,
 					static_cast<double>(rtStart - m_StartTime) / static_cast<double>(REFERENCE_TIME_SECOND));
 				m_StartTime = rtStart;
 			}
 		}
 		if ((m_StartTime < 0) || m_Discontinuity) {
-			LIBISDB_TRACE(LIBISDB_STR("Initialize audio stream time (%lld)\n"), rtStart);
+			LIBISDB_TRACE(LIBISDB_STR("Initialize audio stream time ({})\n"), rtStart);
 			m_StartTime = rtStart;
 		}
 	}
@@ -410,7 +410,7 @@ HRESULT AudioDecoderFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
 				LIBISDB_TRACE(LIBISDB_STR("出力メディアタイプを更新します。\n"));
 				hr = m_pOutput->SetMediaType(&SampleInfo.MediaType);
 				if (FAILED(hr)) {
-					LIBISDB_TRACE(LIBISDB_STR("出力メディアタイプを設定できません。(%08x)\n"), hr);
+					LIBISDB_TRACE(LIBISDB_STR("出力メディアタイプを設定できません。({:08x})\n"), hr);
 					break;
 				}
 				m_MediaType = SampleInfo.MediaType;
@@ -421,7 +421,7 @@ HRESULT AudioDecoderFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
 			IMediaSample *pOutSample = nullptr;
 			hr = m_pOutput->GetDeliveryBuffer(&pOutSample, nullptr, nullptr, 0);
 			if (FAILED(hr)) {
-				LIBISDB_TRACE(LIBISDB_STR("出力メディアサンプルを取得できません。(%08x)\n"), hr);
+				LIBISDB_TRACE(LIBISDB_STR("出力メディアサンプルを取得できません。({:08x})\n"), hr);
 				break;
 			}
 
@@ -432,7 +432,7 @@ HRESULT AudioDecoderFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
 			BYTE *pOutBuff = nullptr;
 			hr = pOutSample->GetPointer(&pOutBuff);
 			if (FAILED(hr)) {
-				LIBISDB_TRACE(LIBISDB_STR("出力サンプルのバッファを取得できません。(%08x)\n"), hr);
+				LIBISDB_TRACE(LIBISDB_STR("出力サンプルのバッファを取得できません。({:08x})\n"), hr);
 				pOutSample->Release();
 				break;
 			}
@@ -485,7 +485,7 @@ HRESULT AudioDecoderFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
 			hr = m_pOutput->Deliver(pOutSample);
 #ifdef _DEBUG
 			if (FAILED(hr)) {
-				LIBISDB_TRACE(LIBISDB_STR("サンプルを送信できません。(%08x)\n"), hr);
+				LIBISDB_TRACE(LIBISDB_STR("サンプルを送信できません。({:08x})\n"), hr);
 				if (m_Passthrough && !m_PassthroughError) {
 					m_PassthroughError = true;
 					m_EventListenerList.CallEventListener(&EventListener::OnSPDIFPassthroughError, hr);
@@ -584,7 +584,9 @@ bool AudioDecoderFilter::SetDualMonoMode(DualMonoMode Mode)
 	case DualMonoMode::Main:
 	case DualMonoMode::Sub:
 	case DualMonoMode::Both:
-		LIBISDB_TRACE(LIBISDB_STR("AudioDecoderFilter::SetDualMonoMode() : Mode %d\n"), Mode);
+		LIBISDB_TRACE(
+			LIBISDB_STR("AudioDecoderFilter::SetDualMonoMode() : Mode {}\n"),
+			static_cast<std::underlying_type_t<DualMonoMode>>(Mode));
 		m_DualMonoMode = Mode;
 		if (m_DualMono)
 			SelectDualMonoStereoMode();
@@ -604,7 +606,9 @@ bool AudioDecoderFilter::SetStereoMode(StereoMode Mode)
 	case StereoMode::Left:
 	case StereoMode::Right:
 		m_StereoMode = Mode;
-		LIBISDB_TRACE(LIBISDB_STR("AudioDecoderFilter::SetStereoMode() : Stereo mode %d\n"), Mode);
+		LIBISDB_TRACE(
+			LIBISDB_STR("AudioDecoderFilter::SetStereoMode() : Stereo mode {}\n"),
+			static_cast<std::underlying_type_t<StereoMode>>(Mode));
 		return true;
 	}
 
@@ -716,7 +720,7 @@ bool AudioDecoderFilter::SetDelay(LONGLONG Delay)
 {
 	CAutoLock AutoLock(&m_cPropLock);
 
-	LIBISDB_TRACE(LIBISDB_STR("AudioDecoderFilter::SetDelay() : %lld\n"), Delay);
+	LIBISDB_TRACE(LIBISDB_STR("AudioDecoderFilter::SetDelay() : {}\n"), Delay);
 
 	m_DelayAdjustment += Delay - m_Delay;
 	m_Delay = Delay;
@@ -928,7 +932,7 @@ HRESULT AudioDecoderFilter::ProcessSPDIF(
 	const int PacketSize = FrameInfo.SamplesPerFrame * 4;
 	if (DataBurstSize > PacketSize) {
 		LIBISDB_TRACE(
-			LIBISDB_STR("S/PDIFビットレートが不正です。(Frame size %d / Data-burst size %d / Packet size %d)\n"),
+			LIBISDB_STR("S/PDIFビットレートが不正です。(Frame size {} / Data-burst size {} / Packet size {})\n"),
 			FrameSize, DataBurstSize, PacketSize);
 		return E_FAIL;
 	}
@@ -937,7 +941,7 @@ HRESULT AudioDecoderFilter::ProcessSPDIF(
 	static bool First = true;
 	if (First) {
 		LIBISDB_TRACE(
-			LIBISDB_STR("S/PDIF出力開始(Frame size %d / Data-burst size %d / Packet size %d)\n"),
+			LIBISDB_STR("S/PDIF出力開始(Frame size {} / Data-burst size {} / Packet size {})\n"),
 			FrameSize, DataBurstSize, PacketSize);
 		First = false;
 	}
@@ -1001,7 +1005,7 @@ HRESULT AudioDecoderFilter::ProcessSPDIF(
 			pSampleInfo->pData->GetBufferSize() - PREAMBLE_SIZE);
 	if ((PayloadSize < 1) || (PREAMBLE_SIZE + PayloadSize > PacketSize)) {
 		LIBISDB_TRACE(
-			LIBISDB_STR("S/PDIF Burst-payload サイズが不正です。(Packet size %d / Payload size %d)\n"),
+			LIBISDB_STR("S/PDIF Burst-payload サイズが不正です。(Packet size {} / Payload size {})\n"),
 			PacketSize, PayloadSize);
 		return E_FAIL;
 	}
@@ -1027,17 +1031,17 @@ HRESULT AudioDecoderFilter::ReconnectOutput(long BufferSize, const CMediaType &m
 	IMemInputPin *pMemInputPin = nullptr;
 	hr = pPin->QueryInterface(IID_IMemInputPin, reinterpret_cast<void**>(&pMemInputPin));
 	if (FAILED(hr)) {
-		LIBISDB_TRACE(LIBISDB_STR("IMemInputPinインターフェースが取得できません。(%08x)\n"), hr);
+		LIBISDB_TRACE(LIBISDB_STR("IMemInputPinインターフェースが取得できません。({:08x})\n"), hr);
 	} else {
 		IMemAllocator *pAllocator = nullptr;
 		hr = pMemInputPin->GetAllocator(&pAllocator);
 		if (FAILED(hr)) {
-			LIBISDB_TRACE(LIBISDB_STR("IMemAllocatorインターフェースが取得できません。(%08x)\n"), hr);
+			LIBISDB_TRACE(LIBISDB_STR("IMemAllocatorインターフェースが取得できません。({:08x})\n"), hr);
 		} else {
 			ALLOCATOR_PROPERTIES Props;
 			hr = pAllocator->GetProperties(&Props);
 			if (FAILED(hr)) {
-				LIBISDB_TRACE(LIBISDB_STR("IMemAllocatorのプロパティが取得できません。(%08x)\n"), hr);
+				LIBISDB_TRACE(LIBISDB_STR("IMemAllocatorのプロパティが取得できません。({:08x})\n"), hr);
 			} else {
 				if ((mt != m_pOutput->CurrentMediaType())
 						|| (Props.cBuffers < NUM_SAMPLE_BUFFERS)
@@ -1049,7 +1053,7 @@ HRESULT AudioDecoderFilter::ReconnectOutput(long BufferSize, const CMediaType &m
 
 						Props.cBuffers = NUM_SAMPLE_BUFFERS;
 						Props.cbBuffer = BufferSize * 3 / 2;
-						LIBISDB_TRACE(LIBISDB_STR("バッファサイズを設定します。(%ld bytes)\n"), Props.cbBuffer);
+						LIBISDB_TRACE(LIBISDB_STR("バッファサイズを設定します。({} bytes)\n"), Props.cbBuffer);
 						if (SUCCEEDED(hr = m_pOutput->DeliverBeginFlush())
 								&& SUCCEEDED(hr = m_pOutput->DeliverEndFlush())
 								&& SUCCEEDED(hr = pAllocator->Decommit())
@@ -1057,7 +1061,7 @@ HRESULT AudioDecoderFilter::ReconnectOutput(long BufferSize, const CMediaType &m
 								&& SUCCEEDED(hr = pAllocator->Commit())) {
 							if ((ActualProps.cBuffers < Props.cBuffers)
 									|| (ActualProps.cbBuffer < BufferSize)) {
-								LIBISDB_TRACE(LIBISDB_STR("バッファサイズの要求が受け付けられません。(%ld / %ld)\n"),
+								LIBISDB_TRACE(LIBISDB_STR("バッファサイズの要求が受け付けられません。({} / {})\n"),
 										  ActualProps.cbBuffer, Props.cbBuffer);
 								hr = E_FAIL;
 								NotifyEvent(EC_ERRORABORT, hr, 0);
@@ -1066,7 +1070,7 @@ HRESULT AudioDecoderFilter::ReconnectOutput(long BufferSize, const CMediaType &m
 								hr = S_OK;
 							}
 						} else {
-							LIBISDB_TRACE(LIBISDB_STR("ピンの再接続ができません。(%08x)\n"), hr);
+							LIBISDB_TRACE(LIBISDB_STR("ピンの再接続ができません。({:08x})\n"), hr);
 						}
 					}
 				} else {

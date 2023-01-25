@@ -27,7 +27,7 @@
 #include "../../LibISDBPrivate.hpp"
 #include "../../LibISDBWindows.hpp"
 #include "BonDriverSourceFilter.hpp"
-#include "../../Utilities/StringUtilities.hpp"
+#include "../../Utilities/StringFormat.hpp"
 #include <thread>
 #include <objbase.h>
 #include "../../Base/DebugDef.hpp"
@@ -215,13 +215,13 @@ bool BonDriverSourceFilter::LoadBonDriver(const CStringView &FileName)
 		return false;
 	}
 
-	Log(Logger::LogType::Information, LIBISDB_STR("BonDriver \"%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\" を読み込みます..."), FileName.c_str());
+	Log(Logger::LogType::Information, LIBISDB_STR("BonDriver \"{}\" を読み込みます..."), FileName);
 
 	if (!m_BonDriver.Load(FileName)) {
 		const DWORD ErrorCode = ::GetLastError();
 		CharType Text[MAX_PATH + 64];
 
-		StringPrintf(Text, LIBISDB_STR("\"%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\" が読み込めません。"), FileName.c_str());
+		StringFormat(Text, LIBISDB_STR("\"{}\" が読み込めません。"), FileName);
 		SetError(ErrorCode, std::system_category(), Text);
 
 		switch (ErrorCode) {
@@ -244,7 +244,7 @@ bool BonDriverSourceFilter::LoadBonDriver(const CStringView &FileName)
 			break;
 
 		default:
-			StringPrintf(Text, LIBISDB_STR("エラーコード: 0x%x"), ErrorCode);
+			StringFormat(Text, LIBISDB_STR("エラーコード: {:#x}"), ErrorCode);
 			SetErrorAdvise(Text);
 		}
 
@@ -395,7 +395,7 @@ bool BonDriverSourceFilter::IsTunerOpen() const
 
 bool BonDriverSourceFilter::SetChannel(uint8_t Channel)
 {
-	LIBISDB_TRACE(LIBISDB_STR("BonDriverSourceFilter::SetChannel(%d)\n"), Channel);
+	LIBISDB_TRACE(LIBISDB_STR("BonDriverSourceFilter::SetChannel({})\n"), Channel);
 
 	if (!IsTunerOpen()) {
 		// チューナが開かれていない
@@ -450,7 +450,7 @@ bool BonDriverSourceFilter::SetChannel(uint8_t Channel)
 bool BonDriverSourceFilter::SetChannel(uint32_t Space, uint32_t Channel)
 {
 	LIBISDB_TRACE(
-		LIBISDB_STR("BonDriverSourceFilter::SetChannel(%") LIBISDB_STR(PRIu32) LIBISDB_STR(", %") LIBISDB_STR(PRIu32) LIBISDB_STR(")\n"),
+		LIBISDB_STR("BonDriverSourceFilter::SetChannel({}, {})\n"),
 		Space, Channel);
 
 	if (!m_BonDriver.IsIBonDriver2()) {
@@ -507,7 +507,7 @@ bool BonDriverSourceFilter::SetChannel(uint32_t Space, uint32_t Channel)
 bool BonDriverSourceFilter::SetChannelAndPlay(uint32_t Space, uint32_t Channel)
 {
 	LIBISDB_TRACE(
-		LIBISDB_STR("BonDriverSourceFilter::SetChannelAndPlay(%") LIBISDB_STR(PRIu32) LIBISDB_STR(", %") LIBISDB_STR(PRIu32) LIBISDB_STR(")\n"),
+		LIBISDB_STR("BonDriverSourceFilter::SetChannelAndPlay({}, {})\n"),
 		Space, Channel);
 
 	if (!SetChannel(Space, Channel))
@@ -638,7 +638,7 @@ uint32_t BonDriverSourceFilter::GetStreamRemain() const
 bool BonDriverSourceFilter::SetStreamingThreadPriority(int Priority)
 {
 	if (m_StreamingThreadPriority != Priority) {
-		LIBISDB_TRACE(LIBISDB_STR("BonDriverSourceFilter::SetStreamingThreadPriority(%d)\n"), Priority);
+		LIBISDB_TRACE(LIBISDB_STR("BonDriverSourceFilter::SetStreamingThreadPriority({})\n"), Priority);
 
 		if (m_hThread != nullptr) {
 			if (!::SetThreadPriority(m_hThread, Priority))
@@ -654,9 +654,7 @@ bool BonDriverSourceFilter::SetStreamingThreadPriority(int Priority)
 
 void BonDriverSourceFilter::SetPurgeStreamOnChannelChange(bool Purge)
 {
-	LIBISDB_TRACE(
-		LIBISDB_STR("BonDriverSourceFilter::SetPurgeStreamOnChannelChange(%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR(")\n"),
-		Purge ? LIBISDB_STR("true") : LIBISDB_STR("false"));
+	LIBISDB_TRACE(LIBISDB_STR("BonDriverSourceFilter::SetPurgeStreamOnChannelChange({})\n"), Purge);
 
 	m_PurgeStreamOnChannelChange = Purge;
 }
@@ -667,7 +665,7 @@ bool BonDriverSourceFilter::SetFirstChannelSetDelay(unsigned long Delay)
 	if (Delay > FIRST_CHANNEL_SET_DELAY_MAX)
 		return false;
 
-	LIBISDB_TRACE(LIBISDB_STR("BonDriverSourceFilter::SetFirstChannelSetDelay(%u)\n"), Delay);
+	LIBISDB_TRACE(LIBISDB_STR("BonDriverSourceFilter::SetFirstChannelSetDelay({})\n"), Delay);
 
 	m_FirstChannelSetDelay = Delay;
 
@@ -680,7 +678,7 @@ bool BonDriverSourceFilter::SetMinChannelChangeInterval(unsigned long Interval)
 	if (Interval > CHANNEL_CHANGE_INTERVAL_MAX)
 		return false;
 
-	LIBISDB_TRACE(LIBISDB_STR("BonDriverSourceFilter::SetMinChannelChangeInterval(%lu)\n"), Interval);
+	LIBISDB_TRACE(LIBISDB_STR("BonDriverSourceFilter::SetMinChannelChangeInterval({})\n"), Interval);
 
 	m_MinChannelChangeInterval = Interval;
 
@@ -739,7 +737,7 @@ void BonDriverSourceFilter::StreamingMain()
 
 			case StreamingRequest::RequestType::SetChannel:
 				SetChannelWait();
-				LIBISDB_TRACE(LIBISDB_STR("IBonDriver::SetChannel(%d)\n"), Request.SetChannel.Channel);
+				LIBISDB_TRACE(LIBISDB_STR("IBonDriver::SetChannel({})\n"), Request.SetChannel.Channel);
 				m_RequestResult = m_BonDriver.SetChannel(Request.SetChannel.Channel);
 				m_SetChannelTime = m_Clock.Get();
 				if (m_RequestResult)
@@ -751,7 +749,7 @@ void BonDriverSourceFilter::StreamingMain()
 			case StreamingRequest::RequestType::SetChannel2:
 				SetChannelWait();
 				LIBISDB_TRACE(
-					LIBISDB_STR("IBonDriver2::SetChannel(%") LIBISDB_STR(PRIu32) LIBISDB_STR(", %") LIBISDB_STR(PRIu32) LIBISDB_STR(")\n"),
+					LIBISDB_STR("IBonDriver2::SetChannel({}, {})\n"),
 					Request.SetChannel2.Space,
 					Request.SetChannel2.Channel);
 				m_RequestResult = m_BonDriver.SetChannel(
@@ -920,7 +918,7 @@ void BonDriverSourceFilter::SetChannelWait()
 	if (Wait > 0) {
 		TickClock::ClockType Interval = m_Clock.Get() - Time;
 		if (Interval < Wait) {
-			LIBISDB_TRACE(LIBISDB_STR("SetChannel wait %lu\n"), static_cast<unsigned long>(Wait - Interval));
+			LIBISDB_TRACE(LIBISDB_STR("SetChannel wait {}\n"), Wait - Interval);
 			std::this_thread::sleep_for(
 				std::chrono::milliseconds((Wait - Interval) * 1000 / TickClock::ClocksPerSec));
 		}

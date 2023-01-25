@@ -122,10 +122,8 @@ bool FileStreamGenericC::Open(const CStringView &FileName, OpenFlag Flags)
 	}
 
 	LIBISDB_TRACE(
-		LIBISDB_STR("FileStreamGenericC::Open() : Open file \"%")
-			LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\" \"%")
-			LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\" %d\n"),
-		FileName.c_str(), Mode, Share);
+		LIBISDB_STR("FileStreamGenericC::Open() : Open file \"{}\" \"{}\" {}\n"),
+		FileName, Mode, Share);
 
 	pFile =
 #ifdef LIBISDB_WCHAR
@@ -142,10 +140,8 @@ bool FileStreamGenericC::Open(const CStringView &FileName, OpenFlag Flags)
 #else
 
 	LIBISDB_TRACE(
-		LIBISDB_STR("FileStreamGenericC::Open() : Open file \"%")
-			LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\" \"%")
-			LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\"\n"),
-		FileName.c_str(), Mode);
+		LIBISDB_STR("FileStreamGenericC::Open() : Open file \"{}\" \"{}\"\n"),
+		FileName, Mode);
 
 	pFile = std::fopen(FileName.c_str(), Mode);
 	if (pFile == nullptr) {

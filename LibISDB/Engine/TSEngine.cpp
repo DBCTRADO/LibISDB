@@ -250,7 +250,7 @@ bool TSEngine::SetService(const ServiceSelectInfo &ServiceSelInfo, bool Reserve)
 
 	uint16_t ServiceID = ServiceSelInfo.ServiceID;
 
-	LIBISDB_TRACE(LIBISDB_STR("TSEngine::SetService() : service_id %04X\n"), ServiceID);
+	LIBISDB_TRACE(LIBISDB_STR("TSEngine::SetService() : service_id {:04X}\n"), ServiceID);
 
 	// Reserve == true の場合、まだPATが来ていなくてもエラーにしない
 
@@ -290,7 +290,7 @@ bool TSEngine::SetService(const ServiceSelectInfo &ServiceSelInfo, bool Reserve)
 
 bool TSEngine::SelectService(uint16_t ServiceID, bool No1Seg)
 {
-	LIBISDB_TRACE(LIBISDB_STR("TSEngine::SelectService(%04X)\n"), ServiceID);
+	LIBISDB_TRACE(LIBISDB_STR("TSEngine::SelectService({:04X})\n"), ServiceID);
 
 	BlockLock Lock(m_EngineLock);
 
@@ -309,7 +309,7 @@ bool TSEngine::SelectService(uint16_t ServiceID, bool No1Seg)
 		}
 	} else {
 		if (GetSelectableServiceIndexByID(ServiceID) < 0) {
-			LIBISDB_TRACE(LIBISDB_STR("Service %04X not found\n"), ServiceID);
+			LIBISDB_TRACE(LIBISDB_STR("Service {:04X} not found\n"), ServiceID);
 			return false;
 		}
 	}
@@ -319,7 +319,7 @@ bool TSEngine::SelectService(uint16_t ServiceID, bool No1Seg)
 
 	m_CurServiceID = ServiceID;
 
-	LIBISDB_TRACE(LIBISDB_STR("Select service : [%d] (service_id %04X)\n"), CurServiceIndex, ServiceID);
+	LIBISDB_TRACE(LIBISDB_STR("Select service : [{}] (service_id {:04X})\n"), CurServiceIndex, ServiceID);
 
 	int VideoIndex;
 	if (m_CurVideoComponentTag != COMPONENT_TAG_INVALID
@@ -338,7 +338,7 @@ bool TSEngine::SelectService(uint16_t ServiceID, bool No1Seg)
 	m_CurVideoStream = VideoIndex;
 	m_CurVideoComponentTag = m_pAnalyzer->GetVideoComponentTag(CurServiceIndex, VideoIndex);
 	const uint8_t VideoStreamType = m_pAnalyzer->GetVideoStreamType(CurServiceIndex, VideoIndex);
-	LIBISDB_TRACE(LIBISDB_STR("Select video : [%d] (component_tag %02X)\n"), m_CurVideoStream, m_CurVideoComponentTag);
+	LIBISDB_TRACE(LIBISDB_STR("Select video : [{}] (component_tag {:02X})\n"), m_CurVideoStream, m_CurVideoComponentTag);
 
 	int AudioIndex;
 	if (m_CurAudioComponentTag != COMPONENT_TAG_INVALID
@@ -357,16 +357,16 @@ bool TSEngine::SelectService(uint16_t ServiceID, bool No1Seg)
 	m_CurAudioStream = AudioIndex;
 	m_CurAudioComponentTag = m_pAnalyzer->GetAudioComponentTag(CurServiceIndex, AudioIndex);
 	const uint8_t AudioStreamType = m_pAnalyzer->GetAudioStreamType(CurServiceIndex, AudioIndex);
-	LIBISDB_TRACE(LIBISDB_STR("Select audio : [%d] (component_tag %02X)\n"), m_CurAudioStream, m_CurAudioComponentTag);
+	LIBISDB_TRACE(LIBISDB_STR("Select audio : [{}] (component_tag {:02X})\n"), m_CurAudioStream, m_CurAudioComponentTag);
 
 	if (m_VideoStreamType != VideoStreamType) {
-		LIBISDB_TRACE(LIBISDB_STR("Video stream_type changed (%02X -> %02X)\n"), m_VideoStreamType, VideoStreamType);
+		LIBISDB_TRACE(LIBISDB_STR("Video stream_type changed ({:02X} -> {:02X})\n"), m_VideoStreamType, VideoStreamType);
 		m_VideoStreamType = VideoStreamType;
 		OnVideoStreamTypeChanged(VideoStreamType);
 	}
 
 	if (m_AudioStreamType != AudioStreamType) {
-		LIBISDB_TRACE(LIBISDB_STR("Audio stream_type changed (%02X -> %02X)\n"), m_AudioStreamType, AudioStreamType);
+		LIBISDB_TRACE(LIBISDB_STR("Audio stream_type changed ({:02X} -> {:02X}\n"), m_AudioStreamType, AudioStreamType);
 		m_AudioStreamType = AudioStreamType;
 		OnAudioStreamTypeChanged(AudioStreamType);
 	}
@@ -484,12 +484,12 @@ bool TSEngine::SetVideoStream(int StreamIndex)
 	m_CurVideoStream = StreamIndex;
 	m_CurVideoComponentTag = m_pAnalyzer->GetVideoComponentTag(ServiceIndex, StreamIndex);
 
-	LIBISDB_TRACE(LIBISDB_STR("Select video : [%d] (component_tag %02X)\n"), m_CurVideoStream, m_CurVideoComponentTag);
+	LIBISDB_TRACE(LIBISDB_STR("Select video : [{}] (component_tag {:02X})\n"), m_CurVideoStream, m_CurVideoComponentTag);
 
 	const uint8_t VideoStreamType = m_pAnalyzer->GetVideoStreamType(ServiceIndex, StreamIndex);
 
 	if (m_VideoStreamType != VideoStreamType) {
-		LIBISDB_TRACE(LIBISDB_STR("Video stream_type changed (%02x -> %02x)\n"), m_VideoStreamType, VideoStreamType);
+		LIBISDB_TRACE(LIBISDB_STR("Video stream_type changed ({:02x} -> {:02x})\n"), m_VideoStreamType, VideoStreamType);
 		m_VideoStreamType = VideoStreamType;
 		OnVideoStreamTypeChanged(VideoStreamType);
 	}
@@ -558,14 +558,14 @@ bool TSEngine::SetAudioStream(int StreamIndex)
 	m_CurAudioStream = StreamIndex;
 	m_CurAudioComponentTag = m_pAnalyzer->GetAudioComponentTag(ServiceIndex, StreamIndex);
 
-	LIBISDB_TRACE(LIBISDB_STR("Select audio : [%d] (component_tag %02X)\n"), m_CurAudioStream, m_CurAudioComponentTag);
+	LIBISDB_TRACE(LIBISDB_STR("Select audio : [{}] (component_tag {:02X})\n"), m_CurAudioStream, m_CurAudioComponentTag);
 
 	SetAudioPID(AudioPID, false);
 
 	uint8_t AudioStreamType = m_pAnalyzer->GetAudioStreamType(ServiceIndex, StreamIndex);
 
 	if (m_AudioStreamType != AudioStreamType) {
-		LIBISDB_TRACE(LIBISDB_STR("Audio stream_type changed (%02x -> %02x)\n"), m_AudioStreamType, AudioStreamType);
+		LIBISDB_TRACE(LIBISDB_STR("Audio stream_type changed ({:02x} -> {:02x})\n"), m_AudioStreamType, AudioStreamType);
 		m_AudioStreamType = AudioStreamType;
 		OnAudioStreamTypeChanged(AudioStreamType);
 	}
@@ -624,7 +624,7 @@ void TSEngine::OnPATUpdated(AnalyzerFilter *pAnalyzer)
 
 	if (m_CurTransportStreamID != TransportStreamID) {
 		// ストリームIDが変わっているなら初期化
-		LIBISDB_TRACE(LIBISDB_STR("Stream changed (%04X <- %04X)\n"), TransportStreamID, m_CurTransportStreamID);
+		LIBISDB_TRACE(LIBISDB_STR("Stream changed ({:04X} <- {:04X})\n"), TransportStreamID, m_CurTransportStreamID);
 
 		m_CurTransportStreamID = TransportStreamID;
 		m_CurServiceID = SERVICE_ID_INVALID;
@@ -646,7 +646,7 @@ void TSEngine::OnPATUpdated(AnalyzerFilter *pAnalyzer)
 			const int ServiceIndex = pAnalyzer->GetServiceIndexByID(m_ServiceSel.ServiceID);
 			if (ServiceIndex < 0) {
 				// サービスがPATにない
-				LIBISDB_TRACE(LIBISDB_STR("Specified service_id %04X not found in PAT\n"), m_ServiceSel.ServiceID);
+				LIBISDB_TRACE(LIBISDB_STR("Specified service_id {:04X} not found in PAT\n"), m_ServiceSel.ServiceID);
 				SetService = false;
 			} else {
 				if (GetSelectableServiceIndexByID(m_ServiceSel.ServiceID) >= 0) {
@@ -691,7 +691,7 @@ void TSEngine::OnPATUpdated(AnalyzerFilter *pAnalyzer)
 		if (!OneSeg && (m_ServiceSel.ServiceID != SERVICE_ID_INVALID)) {
 			const int ServiceIndex = pAnalyzer->GetServiceIndexByID(m_ServiceSel.ServiceID);
 			if (ServiceIndex < 0) {
-				LIBISDB_TRACE(LIBISDB_STR("Specified service_id %04X not found in PAT\n"), m_ServiceSel.ServiceID);
+				LIBISDB_TRACE(LIBISDB_STR("Specified service_id {:04X} not found in PAT\n"), m_ServiceSel.ServiceID);
 				if (((m_CurServiceID == SERVICE_ID_INVALID) && !m_ServiceSel.FollowViewableService)
 						|| (GetSelectableServiceCount() == 0)) {
 					SetService = false;
@@ -711,7 +711,7 @@ void TSEngine::OnPATUpdated(AnalyzerFilter *pAnalyzer)
 			const int ServiceIndex = pAnalyzer->GetServiceIndexByID(m_CurServiceID);
 			if (ServiceIndex < 0) {
 				// サービスがPATにない
-				LIBISDB_TRACE(LIBISDB_STR("Current service_id %04X not found in PAT\n"), m_CurServiceID);
+				LIBISDB_TRACE(LIBISDB_STR("Current service_id {:04X} not found in PAT\n"), m_CurServiceID);
 				if (m_ServiceSel.FollowViewableService
 						&& (GetSelectableServiceCount() > 0)) {
 					m_CurServiceID = SERVICE_ID_INVALID;

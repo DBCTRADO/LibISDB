@@ -31,6 +31,7 @@
 #include "DirectShow/VideoParsers/MPEG2ParserFilter.hpp"
 #include "DirectShow/VideoParsers/H264ParserFilter.hpp"
 #include "DirectShow/VideoParsers/H265ParserFilter.hpp"
+#include "../../Utilities/StringFormat.hpp"
 #include "../../Utilities/StringUtilities.hpp"
 #include <numeric>	// for std::gcd()
 #include <dvdmedia.h>
@@ -268,7 +269,7 @@ void ViewerFilter::SetActiveVideoPID(uint16_t PID, bool ServiceChanged)
 	if (PID == m_VideoPID)
 		return;
 
-	LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::SetActiveVideoPID() : %04X <- %04X\n"), PID, m_VideoPID);
+	LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::SetActiveVideoPID() : {:04X} <- {:04X}\n"), PID, m_VideoPID);
 
 	if (m_MPEG2DemuxerVideoMap) {
 		// 現在のPIDをアンマップ
@@ -300,7 +301,7 @@ void ViewerFilter::SetActiveAudioPID(uint16_t PID, bool ServiceChanged)
 			&& (UseMap || PID == m_MapAudioPID))
 		return;
 
-	LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::SetActiveAudioPID() : %04X <- %04X\n"), PID, m_AudioPID);
+	LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::SetActiveAudioPID() : {:04X} <- {:04X}\n"), PID, m_AudioPID);
 
 	if (UseMap && (PID != PID_INVALID) && (m_MapAudioPID != PID_INVALID)) {
 		/*
@@ -590,7 +591,7 @@ bool ViewerFilter::OpenViewer(const OpenSettings &Settings)
 								m_GraphBuilder.Get(), Filter.clsid, Filter.FriendlyName.c_str(),
 								&FilterInterface, &OutputAudioPin, true);
 							if (SUCCEEDED(hr)) {
-								LIBISDB_TRACE(LIBISDB_STR("Audio filter connected : %") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\n"), Filter.FriendlyName.c_str());
+								LIBISDB_TRACE(LIBISDB_STR("Audio filter connected : {}\n"), Filter.FriendlyName);
 								m_AudioFilterList.emplace_back(std::move(FilterInterface));
 								Connected = true;
 							} else {
@@ -709,7 +710,7 @@ bool ViewerFilter::OpenViewer(const OpenSettings &Settings)
 					m_GraphBuilder.Get(), m_AudioRenderer.Get(), L"Audio Renderer", &OutputAudioPin);
 				if (SUCCEEDED(hr)) {
 #ifdef _DEBUG
-					LIBISDB_TRACE(LIBISDB_STR("音声デバイス %") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR(" を接続\n"), m_AudioRendererName.c_str());
+					LIBISDB_TRACE(LIBISDB_STR("音声デバイス {} を接続\n"), m_AudioRendererName);
 #endif
 					if (m_UseAudioRendererClock) {
 						IMediaFilter *pMediaFilter;
@@ -806,7 +807,7 @@ bool ViewerFilter::OpenViewer(const OpenSettings &Settings)
 
 		CloseViewer();
 
-		LIBISDB_TRACE(LIBISDB_STR("フィルタグラフ構築失敗 : %") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\n"), GetLastErrorText());
+		LIBISDB_TRACE(LIBISDB_STR("フィルタグラフ構築失敗 : {}\n"), GetLastErrorText());
 		return false;
 	}
 
@@ -1003,7 +1004,7 @@ bool ViewerFilter::DisplayModeChanged()
 void ViewerFilter::Set1SegMode(bool OneSeg)
 {
 	if (m_1SegMode != OneSeg) {
-		LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::Set1SegMode(%d)\n"), OneSeg);
+		LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::Set1SegMode({})\n"), OneSeg);
 
 		m_1SegMode = OneSeg;
 
@@ -1114,7 +1115,7 @@ bool ViewerFilter::AdjustVideoPosition()
 				rcSrc.left = (m_VideoInfo.OriginalWidth - NewSrcWidth) / 2;
 				rcSrc.right = rcSrc.left + NewSrcWidth;
 				LIBISDB_TRACE(
-					LIBISDB_STR("Adjust %d x %d -> %d x %d [%d - %d (%d)]\n"),
+					LIBISDB_STR("Adjust {} x {} -> {} x {} [{} - {} ({})]\n"),
 					DestWidth, DestHeight, NewDestWidth, DestHeight,
 					rcSrc.left, rcSrc.right, NewSrcWidth);
 				DestWidth = NewDestWidth;
@@ -1140,7 +1141,7 @@ bool ViewerFilter::AdjustVideoPosition()
 
 #if 0
 		LIBISDB_TRACE(
-			LIBISDB_STR("SetVideoPosition %d,%d,%d,%d -> %d,%d,%d,%d [%d,%d,%d,%d]\n"),
+			LIBISDB_STR("SetVideoPosition {},{},{},{} -> {},{},{},{} [{},{},{},{}]\n"),
 			rcSrc.left, rcSrc.top, rcSrc.right, rcSrc.bottom,
 			rcDst.left, rcDst.top, rcDst.right, rcDst.bottom,
 			rcWindow.left, rcWindow.top, rcWindow.right, rcWindow.bottom);
@@ -1832,7 +1833,7 @@ bool ViewerFilter::ClearOSD()
 
 bool ViewerFilter::EnablePTSSync(bool Enable)
 {
-	LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::EnablePTSSync(%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR(")\n"), Enable ? LIBISDB_STR("true") : LIBISDB_STR("false"));
+	LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::EnablePTSSync({})\n"), Enable);
 	if (m_SourceFilter) {
 		if (!m_SourceFilter->EnableSync(Enable, m_1SegMode))
 			return false;
@@ -1855,7 +1856,7 @@ bool ViewerFilter::IsPTSSyncEnabled() const
 bool ViewerFilter::SetAdjust1SegVideoSample(bool AdjustTime, bool AdjustFrameRate)
 {
 	LIBISDB_TRACE(
-		LIBISDB_STR("ViewerFilter::SetAdjust1SegVideoSample() : Adjust time %d / Adjust frame rate %d\n"),
+		LIBISDB_STR("ViewerFilter::SetAdjust1SegVideoSample() : Adjust time {} / Adjust frame rate {}\n"),
 		AdjustTime, AdjustFrameRate);
 
 	m_Adjust1SegVideoSampleTime = AdjustTime;
@@ -1875,7 +1876,7 @@ void ViewerFilter::ResetBuffer()
 
 bool ViewerFilter::SetBufferSize(size_t Size)
 {
-	LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::SetBufferSize(%zu)\n"), Size);
+	LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::SetBufferSize({})\n"), Size);
 
 	if (m_SourceFilter) {
 		if (!m_SourceFilter->SetBufferSize(Size))
@@ -1890,7 +1891,7 @@ bool ViewerFilter::SetBufferSize(size_t Size)
 
 bool ViewerFilter::SetInitialPoolPercentage(int Percentage)
 {
-	LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::SetInitialPoolPercentage(%d)\n"), Percentage);
+	LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::SetInitialPoolPercentage({})\n"), Percentage);
 
 	if (m_SourceFilter) {
 		if (!m_SourceFilter->SetInitialPoolPercentage(Percentage))
@@ -1913,7 +1914,7 @@ int ViewerFilter::GetBufferFillPercentage() const
 
 bool ViewerFilter::SetPacketInputWait(DWORD Wait)
 {
-	LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::SetPacketInputWait(%u)\n"), Wait);
+	LIBISDB_TRACE(LIBISDB_STR("ViewerFilter::SetPacketInputWait({})\n"), Wait);
 
 	if (m_SourceFilter) {
 		if (!m_SourceFilter->SetInputWait(Wait))
@@ -1929,7 +1930,7 @@ bool ViewerFilter::SetPacketInputWait(DWORD Wait)
 void ViewerFilter::ConnectVideoDecoder(
 	LPCTSTR pszCodecName, const GUID &MediaSubType, LPCTSTR pszDecoderName, COMPointer<IPin> *pOutputPin)
 {
-	Log(Logger::LogType::Information, LIBISDB_STR("%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("デコーダの接続中..."), pszCodecName);
+	Log(Logger::LogType::Information, LIBISDB_STR("{} デコーダの接続中..."), pszCodecName);
 
 	const bool Default = StringIsEmpty(pszDecoderName);
 	bool ConnectSuccess = false;
@@ -1962,13 +1963,13 @@ void ViewerFilter::ConnectVideoDecoder(
 
 		// 検索
 		if (!FilterFinder.FindFilters(&MEDIATYPE_Video, &MediaSubType)) {
-			StringPrintf(
+			StringFormat(
 				szText1,
-				LIBISDB_STR("%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("デコーダが見付かりません。"),
+				LIBISDB_STR("{} デコーダが見付かりません。"),
 				pszCodecName);
-			StringPrintf(
+			StringFormat(
 				szText2,
-				LIBISDB_STR("%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("デコーダがインストールされているか確認してください。"),
+				LIBISDB_STR("{} デコーダがインストールされているか確認してください。"),
 				pszCodecName);
 			throw ErrorDescription(HRESULTErrorCode(E_FAIL), szText1, szText2);
 		}
@@ -2002,9 +2003,9 @@ void ViewerFilter::ConnectVideoDecoder(
 	if (ConnectSuccess) {
 		m_VideoDecoderName = FilterName;
 	} else {
-		StringPrintf(
+		StringFormat(
 			szText1,
-			LIBISDB_STR("%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("デコーダフィルタをフィルタグラフに追加できません。"),
+			LIBISDB_STR("{} デコーダフィルタをフィルタグラフに追加できません。"),
 			pszCodecName);
 		throw ErrorDescription(
 			HRESULTErrorCode(hr), szText1,

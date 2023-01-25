@@ -284,10 +284,10 @@ STDMETHODIMP VMR9Allocator::InitializeDevice(
 		return E_FAIL;
 
 	LIBISDB_TRACE(
-		LIBISDB_STR("CVMRAllocator::InitializeDevice() : %lu x %lu (%lu buffers)\n"),
-		(unsigned long)lpAllocInfo->dwWidth,
-		(unsigned long)lpAllocInfo->dwHeight,
-		(unsigned long)*lpNumBuffers);
+		LIBISDB_STR("CVMRAllocator::InitializeDevice() : {} x {} ({} buffers)\n"),
+		lpAllocInfo->dwWidth,
+		lpAllocInfo->dwHeight,
+		*lpNumBuffers);
 
 	HRESULT hr;
 

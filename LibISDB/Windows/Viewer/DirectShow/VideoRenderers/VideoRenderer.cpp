@@ -36,6 +36,7 @@
 #include "VideoRenderer_madVR.hpp"
 #include "EVRCustomPresenter/VideoRenderer_EVRCustomPresenter.hpp"
 #include "../DirectShowUtilities.hpp"
+#include "../../../../Utilities/StringFormat.hpp"
 #include "../../../../Utilities/StringUtilities.hpp"
 #include "../../../../Base/DebugDef.hpp"
 
@@ -228,10 +229,10 @@ bool VideoRenderer_Basic::Initialize(
 	hr = ::CoCreateInstance(
 		m_clsidRenderer, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(m_Renderer.GetPP()));
 	if (FAILED(hr)) {
-		StringPrintf(
+		StringFormat(
 			Message,
-			LIBISDB_STR("%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR(" のインスタンスを作成できません。"),
-			m_RendererName.c_str());
+			LIBISDB_STR("{} のインスタンスを作成できません。"),
+			m_RendererName);
 		SetError(HRESULTErrorCode(hr), Message, LIBISDB_STR("指定したレンダラがインストールされているか確認してください。"));
 		return false;
 	}
@@ -239,10 +240,10 @@ bool VideoRenderer_Basic::Initialize(
 	hr = pGraphBuilder->AddFilter(m_Renderer.Get(), m_RendererName.c_str());
 	if (FAILED(hr)) {
 		m_Renderer.Release();
-		StringPrintf(
+		StringFormat(
 			Message,
-			LIBISDB_STR("%") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR(" をフィルタグラフに追加できません。"),
-			m_RendererName.c_str());
+			LIBISDB_STR("{} をフィルタグラフに追加できません。"),
+			m_RendererName);
 		SetHRESULTError(hr, Message);
 		return false;
 	}
@@ -307,7 +308,7 @@ bool VideoRenderer_Basic::SetVideoPosition(
 		m_VideoWindow->SetWindowPosition(WindowRect.left, WindowRect.top, WindowWidth, WindowHeight);
 
 		LIBISDB_TRACE(
-			LIBISDB_STR("VideoRenderer_Basic::SetVideoPosition() : Src [%d, %d, %d, %d] Dest [%d, %d, %d, %d] -> [%d, %d, %d, %d]\n"),
+			LIBISDB_STR("VideoRenderer_Basic::SetVideoPosition() : Src [{}, {}, {}, {}] Dest [{}, {}, {}, {}] -> [{}, {}, {}, {}]\n"),
 			SourceRect.left, SourceRect.top, SourceRect.right, SourceRect.bottom,
 			DestRect.left, DestRect.top, DestRect.right, DestRect.bottom,
 			rcDest.left, rcDest.top, rcDest.right, rcDest.bottom);

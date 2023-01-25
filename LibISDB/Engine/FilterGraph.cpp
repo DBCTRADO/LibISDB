@@ -65,7 +65,7 @@ bool FilterGraph::ConnectFilters(const ConnectionInfo *pConnectionList, size_t C
 		m_ConnectionList.push_back(Info);
 
 		LIBISDB_TRACE(
-			LIBISDB_STR("Filter connected : %") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR(" [%d] -> %") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\n"),
+			LIBISDB_STR("Filter connected : {} [{}] -> {}\n"),
 			pUpstreamFilter->GetObjectName(),
 			Info.OutputIndex,
 			pDownstreamFilter->GetObjectName());

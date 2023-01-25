@@ -158,7 +158,7 @@ bool TSSourceStream::InputData(DataBuffer *pData)
 			}
 			if (AudioPTS >= m_AudioPTSPrev + ERR_PTS_DIFF) {
 				LIBISDB_TRACE(
-					LIBISDB_STR("Reset Audio PTS : Adj=%llX Cur=%llX Prev=%llX\n"),
+					LIBISDB_STR("Reset Audio PTS : Adj={:X} Cur={:X} Prev={:X}\n"),
 					AudioPTS, m_AudioPTS, m_AudioPTSPrev);
 				AddPoolPackets();
 				ResetSync();
@@ -196,7 +196,7 @@ bool TSSourceStream::InputData(DataBuffer *pData)
 			}
 			if (VideoPTS >= m_VideoPTSPrev + ERR_PTS_DIFF) {
 				LIBISDB_TRACE(
-					LIBISDB_STR("Reset Video PTS : Adj=%llX Cur=%llX Prev=%llX\n"),
+					LIBISDB_STR("Reset Video PTS : Adj={:X} Cur={:X} Prev={:X}\n"),
 					VideoPTS, m_VideoPTS, m_VideoPTSPrev);
 				AddPoolPackets();
 				ResetSync();
@@ -377,7 +377,7 @@ bool TSSourceStream::EnableSync(bool Enable, bool OneSeg)
 	BlockLock Lock(m_Lock);
 
 	if (m_EnableSync != Enable || m_SyncFor1Seg != OneSeg) {
-		LIBISDB_TRACE(LIBISDB_STR("TSSourceStream::EnableSync(%d, %d)\n"), Enable, OneSeg);
+		LIBISDB_TRACE(LIBISDB_STR("TSSourceStream::EnableSync({}, {})\n"), Enable, OneSeg);
 
 		ResetSync();
 
@@ -413,7 +413,7 @@ void TSSourceStream::SetAudioPID(uint16_t PID)
 
 void TSSourceStream::MapAudioPID(uint16_t AudioPID, uint16_t MapPID)
 {
-	LIBISDB_TRACE(LIBISDB_STR("TSSourceStream::MapAudioPID() : %04x -> %04x\n"), AudioPID, MapPID);
+	LIBISDB_TRACE(LIBISDB_STR("TSSourceStream::MapAudioPID() : {:04x} -> {:04x}\n"), AudioPID, MapPID);
 
 	BlockLock Lock(m_Lock);
 

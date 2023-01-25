@@ -115,6 +115,7 @@
     <ClInclude Include="..\LibISDB\Utilities\Lock.hpp" />
     <ClInclude Include="..\LibISDB\Utilities\MD5.hpp" />
     <ClInclude Include="..\LibISDB\Utilities\Sort.hpp" />
+    <ClInclude Include="..\LibISDB\Utilities\StringFormat.hpp" />
     <ClInclude Include="..\LibISDB\Utilities\StringUtilities.hpp" />
     <ClInclude Include="..\LibISDB\Utilities\Thread.hpp" />
     <ClInclude Include="..\LibISDB\Utilities\Utilities.hpp" />
@@ -189,6 +190,7 @@
     <ClCompile Include="..\LibISDB\Utilities\CRC.cpp" />
     <ClCompile Include="..\LibISDB\Utilities\Lock.cpp" />
     <ClCompile Include="..\LibISDB\Utilities\MD5.cpp" />
+    <ClCompile Include="..\LibISDB\Utilities\StringFormat.cpp" />
     <ClCompile Include="..\LibISDB\Utilities\Thread.cpp" />
     <ClCompile Include="..\LibISDB\Utilities\Utilities.cpp" />
   </ItemGroup>

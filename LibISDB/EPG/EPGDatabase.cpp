@@ -838,7 +838,7 @@ bool EPGDatabase::UpdateSection(
 						|| (Service.ScheduleUpdatedTime.Month != m_CurTOTTime.Month)
 						|| (Service.ScheduleUpdatedTime.Day != m_CurTOTTime.Day))) {
 				LIBISDB_TRACE(
-					LIBISDB_STR("Reset EPG schedule : NID %x / TSID %x / SID %x\n"),
+					LIBISDB_STR("Reset EPG schedule : NID {:x} / TSID {:x} / SID {:x}\n"),
 					itService->first.NetworkID,
 					itService->first.TransportStreamID,
 					itService->first.ServiceID);
@@ -862,7 +862,7 @@ bool EPGDatabase::UpdateSection(
 			// 1サービス分の番組情報が揃ったら通知する
 			if (!IsComplete && Service.Schedule.IsComplete(m_CurTOTTime.Hour, IsExtended)) {
 				LIBISDB_TRACE(
-					LIBISDB_STR("EPG schedule %") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR(" completed : NID %x / TSID %x / SID %x\n"),
+					LIBISDB_STR("EPG schedule {} completed : NID {:x} / TSID {:x} / SID {:x}\n"),
 					IsExtended ? LIBISDB_STR("extended") : LIBISDB_STR("basic"),
 					itService->first.NetworkID,
 					itService->first.TransportStreamID,
@@ -964,7 +964,7 @@ bool EPGDatabase::MergeEventMap(
 		Map.EventMap.find(Map.TimeMap.rbegin()->EventID)->second.GetEndTime(&NewestTime);
 
 		LIBISDB_TRACE(
-			LIBISDB_STR("EPGDatabase::MergeEventMap() : [%x %x %x] %d/%d %d:%02d - %d/%d %d:%02d %zu Events\n"),
+			LIBISDB_STR("EPGDatabase::MergeEventMap() : [{:x} {:x} {:x}] {}/{} {}:{:02} - {}/{} {}:{:02} {} Events\n"),
 			Info.NetworkID, Info.TransportStreamID, Info.ServiceID,
 			OldestTime.Month, OldestTime.Day, OldestTime.Hour, OldestTime.Minute,
 			NewestTime.Month, NewestTime.Day, NewestTime.Hour, NewestTime.Minute,
@@ -1150,7 +1150,7 @@ bool EPGDatabase::UpdateTimeMap(ServiceEventMap &Service, const TimeEventInfo &T
 
 		if (!TimeResult.second) {
 			if (itCur->EventID != Time.EventID) {
-				LIBISDB_TRACE(LIBISDB_STR("event_id changed (%04x -> %04x)\n"), itCur->EventID, Time.EventID);
+				LIBISDB_TRACE(LIBISDB_STR("event_id changed ({:04x} -> {:04})\n"), itCur->EventID, Time.EventID);
 				RemoveEvent(Service.EventMap, itCur->EventID);
 			}
 		}
@@ -1242,7 +1242,7 @@ bool EPGDatabase::MergeEventExtendedInfo(ServiceEventMap &Service, EventInfo *pE
 	}
 
 	LIBISDB_TRACE(
-		LIBISDB_STR("Merge extended info : [%04x] %d/%d/%d %d:%02d:%02d\n"),
+		LIBISDB_STR("Merge extended info : [{:04x}] {}/{}/{} {}:{:02}:{:02}\n"),
 		pEvent->EventID,
 		pEvent->StartTime.Year, pEvent->StartTime.Month, pEvent->StartTime.Day,
 		pEvent->StartTime.Hour, pEvent->StartTime.Minute, pEvent->StartTime.Second);
@@ -1265,11 +1265,11 @@ bool EPGDatabase::RemoveEvent(EventMapType &Map, uint16_t EventID)
 		return false;
 
 	LIBISDB_TRACE(
-		LIBISDB_STR("EPGDatabase::RemoveEvent() : [%04x] %d/%d/%d %d:%02d:%02d %") LIBISDB_STR(LIBISDB_PRIS) LIBISDB_STR("\n"),
+		LIBISDB_STR("EPGDatabase::RemoveEvent() : [{:04x}] {}/{}/{} {}:{:02}:{:02} {}\n"),
 		EventID,
 		it->second.StartTime.Year, it->second.StartTime.Month, it->second.StartTime.Day,
 		it->second.StartTime.Hour, it->second.StartTime.Minute, it->second.StartTime.Second,
-		it->second.EventName.c_str());
+		it->second.EventName);
 
 	Map.erase(it);
 
@@ -1379,7 +1379,7 @@ bool EPGDatabase::ScheduleInfo::OnSection(const EITTable *pTable, int Hour)
 			|| (TableID < FirstTableID) || (TableID > LastTableID)
 			|| (SectionNumber < FirstSectionNumber) || (SectionNumber > LastSectionNumber)) {
 		LIBISDB_TRACE_WARNING(
-			LIBISDB_STR("EPGDatabase::ScheduleInfo::OnSection() : table_id or section_number out of range : table_id %x[%x - %x] / section_number %x[%x - %x]\n"),
+			LIBISDB_STR("EPGDatabase::ScheduleInfo::OnSection() : table_id or section_number out of range : table_id {:x}[{:x} - {:x}] / section_number {:x}[{:x} - {:x}]\n"),
 			TableID, FirstTableID, LastTableID,
 			SectionNumber, FirstSectionNumber, LastSectionNumber);
 		return false;

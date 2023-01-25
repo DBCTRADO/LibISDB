@@ -27,67 +27,93 @@
 #include "../LibISDBBase.hpp"
 #include "Debug.hpp"
 #include "DateTime.hpp"
+#include "../Utilities/StringFormat.hpp"
 #ifdef LIBISDB_WINDOWS
 #include "../LibISDBWindows.hpp"
 #endif
-#include "../Utilities/StringUtilities.hpp"
 
 
 namespace LibISDB
 {
 
 
-void DebugTrace(TraceType Type, const CharType *pFormat, ...)
+void DebugTraceV(TraceType Type, std::string_view Format, std::format_args Args)
 {
-	std::va_list Args;
-
-	va_start(Args, pFormat);
-	DebugTraceV(Type, pFormat, Args);
-	va_end(Args);
-}
-
-
-void DebugTraceV(TraceType Type, const CharType *pFormat, std::va_list Args)
-{
-	CharType Buffer[MAX_TRACE_TEXT_LENGTH];
+	char Buffer[MAX_TRACE_TEXT_LENGTH];
 	DateTime Time;
 
 	Time.NowLocal();
 
 #ifdef LIBISDB_WINDOWS
 
-	int Length = StringPrintf(
+	const size_t Length = StringFormat(
 		Buffer,
-		LIBISDB_STR("%02d/%02d %02d:%02d:%02d %04X > %") LIBISDB_STR(LIBISDB_PRIS),
+		"{:02}/{:02} {:02}:{:02}:{:02} {:04X} > {}",
 		Time.Month, Time.Day, Time.Hour, Time.Minute, Time.Second,
 		::GetCurrentThreadId(),
-		Type == TraceType::Warning ? LIBISDB_STR("[Warning] ") :
-		Type == TraceType::Error   ? LIBISDB_STR("[Error] ") :
-		LIBISDB_STR(""));
-	StringPrintfV(Buffer + Length, std::size(Buffer) - Length, pFormat, Args);
-	::OutputDebugString(Buffer);
+		Type == TraceType::Warning ? "[Warning] " :
+		Type == TraceType::Error   ? "[Error] " :
+		"");
+	StringVFormatArgs(Buffer + Length, std::size(Buffer) - Length, Format, Args);
+	::OutputDebugStringA(Buffer);
 
 #else
 
-	int Length = StringPrintf(
+	const size_t Length = StringFormat(
 		Buffer,
-		LIBISDB_STR("%02d/%02d %02d:%02d:%02d > %") LIBISDB_STR(LIBISDB_PRIS),
+		"{:02}/{:02} {:02}:{:02}:{:02} > {}",
 		Time.Month, Time.Day, Time.Hour, Time.Minute, Time.Second,
 #ifndef LIBISDB_NO_ANSI_ESCAPE_SEQUENCE
-		Type == TraceType::Warning ? LIBISDB_STR("\033[33m[Warning]\033[0m ") :
-		Type == TraceType::Error   ? LIBISDB_STR("\033[31m[Error]\033[0m ") :
+		Type == TraceType::Warning ? "\033[33m[Warning]\033[0m " :
+		Type == TraceType::Error   ? "\033[31m[Error]\033[0m " :
 #else
-		Type == TraceType::Warning ? LIBISDB_STR("[Warning] ") :
-		Type == TraceType::Error   ? LIBISDB_STR("[Error] ") :
+		Type == TraceType::Warning ? "[Warning] " :
+		Type == TraceType::Error   ? "[Error] " :
 #endif
-		LIBISDB_STR(""));
-	StringPrintfV(Buffer + Length, std::size(Buffer) - Length, pFormat, Args);
-
-#ifdef LIBISDB_WCHAR
-	std::fputws(Buffer, stderr);
-#else
+		"");
+	StringVFormatArgs(Buffer + Length, std::size(Buffer) - Length, Format, Args);
 	std::fputs(Buffer, stderr);
+
 #endif
+}
+
+
+void DebugTraceV(TraceType Type, std::wstring_view Format, std::wformat_args Args)
+{
+	wchar_t Buffer[MAX_TRACE_TEXT_LENGTH];
+	DateTime Time;
+
+	Time.NowLocal();
+
+#ifdef LIBISDB_WINDOWS
+
+	const size_t Length = StringFormat(
+		Buffer,
+		L"{:02}/{:02} {:02}:{:02}:{:02} {:04X} > {}",
+		Time.Month, Time.Day, Time.Hour, Time.Minute, Time.Second,
+		::GetCurrentThreadId(),
+		Type == TraceType::Warning ? L"[Warning] " :
+		Type == TraceType::Error   ? L"[Error] " :
+		L"");
+	StringVFormatArgs(Buffer + Length, std::size(Buffer) - Length, Format, Args);
+	::OutputDebugStringW(Buffer);
+
+#else
+
+	const size_t Length = StringFormat(
+		Buffer,
+		L"{:02}/{:02} {:02}:{:02}:{:02} > {}",
+		Time.Month, Time.Day, Time.Hour, Time.Minute, Time.Second,
+#ifndef LIBISDB_NO_ANSI_ESCAPE_SEQUENCE
+		Type == TraceType::Warning ? L"\033[33m[Warning]\033[0m " :
+		Type == TraceType::Error   ? L"\033[31m[Error]\033[0m " :
+#else
+		Type == TraceType::Warning ? L"[Warning] " :
+		Type == TraceType::Error   ? L"[Error] " :
+#endif
+		L"");
+	StringVFormatArgs(Buffer + Length, std::size(Buffer) - Length, Format, Args);
+	std::fputws(Buffer, stderr);
 
 #endif
 }
@@ -96,10 +122,7 @@ void DebugTraceV(TraceType Type, const CharType *pFormat, std::va_list Args)
 bool TraceIf(TraceType Type, bool Condition, const char *pExpression, const char *pFile, int Line)
 {
 	if (Condition) {
-		DebugTrace(
-			Type,
-			LIBISDB_STR("%") LIBISDB_STR(LIBISDB_PRIs) LIBISDB_STR("(%d): %") LIBISDB_STR(LIBISDB_PRIs) LIBISDB_STR("\n"),
-			pFile, Line, pExpression);
+		DebugTrace(Type, "{}({}): {}\n", pFile, Line, pExpression);
 	}
 
 	return Condition;

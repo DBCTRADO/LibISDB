@@ -37,6 +37,7 @@
 #include "../LibISDB/Base/StandardStream.hpp"
 #include "../LibISDB/Base/FileStream.hpp"
 #include "../LibISDB/Utilities/Utilities.hpp"
+#include "../LibISDB/Utilities/StringFormat.hpp"
 #include "../LibISDB/Utilities/StringUtilities.hpp"
 #include "../LibISDB/Utilities/CRC.hpp"
 #include <iostream>
@@ -76,8 +77,8 @@ void LogoExtractEngine::OnLogoDownloaded(const LibISDB::LogoDownloaderFilter::Lo
 
 	LibISDB::CharType Format[32];
 
-	LibISDB::StringPrintf(
-		Format, LIBISDB_STR("%04X_%03X_%03X_%02X"),
+	LibISDB::StringFormat(
+		Format, LIBISDB_STR("{:04X}_{:03X}_{:03X}_{:02X}"),
 		Data.NetworkID, Data.LogoID, Data.LogoVersion, Data.LogoType);
 
 	LibISDB::String FileName(Format);
@@ -92,7 +93,7 @@ void LogoExtractEngine::OnLogoDownloaded(const LibISDB::LogoDownloaderFilter::Lo
 			Count++;
 		}
 
-		LibISDB::StringPrintf(Format, LIBISDB_STR("-%d"), Count + 1);
+		LibISDB::StringFormat(Format, LIBISDB_STR("-{}"), Count + 1);
 		FileName += Format;
 	}
 

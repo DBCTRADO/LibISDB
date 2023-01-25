@@ -376,7 +376,9 @@ HRESULT EVRPresentEngine::GetCurrentImage(
 		return hr;
 	}
 
-	LIBISDB_TRACE(LIBISDB_STR("Surface desc : Format %#x / Size %d x %d\n"), Desc.Format, Desc.Width, Desc.Height);
+	LIBISDB_TRACE(
+		LIBISDB_STR("Surface desc : Format {:#x} / Size {} x {}\n"),
+		static_cast<std::underlying_type_t<D3DFORMAT>>(Desc.Format), Desc.Width, Desc.Height);
 
 	if ((Desc.Format != D3DFMT_R8G8B8) &&
 		(Desc.Format != D3DFMT_X8R8G8B8) &&
@@ -430,7 +432,7 @@ HRESULT EVRPresentEngine::GetDibFromSurface(
 
 	hr = pSurface->LockRect(&Rect, nullptr, D3DLOCK_READONLY);
 	if (FAILED(hr)) {
-		LIBISDB_TRACE(LIBISDB_STR("LockRect() failed (%#x)\n"), hr);
+		LIBISDB_TRACE(LIBISDB_STR("LockRect() failed ({:#x})\n"), hr);
 		return hr;
 	}
 

@@ -346,6 +346,9 @@
     <ClInclude Include="..\LibISDB\Base\FileStreamPOSIX.hpp">
       <Filter>Base\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\LibISDB\Utilities\StringFormat.hpp">
+      <Filter>Utilities\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\LibISDB\Base\ARIBString.cpp">
@@ -560,6 +563,9 @@
     </ClCompile>
     <ClCompile Include="..\LibISDB\Base\FileStreamPOSIX.cpp">
       <Filter>Base\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Utilities\StringFormat.cpp">
+      <Filter>Utilities\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

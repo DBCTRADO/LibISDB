@@ -29,6 +29,7 @@
 #include <initguid.h>
 #include <ks.h>
 #include "DirectShowUtilities.hpp"
+#include "../../../Utilities/StringFormat.hpp"
 #include "../../../Utilities/StringUtilities.hpp"
 #include "../../../Base/DebugDef.hpp"
 
@@ -379,7 +380,7 @@ HRESULT AddToROT(IUnknown *pUnkGraph, DWORD *pRegister)
 		return hr;
 
 	WCHAR Name[256];
-	StringPrintf(Name, L"FilterGraph %p pid %08x", pUnkGraph, ::GetCurrentProcessId());
+	StringFormat(Name, L"FilterGraph {} pid {:08x}", static_cast<void *>(pUnkGraph), ::GetCurrentProcessId());
 
 	IMoniker *pMoniker;
 	hr = ::CreateItemMoniker(L"!", Name, &pMoniker);

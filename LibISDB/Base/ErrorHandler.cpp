@@ -30,6 +30,7 @@
 #include <tchar.h>
 #endif	// LIBISDB_WINDOWS
 #include "ErrorHandler.hpp"
+#include "../Utilities/StringFormat.hpp"
 #include "../Utilities/StringUtilities.hpp"
 #include "DebugDef.hpp"
 
@@ -329,7 +330,7 @@ std::string ErrorCategory_HRESULT::message(int ev) const
 			FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr,
 			ev, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 			szText, (DWORD)std::size(szText), nullptr) <= 0) {
-		StringPrintf(szText, std::size(szText), "HRESULT %08x", ev);
+		StringFormat(szText, "HRESULT {:08x}", ev);
 	}
 
 	return std::string(szText);

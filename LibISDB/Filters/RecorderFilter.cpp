@@ -109,7 +109,7 @@ std::shared_ptr<RecorderFilter::RecordingTask> RecorderFilter::CreateTask(
 		CacheSize = MinCacheSize;
 	if (!Task->AllocateWriteCacheBuffer(CacheSize)) {
 		Log(Logger::LogType::Error,
-			LIBISDB_STR("Failed to allocate write cache memory. (%zu bytes)"),
+			LIBISDB_STR("Failed to allocate write cache memory. ({} bytes)"),
 			CacheSize);
 		if ((CacheSize <= MinCacheSize)
 				|| !Task->AllocateWriteCacheBuffer(MinCacheSize)) {
@@ -358,7 +358,7 @@ bool RecorderFilter::RecordingTaskImpl::SetWriter(StreamWriter *pWriter)
 bool RecorderFilter::RecordingTaskImpl::Reopen(
 	const CStringView &FileName, StreamWriter::OpenFlag Flags)
 {
-	LIBISDB_TRACE(LIBISDB_STR("RecorderFilter::RecordingTaskImpl::Reopen() : %p\n"), this);
+	LIBISDB_TRACE(LIBISDB_STR("RecorderFilter::RecordingTaskImpl::Reopen() : {}\n"), static_cast<void *>(this));
 
 	return m_DataStreamer.ReopenWriter(FileName, Flags);
 }
@@ -366,7 +366,7 @@ bool RecorderFilter::RecordingTaskImpl::Reopen(
 
 bool RecorderFilter::RecordingTaskImpl::Start()
 {
-	LIBISDB_TRACE(LIBISDB_STR("RecorderFilter::RecordingTaskImpl::Start() : %p\n"), this);
+	LIBISDB_TRACE(LIBISDB_STR("RecorderFilter::RecordingTaskImpl::Start() : {}\n"), static_cast<void *>(this));
 
 	BlockLock Lock(m_Lock);
 
@@ -386,7 +386,7 @@ bool RecorderFilter::RecordingTaskImpl::Start()
 
 void RecorderFilter::RecordingTaskImpl::Stop()
 {
-	LIBISDB_TRACE(LIBISDB_STR("RecorderFilter::RecordingTaskImpl::Stop() : %p\n"), this);
+	LIBISDB_TRACE(LIBISDB_STR("RecorderFilter::RecordingTaskImpl::Stop() : {}\n"), static_cast<void *>(this));
 
 	BlockLock Lock(m_Lock);
 
@@ -398,7 +398,7 @@ void RecorderFilter::RecordingTaskImpl::Stop()
 
 bool RecorderFilter::RecordingTaskImpl::Pause()
 {
-	LIBISDB_TRACE(LIBISDB_STR("RecorderFilter::RecordingTaskImpl::Pause() : %p\n"), this);
+	LIBISDB_TRACE(LIBISDB_STR("RecorderFilter::RecordingTaskImpl::Pause() : {}\n"), static_cast<void *>(this));
 
 	BlockLock Lock(m_Lock);
 
@@ -412,7 +412,7 @@ bool RecorderFilter::RecordingTaskImpl::Pause()
 
 bool RecorderFilter::RecordingTaskImpl::Resume()
 {
-	LIBISDB_TRACE(LIBISDB_STR("RecorderFilter::RecordingTaskImpl::Resume() : %p\n"), this);
+	LIBISDB_TRACE(LIBISDB_STR("RecorderFilter::RecordingTaskImpl::Resume() : {}\n"), static_cast<void *>(this));
 
 	BlockLock Lock(m_Lock);
 
@@ -426,7 +426,7 @@ bool RecorderFilter::RecordingTaskImpl::Resume()
 
 void RecorderFilter::RecordingTaskImpl::ClearBuffer()
 {
-	LIBISDB_TRACE(LIBISDB_STR("RecorderFilter::RecordingTaskImpl::ClearBuffer() : %p\n"), this);
+	LIBISDB_TRACE(LIBISDB_STR("RecorderFilter::RecordingTaskImpl::ClearBuffer() : {}\n"), static_cast<void *>(this));
 
 	m_DataStreamer.ClearBuffer();
 }

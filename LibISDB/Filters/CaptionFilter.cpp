@@ -127,7 +127,7 @@ bool CaptionFilter::SetTargetStream(uint16_t ServiceID, uint8_t ComponentTag)
 {
 	BlockLock Lock(m_FilterLock);
 
-	LIBISDB_TRACE(LIBISDB_STR("Select caption : service_id %04X / component_tag %02X\n"), ServiceID, ComponentTag);
+	LIBISDB_TRACE(LIBISDB_STR("Select caption : service_id {:04X} / component_tag {:02X}\n"), ServiceID, ComponentTag);
 
 	if (m_TargetESPID != PID_INVALID) {
 		CaptionStream *pStream = m_PIDMapManager.GetMapTarget<CaptionStream>(m_TargetESPID);

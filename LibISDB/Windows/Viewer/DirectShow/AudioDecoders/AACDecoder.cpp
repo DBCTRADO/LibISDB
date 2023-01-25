@@ -122,7 +122,7 @@ int AACDecoder::GetSPDIFBurstPayload(uint8_t *pBuffer, size_t BufferSize) const
 
 	if (m_pADTSFrame->GetRawDataBlockNum() != 0) {
 		LIBISDB_TRACE(
-			LIBISDB_STR("Invalid no_raw_data_blocks_in_frame (%d)\n"),
+			LIBISDB_STR("Invalid no_raw_data_blocks_in_frame ({})\n"),
 			m_pADTSFrame->GetRawDataBlockNum());
 		return 0;
 	}

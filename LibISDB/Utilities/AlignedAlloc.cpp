@@ -118,7 +118,7 @@ void * AlignedRealloc(void *pBuffer, size_t Size, size_t Align, size_t Offset) n
 	AlignedMemoryInfo *pInfo = GetAlignedMemoryInfo(pBuffer);
 
 	if (pInfo->Signature != ALIGNED_MEMORY_SIGNATURE) {
-		LIBISDB_TRACE_ERROR(LIBISDB_STR("AlignedRealloc() : Memory not allocated by AlignedAlloc() [%p]\n"), pBuffer);
+		LIBISDB_TRACE_ERROR(LIBISDB_STR("AlignedRealloc() : Memory not allocated by AlignedAlloc() [{}]\n"), pBuffer);
 		return nullptr;
 	}
 
@@ -145,7 +145,7 @@ void AlignedFree(void *pBuffer) noexcept
 
 	AlignedMemoryInfo *pInfo = GetAlignedMemoryInfo(pBuffer);
 	if (pInfo->Signature != ALIGNED_MEMORY_SIGNATURE) {
-		LIBISDB_TRACE_ERROR(LIBISDB_STR("AlignedFree() : Memory not allocated by AlignedAlloc() [%p]\n"), pBuffer);
+		LIBISDB_TRACE_ERROR(LIBISDB_STR("AlignedFree() : Memory not allocated by AlignedAlloc() [{}]\n"), pBuffer);
 		return;
 	}
 

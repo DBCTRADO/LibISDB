@@ -161,7 +161,7 @@ bool AACDecoder_FDK::DecodeFrame(const ADTSFrame *pFrame, ReturnArg<DecodeFrameI
 	if (pFrame->GetChannelConfig() != m_LastChannelConfig) {
 		// チャンネル設定が変化した、デコーダリセット
 		LIBISDB_TRACE(
-			LIBISDB_STR("AACDecoder_FDK::DecodeFrame() Channel config changed %d -> %d\n"),
+			LIBISDB_STR("AACDecoder_FDK::DecodeFrame() Channel config changed {} -> {}\n"),
 			m_LastChannelConfig,
 			pFrame->GetChannelConfig());
 		if (!ResetDecoder())
@@ -179,7 +179,9 @@ bool AACDecoder_FDK::DecodeFrame(const ADTSFrame *pFrame, ReturnArg<DecodeFrameI
 		const UINT Size = Avail;
 		AAC_DECODER_ERROR Err = ::aacDecoder_Fill(m_hDecoder, &p, &Size, &Avail);
 		if (Err != AAC_DEC_OK) {
-			LIBISDB_TRACE(LIBISDB_STR("aacDecoder_Fill() error 0x%X\n"), Err);
+			LIBISDB_TRACE(
+				LIBISDB_STR("aacDecoder_Fill() error {:#X}\n"),
+				static_cast<std::underlying_type_t<AAC_DECODER_ERROR>>(Err));
 			break;
 		}
 		p += Size - Avail;
@@ -209,7 +211,9 @@ bool AACDecoder_FDK::DecodeFrame(const ADTSFrame *pFrame, ReturnArg<DecodeFrameI
 			break;
 		} else {
 			// エラー発生
-			LIBISDB_TRACE(LIBISDB_STR("aacDecoder_DecodeFrame() error 0x%X\n"), Err);
+			LIBISDB_TRACE(
+				LIBISDB_STR("aacDecoder_DecodeFrame() error {:#X}\n"),
+				static_cast<std::underlying_type_t<AAC_DECODER_ERROR>>(Err));
 
 			// リセットする
 			//ResetDecoder();
