@@ -119,10 +119,10 @@ void DebugTraceV(TraceType Type, std::wstring_view Format, std::wformat_args Arg
 }
 
 
-bool TraceIf(TraceType Type, bool Condition, const char *pExpression, const char *pFile, int Line)
+bool TraceIf(TraceType Type, bool Condition, const char *pExpression, const std::source_location &Location)
 {
 	if (Condition) {
-		DebugTrace(Type, "{}({}): {}\n", pFile, Line, pExpression);
+		DebugTrace(Type, "{}({}): {}\n", Location.file_name(), Location.line(), pExpression);
 	}
 
 	return Condition;
