@@ -51,6 +51,7 @@ namespace LibISDB
 			PriorityIdle = 0x0020U, /**< 最低優先度 */
 			DiscardOld   = 0x0040U, /**< 古い情報を破棄 */
 			Flush        = 0x0080U, /**< 書き出し時にフラッシュする */
+			LIBISDB_ENUM_FLAGS_TRAILER
 		};
 
 		enum class Exception {
@@ -102,8 +103,6 @@ namespace LibISDB
 		uint64_t m_UpdateCount;
 		EventInfo::SourceIDType m_SourceID;
 	};
-
-	LIBISDB_ENUM_FLAGS(EPGDataFile::OpenFlag)
 
 }	// namespace LibISDB
 

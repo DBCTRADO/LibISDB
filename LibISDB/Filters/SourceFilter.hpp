@@ -43,6 +43,7 @@ namespace LibISDB
 		enum class SourceMode : unsigned int {
 			Push = 0x0001U,
 			Pull = 0x0002U,
+			LIBISDB_ENUM_FLAGS_TRAILER
 		};
 
 		class EventListener
@@ -82,8 +83,6 @@ namespace LibISDB
 		SourceMode m_SourceMode;
 		EventListenerList<EventListener> m_EventListenerList;
 	};
-
-	LIBISDB_ENUM_FLAGS(SourceFilter::SourceMode)
 
 }	// namespace LibISDB
 

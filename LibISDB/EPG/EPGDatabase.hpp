@@ -123,6 +123,7 @@ namespace LibISDB
 			Database           = 0x0004U,
 			MergeBasicExtended = 0x0008U,
 			SetServiceUpdated  = 0x0010U,
+			LIBISDB_ENUM_FLAGS_TRAILER
 		};
 
 		EPGDatabase() noexcept;
@@ -274,8 +275,6 @@ namespace LibISDB
 
 		static bool RemoveEvent(EventMapType &Map, uint16_t EventID);
 	};
-
-	LIBISDB_ENUM_FLAGS(EPGDatabase::MergeFlag)
 
 }	// namespace LibISDB
 

@@ -140,6 +140,7 @@
 #include <string_view>
 #include <type_traits>
 #include <optional>
+#include <concepts>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -150,8 +151,6 @@
 #endif
 
 #include "Templates/cstring_view.hpp"
-#include "Templates/EnumFlags.hpp"
-#include "Templates/ReturnArg.hpp"
 
 
 #ifdef LIBISDB_DEBUG
@@ -259,7 +258,25 @@ namespace LibISDB
 	typedef std::basic_string_view<CharType> StringView;
 	typedef basic_cstring_view<CharType> CStringView;
 
+	template<typename T> inline constexpr bool IsEnumClass =
+		std::bool_constant<std::is_enum_v<T> && !std::is_convertible_v<T, int>>::value;
+
+	namespace Concept
+	{
+
+		template<typename T> concept Pointer = std::is_pointer_v<T>;
+		template<typename T> concept PointerNullable = std::is_pointer_v<T> || std::is_null_pointer_v<T>;
+		template<typename T> concept Reference = std::is_reference_v<T>;
+		template<typename T> concept Enum = std::is_enum_v<T>;
+		template<typename T> concept EnumClass = IsEnumClass<T>;
+
+	}	// namespace Concept
+
 }	// namespace LibISDB
+
+
+#include "Templates/EnumFlags.hpp"
+#include "Templates/ReturnArg.hpp"
 
 
 #endif	// ifndef LIBISDB_BASE_H

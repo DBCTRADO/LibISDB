@@ -101,6 +101,7 @@ namespace LibISDB::DirectShow
 			Time      = 0x0001U,
 			FrameRate = 0x0002U,
 			OneSeg    = 0x0004U,
+			LIBISDB_ENUM_FLAGS_TRAILER
 		};
 
 		VideoParser() noexcept;
@@ -129,8 +130,6 @@ namespace LibISDB::DirectShow
 		mutable CCritSec m_ParserLock;
 		bool m_AttachMediaType;
 	};
-
-	LIBISDB_ENUM_FLAGS(VideoParser::AdjustSampleFlag)
 
 }	// namespace LibISDB::DirectShow
 

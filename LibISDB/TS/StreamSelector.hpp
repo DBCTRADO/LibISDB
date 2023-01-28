@@ -60,6 +60,7 @@ namespace LibISDB
 			DolbyDigitalPlus = 0x00001000UL,
 			Caption          = 0x00002000UL,
 			DataCarrousel    = 0x00004000UL,
+			LIBISDB_ENUM_FLAGS_TRAILER,
 			Audio            = MPEG1Audio | MPEG2Audio | AAC | MPEG4Audio | AC3 | DTS | TrueHD | DolbyDigitalPlus,
 			Vido             = MPEG1Video | MPEG2Video | MPEG4Visual | H264 | H265,
 			All              = 0xFFFFFFFFUL
@@ -137,8 +138,6 @@ namespace LibISDB
 		uint8_t m_LastVersion;
 		uint8_t m_Version;
 	};
-
-	LIBISDB_ENUM_FLAGS(StreamSelector::StreamFlag)
 
 }	// namespace LibISDB
 

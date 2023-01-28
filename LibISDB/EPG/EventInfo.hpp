@@ -125,6 +125,7 @@ namespace LibISDB
 			Present   = 0x0004U,
 			Following = 0x0008U,
 			Database  = 0x0010U,
+			LIBISDB_ENUM_FLAGS_TRAILER
 		};
 
 		typedef unsigned int SourceIDType;
@@ -174,8 +175,6 @@ namespace LibISDB
 		int GetMainAudioIndex() const;
 		const AudioInfo * GetMainAudioInfo() const;
 	};
-
-	LIBISDB_ENUM_FLAGS(EventInfo::TypeFlag)
 
 	bool EPGTimeToUTCTime(const DateTime &EPGTime, ReturnArg<DateTime> UTCTime);
 	bool UTCTimeToEPGTime(const DateTime &UTCTime, ReturnArg<DateTime> EPGTime);

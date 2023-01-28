@@ -46,6 +46,7 @@ namespace LibISDB
 		enum class OpenFlag {
 			None      = 0x0000U, /**< 指定なし */
 			Overwrite = 0x0001U, /**< 上書き */
+			LIBISDB_ENUM_FLAGS_TRAILER
 		};
 
 		virtual ~StreamWriter() = default;
@@ -60,8 +61,6 @@ namespace LibISDB
 		virtual bool IsWriteSizeAvailable() const = 0;
 		virtual bool SetPreallocationUnit(SizeType PreallocationUnit) { return false; }
 	};
-
-	LIBISDB_ENUM_FLAGS(StreamWriter::OpenFlag)
 
 	/** ファイルストリーム書き出しクラス */
 	class FileStreamWriter

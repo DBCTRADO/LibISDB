@@ -93,6 +93,7 @@ namespace LibISDB
 			RandomAccess    = 0x0400U, /**< ランダムアクセス */
 			PriorityLow     = 0x0800U, /**< 低優先度 */
 			PriorityIdle    = 0x1000U, /**< 最低優先度 */
+			LIBISDB_ENUM_FLAGS_TRAILER
 		};
 
 		virtual bool Open(const CStringView &FileName, OpenFlag Flags) = 0;
@@ -107,8 +108,6 @@ namespace LibISDB
 	protected:
 		String m_FileName;
 	};
-
-	LIBISDB_ENUM_FLAGS(FileStreamBase::OpenFlag)
 
 }	// namespace LibISDB
 

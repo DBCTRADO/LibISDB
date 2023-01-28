@@ -64,6 +64,7 @@ namespace LibISDB
 			OneSeg        = 0x0002U, /**< ワンセグ */
 			UseCharSize   = 0x0004U, /**< 文字サイズを反映 */
 			UnicodeSymbol = 0x0008U, /**< Unicodeの記号を利用(Unicode 5.2以降) */
+			LIBISDB_ENUM_FLAGS_TRAILER
 		};
 
 		/** 文字サイズ */
@@ -212,8 +213,6 @@ namespace LibISDB
 
 		static bool IsDoubleByteCodeSet(CodeSet Set);
 	};
-
-	LIBISDB_ENUM_FLAGS(ARIBStringDecoder::DecodeFlag)
 
 }	// namespace LibISDB
 
