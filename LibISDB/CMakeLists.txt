@@ -74,6 +74,7 @@ add_library(LibISDB STATIC
   ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/CRC.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Lock.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/MD5.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/StringFormat.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Thread.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Utilities.cpp
 )
