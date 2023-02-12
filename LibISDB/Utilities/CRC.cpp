@@ -51,7 +51,7 @@ class CRC32SlicingTable
 	uint32_t m_Table[SLICING_COUNT][256];
 
 public:
-	CRC32SlicingTable(const uint32_t Table[256]) noexcept
+	CRC32SlicingTable(const uint32_t (&Table)[256]) noexcept
 	{
 		for (size_t i = 0; i < 256; i++) {
 			uint32_t c = Table[i];

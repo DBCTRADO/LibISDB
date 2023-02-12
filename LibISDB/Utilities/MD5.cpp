@@ -49,7 +49,7 @@ template<typename TFunc> LIBISDB_FORCE_INLINE void MD5Step(
 	w += x;
 }
 
-void MD5Transform(uint32_t MD5[4], const uint32_t *p)
+void MD5Transform(uint32_t (&MD5)[4], const uint32_t *p)
 {
 	uint32_t a, b, c, d;
 
