@@ -19,17 +19,17 @@
 ◆ 試験環境
 
   ・Windows
-      Windows 7/8.1/10
-      Visual Studio 2017 Update 5 以降
+      Windows 7/8.1/10/11
+      Visual Studio 2019 Update 10 (16.10) 以降
 
   ・Linux
-      CMake 3.8 以降
-      GCC 7 以降 又は Clang 3.9 以降
+      CMake 3.12 以降
+      GCC 11 以降 又は Clang 16(?) 以降
 
 
 ◆ 試験資料構築(Windows)
 
-  Visual Studio 2017 のプロジェクトファイルを添付している。
+  Visual Studio 2019 のプロジェクトファイルを添付している。
   Projects フォルダ内のソリューションファイル LibISDB.sln を開いてビルドすること
   ができる。
 
