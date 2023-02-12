@@ -290,10 +290,4 @@ bool SharedLock::TryLockShared(const std::chrono::milliseconds &Timeout)
 #endif	// !def LIBISDB_WINDOWS
 
 
-
-
-const LockGuard::DeferLockT LockGuard::DeferLock;
-const LockGuard::AdoptLockT LockGuard::AdoptLock;
-
-
 }	// namespace LibISDB

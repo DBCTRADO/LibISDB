@@ -40,26 +40,7 @@
 namespace LibISDB
 {
 
-	class LockBase
-	{
-	public:
-		virtual void Lock() = 0;
-		virtual void Unlock() = 0;
-		virtual bool TryLock() = 0;
-		virtual bool TryLock(const std::chrono::milliseconds &Timeout) = 0;
-	};
-
-	class SharedLockBase
-	{
-	public:
-		virtual void LockShared() = 0;
-		virtual void UnlockShared() = 0;
-		virtual bool TryLockShared() = 0;
-		virtual bool TryLockShared(const std::chrono::milliseconds &Timeout) = 0;
-	};
-
 	class MutexLock
-		: public LockBase
 	{
 	public:
 		MutexLock();
@@ -67,13 +48,11 @@ namespace LibISDB
 		MutexLock(const MutexLock &) = delete;
 		MutexLock & operator = (const MutexLock &) = delete;
 
-	// LockBase
-		void Lock() override;
-		void Unlock() override;
-		bool TryLock() override;
-		bool TryLock(const std::chrono::milliseconds &Timeout) override;
+		void Lock();
+		void Unlock();
+		bool TryLock();
+		bool TryLock(const std::chrono::milliseconds &Timeout);
 
-	// MutexLock
 #ifdef LIBISDB_WINDOWS
 		::CRITICAL_SECTION & Native() { return m_CriticalSection; }
 #else
@@ -89,8 +68,6 @@ namespace LibISDB
 	};
 
 	class SharedLock
-		: public LockBase
-		, public SharedLockBase
 	{
 	public:
 		SharedLock();
@@ -98,19 +75,16 @@ namespace LibISDB
 		SharedLock(const SharedLock &) = delete;
 		SharedLock & operator = (const SharedLock &) = delete;
 
-	// LockBase
-		void Lock() override;
-		void Unlock() override;
-		bool TryLock() override;
-		bool TryLock(const std::chrono::milliseconds &Timeout) override;
+		void Lock();
+		void Unlock();
+		bool TryLock();
+		bool TryLock(const std::chrono::milliseconds &Timeout);
 
-	// SharedLockBase
-		void LockShared() override;
-		void UnlockShared() override;
-		bool TryLockShared() override;
-		bool TryLockShared(const std::chrono::milliseconds &Timeout) override;
+		void LockShared();
+		void UnlockShared();
+		bool TryLockShared();
+		bool TryLockShared(const std::chrono::milliseconds &Timeout);
 
-	// SharedLock
 #ifdef LIBISDB_WINDOWS
 		::SRWLOCK & Native() { return m_Lock; }
 #else
@@ -125,28 +99,28 @@ namespace LibISDB
 #endif
 	};
 
-	class LockGuard
+	template<typename TLock> class LockGuard
 	{
 	public:
 		struct DeferLockT {};
-		static const DeferLockT DeferLock;
+		static constexpr DeferLockT DeferLock;
 		struct AdoptLockT {};
-		static const AdoptLockT AdoptLock;
+		static constexpr AdoptLockT AdoptLock;
 
-		LockGuard(LockBase &Lock)
+		LockGuard(TLock &Lock)
 			: m_Lock(Lock)
 			, m_IsLocked(true)
 		{
 			m_Lock.Lock();
 		}
 
-		LockGuard(LockBase &Lock, DeferLockT)
+		LockGuard(TLock &Lock, DeferLockT)
 			: m_Lock(Lock)
 			, m_IsLocked(false)
 		{
 		}
 
-		LockGuard(LockBase &Lock, AdoptLockT)
+		LockGuard(TLock &Lock, AdoptLockT)
 			: m_Lock(Lock)
 			, m_IsLocked(true)
 		{
@@ -189,14 +163,14 @@ namespace LibISDB
 		}
 
 	private:
-		LockBase &m_Lock;
+		TLock &m_Lock;
 		bool m_IsLocked;
 	};
 
-	class BlockLock
+	template<typename TLock> class BlockLock
 	{
 	public:
-		BlockLock(LockBase &Lock)
+		BlockLock(TLock &Lock)
 			: m_Lock(Lock)
 		{
 			m_Lock.Lock();
@@ -211,13 +185,13 @@ namespace LibISDB
 		BlockLock & operator = (const BlockLock &) = delete;
 
 	private:
-		LockBase &m_Lock;
+		TLock &m_Lock;
 	};
 
-	class TryBlockLock
+	template<typename TLock> class TryBlockLock
 	{
 	public:
-		TryBlockLock(LockBase &Lock)
+		TryBlockLock(TLock &Lock)
 			: m_Lock(Lock)
 			, m_IsLocked(false)
 		{
@@ -248,14 +222,14 @@ namespace LibISDB
 		}
 
 	private:
-		LockBase &m_Lock;
+		TLock &m_Lock;
 		bool m_IsLocked;
 	};
 
-	class SharedBlockLock
+	template<typename TLock> class SharedBlockLock
 	{
 	public:
-		SharedBlockLock(SharedLockBase &Lock)
+		SharedBlockLock(TLock &Lock)
 			: m_Lock(Lock)
 		{
 			m_Lock.LockShared();
@@ -270,13 +244,13 @@ namespace LibISDB
 		SharedBlockLock & operator = (const SharedBlockLock &) = delete;
 
 	private:
-		SharedLockBase &m_Lock;
+		TLock &m_Lock;
 	};
 
-	class SharedTryBlockLock
+	template<typename TLock> class SharedTryBlockLock
 	{
 	public:
-		SharedTryBlockLock(SharedLockBase &Lock)
+		SharedTryBlockLock(TLock &Lock)
 			: m_Lock(Lock)
 			, m_IsLocked(false)
 		{
@@ -307,7 +281,7 @@ namespace LibISDB
 		}
 
 	private:
-		SharedLockBase &m_Lock;
+		TLock &m_Lock;
 		bool m_IsLocked;
 	};
 
