@@ -153,6 +153,13 @@
 #include "Templates/cstring_view.hpp"
 
 
+#ifdef LIBISDB_MSB_FIRST
+static_assert(std::endian::native == std::endian::big);
+#else
+static_assert(std::endian::native == std::endian::little);
+#endif
+
+
 #ifdef LIBISDB_DEBUG
 #define LIBISDB_ASSERT assert
 #else
