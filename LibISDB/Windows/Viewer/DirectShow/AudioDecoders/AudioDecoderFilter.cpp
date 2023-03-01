@@ -920,7 +920,7 @@ HRESULT AudioDecoderFilter::ProcessPCM(
 HRESULT AudioDecoderFilter::ProcessSPDIF(
 	const AudioDecoder::AudioInfo &Info, FrameSampleInfo *pSampleInfo)
 {
-	static const int PREAMBLE_SIZE = sizeof(WORD) * 4;
+	constexpr int PREAMBLE_SIZE = sizeof(WORD) * 4;
 
 	AudioDecoder::SPDIFFrameInfo FrameInfo;
 	if (!m_Decoder->GetSPDIFFrameInfo(&FrameInfo))
@@ -1337,7 +1337,7 @@ size_t AudioDecoderFilter::MapSurroundChannels(int16_t *pDst, const int16_t *pSr
 
 void AudioDecoderFilter::GainControl(int16_t *pBuffer, size_t Samples, float Gain)
 {
-	static const int Factor = 0x1000;
+	constexpr int Factor = 0x1000;
 	const int Level = static_cast<int>(Gain * static_cast<float>(Factor));
 
 	if (Level != Factor) {

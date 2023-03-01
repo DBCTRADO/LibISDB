@@ -101,7 +101,7 @@ std::shared_ptr<RecorderFilter::RecordingTask> RecorderFilter::CreateTask(
 	Task->AddEventListener(&m_TaskEventListener);
 	Task->SetLogger(m_pLogger);
 
-	static const size_t MinCacheSize = 1024;
+	constexpr size_t MinCacheSize = 1024;
 	size_t CacheSize;
 	if (pOptions != nullptr)
 		CacheSize = std::max(pOptions->WriteCacheSize, MinCacheSize);

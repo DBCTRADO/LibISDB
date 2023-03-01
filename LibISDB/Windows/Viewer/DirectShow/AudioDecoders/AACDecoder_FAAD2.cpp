@@ -118,7 +118,7 @@ bool AACDecoder_FAAD2::GetDownmixInfo(ReturnArg<DownmixInfo> Info) const
 	ただしTVTestでは元々この規定は無視していた
 	*/
 
-	static const double PSQR = 1.0 / 1.4142135623730950488016887242097;
+	constexpr double PSQR = 1.0 / 1.4142135623730950488016887242097;
 
 	Info->Center = PSQR;
 	Info->Front  = 1.0;

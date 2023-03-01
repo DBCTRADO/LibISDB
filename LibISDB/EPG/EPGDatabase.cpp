@@ -48,7 +48,7 @@ bool IsEventValid(const EventInfo &Event)
 // EIT schedule の時刻を取得する
 unsigned long long GetScheduleTime(unsigned long long CurTime, uint16_t TableID, uint8_t SectionNumber)
 {
-	static const unsigned long long HOUR = 60 * 60;
+	constexpr unsigned long long HOUR = 60 * 60;
 
 	return (CurTime / (24 * HOUR) * (24 * HOUR)) +
 			((TableID & 0x07) * (4 * 24 * HOUR)) +

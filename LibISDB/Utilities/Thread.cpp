@@ -144,7 +144,7 @@ void Thread::SetThreadName(const CharType *pName)
 	// https://msdn.microsoft.com/en-us/library/xcb2z8hs(VS.90).aspx
 
 	if (::IsDebuggerPresent()) {
-		static const DWORD MS_VC_EXCEPTION = 0x406D1388;
+		constexpr DWORD MS_VC_EXCEPTION = 0x406D1388;
 
 #pragma pack(push, 8)
 		typedef struct tagTHREADNAME_INFO

@@ -140,7 +140,7 @@ struct FileHeader {
 } LIBISDB_ATTRIBUTE_PACKED;
 
 const char FileHeader_Type[8] = {'E', 'P', 'G', '-', 'D', 'A', 'T', 'A'};
-const uint32_t FileHeader_Version = 0;
+constexpr uint32_t FileHeader_Version = 0;
 
 struct EPGDateTime {
 	uint16_t Year;

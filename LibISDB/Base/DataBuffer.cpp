@@ -227,7 +227,7 @@ size_t DataBuffer::AllocateBuffer(size_t Size)
 		if (m_pData != nullptr)
 			m_BufferSize = Size;
 	} else if (Size > m_BufferSize) {
-		const size_t AllocateUnit = 0x100000_z;
+		constexpr size_t AllocateUnit = 0x100000_z;
 		size_t BufferSize = Size;
 
 		if (BufferSize < AllocateUnit) {

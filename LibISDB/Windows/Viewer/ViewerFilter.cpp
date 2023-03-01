@@ -58,7 +58,7 @@ const std::chrono::milliseconds LOCK_TIMEOUT(2000);
 
 HRESULT SetVideoMediaType(CMediaType *pMediaType, BYTE VideoStreamType, int Width, int Height)
 {
-	static const REFERENCE_TIME TIME_PER_FRAME =
+	constexpr REFERENCE_TIME TIME_PER_FRAME =
 		static_cast<REFERENCE_TIME>(10000000.0 / 29.97 + 0.5);
 
 	switch (VideoStreamType) {
