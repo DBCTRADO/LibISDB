@@ -94,7 +94,7 @@ bool ServiceSelectorFilter::SetTargetServiceID(uint16_t ServiceID, StreamSelecto
 		if (Stream == StreamSelector::StreamFlag::All) {
 			m_StreamSelector.SetTarget(ServiceID);
 		} else {
-			StreamSelector::StreamTypeTable StreamTable(Stream);
+			const StreamSelector::StreamTypeTable StreamTable(Stream);
 
 			m_StreamSelector.SetTarget(ServiceID, &StreamTable);
 		}

@@ -205,7 +205,7 @@ bool CaptionParser::ParseManagementData(const uint8_t *pData, uint32_t DataSize)
 		LangInfo.TCS          = (pData[Pos + 4] & 0x0C) >> 2;
 		LangInfo.RollupMode   = pData[Pos + 4] & 0x03;
 
-		int Index = GetLanguageIndexByTag(LangInfo.LanguageTag);
+		const int Index = GetLanguageIndexByTag(LangInfo.LanguageTag);
 		if (Index < 0) {
 			m_LanguageList.push_back(LangInfo);
 			Changed  = true;
@@ -303,7 +303,7 @@ bool CaptionParser::ParseUnitData(const uint8_t *pData, uint32_t *pDataSize)
 	}
 
 	if ((UnitSize > 0) && (m_pHandler != nullptr)) {
-		ARIBStringDecoder::DecodeFlag Flags =
+		const ARIBStringDecoder::DecodeFlag Flags =
 			m_1Seg ? ARIBStringDecoder::DecodeFlag::OneSeg : ARIBStringDecoder::DecodeFlag::None;
 		ARIBStringDecoder::FormatList FormatList;
 		String Text;

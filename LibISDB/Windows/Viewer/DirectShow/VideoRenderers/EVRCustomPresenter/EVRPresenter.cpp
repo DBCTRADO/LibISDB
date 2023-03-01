@@ -84,7 +84,7 @@ bool AreMediaTypesEqual(IMFMediaType *pType1, IMFMediaType *pType2)
 	}
 
 	DWORD Flags = 0;
-	HRESULT hr = pType1->IsEqual(pType2, &Flags);
+	const HRESULT hr = pType1->IsEqual(pType2, &Flags);
 
 	return hr == S_OK;
 }
@@ -92,8 +92,8 @@ bool AreMediaTypesEqual(IMFMediaType *pType1, IMFMediaType *pType2)
 
 HRESULT ValidateVideoArea(const MFVideoArea &Area, UINT32 Width, UINT32 Height)
 {
-	float OffsetX = MFOffsetToFloat(Area.OffsetX);
-	float OffsetY = MFOffsetToFloat(Area.OffsetY);
+	const float OffsetX = MFOffsetToFloat(Area.OffsetX);
+	const float OffsetY = MFOffsetToFloat(Area.OffsetY);
 
 	if ((static_cast<LONG>(OffsetX) + Area.Area.cx > static_cast<LONG>(Width)) ||
 		(static_cast<LONG>(OffsetY) + Area.Area.cy > static_cast<LONG>(Height))) {
@@ -134,7 +134,7 @@ HRESULT ClearDesiredSampleTime(IMFSample *pSample)
 	IUnknown *pUnkSwapChain = nullptr;
 	IMFDesiredSample *pDesired = nullptr;
 
-	UINT32 Counter = ::MFGetAttributeUINT32(pSample, SampleAttribute_Counter, (UINT32)-1);
+	const UINT32 Counter = ::MFGetAttributeUINT32(pSample, SampleAttribute_Counter, (UINT32)-1);
 
 	pSample->GetUnknown(SampleAttribute_SwapChain, IDD_PPV_ARGS_IUNKNOWN(&pUnkSwapChain));
 
@@ -666,7 +666,7 @@ HRESULT EVRPresenter::GetSlowestRate(MFRATE_DIRECTION eDirection, BOOL bThin, fl
 
 	BlockLock Lock(m_ObjectLock);
 
-	HRESULT hr = CheckShutdown();
+	const HRESULT hr = CheckShutdown();
 	if (FAILED(hr)) {
 		return hr;
 	}
@@ -685,7 +685,7 @@ HRESULT EVRPresenter::GetFastestRate(MFRATE_DIRECTION eDirection, BOOL bThin, fl
 
 	BlockLock Lock(m_ObjectLock);
 
-	HRESULT hr = CheckShutdown();
+	const HRESULT hr = CheckShutdown();
 	if (FAILED(hr)) {
 		return hr;
 	}
@@ -714,7 +714,7 @@ HRESULT EVRPresenter::IsRateSupported(BOOL bThin, float fRate, float *pfNearestS
 	}
 
 	float fNearestRate = fRate;
-	float fMaxRate = GetMaxRate(bThin);
+	const float fMaxRate = GetMaxRate(bThin);
 
 	if (std::fabs(fRate) > fMaxRate) {
 		hr = MF_E_UNSUPPORTED_RATE;
@@ -848,7 +848,7 @@ HRESULT EVRPresenter::SetVideoPosition(const MFVideoNormalizedRect *pnrcSource, 
 	}
 
 	if (prcDest != nullptr) {
-		RECT rcOldDest = m_PresentEngine->GetDestinationRect();
+		const RECT rcOldDest = m_PresentEngine->GetDestinationRect();
 
 		if (!::EqualRect(prcDest, &rcOldDest)) {
 			hr = m_PresentEngine->SetDestinationRect(*prcDest);
@@ -1216,7 +1216,7 @@ HRESULT EVRPresenter::CompleteFrameStep(IMFSample *pSample)
 
 HRESULT EVRPresenter::CancelFrameStep()
 {
-	FrameStepState OldState = m_FrameStep.State;
+	const FrameStepState OldState = m_FrameStep.State;
 
 	m_FrameStep.State = FrameStepState::None;
 	m_FrameStep.Steps = 0;
@@ -1266,7 +1266,7 @@ HRESULT EVRPresenter::CreateOptimalVideoType(IMFMediaType *pProposedType, IMFMed
 		if (FAILED(hr)) {
 			return hr;
 		}
-		MFRatio AspectRatio = mtOptimal.GetPixelAspectRatio();
+		const MFRatio AspectRatio = mtOptimal.GetPixelAspectRatio();
 		SrcWidth = ::MulDiv(SrcWidth, AspectRatio.Numerator, AspectRatio.Denominator);
 
 		hr = mtOptimal.SetPixelAspectRatio(
@@ -1341,8 +1341,8 @@ HRESULT EVRPresenter::CalculateOutputRectangle(IMFMediaType *pProposedType, RECT
 		return hr;
 	}
 
-	LONG OffsetX = static_cast<LONG>(MFOffsetToFloat(DisplayArea.OffsetX));
-	LONG OffsetY = static_cast<LONG>(MFOffsetToFloat(DisplayArea.OffsetY));
+	const LONG OffsetX = static_cast<LONG>(MFOffsetToFloat(DisplayArea.OffsetX));
+	const LONG OffsetY = static_cast<LONG>(MFOffsetToFloat(DisplayArea.OffsetY));
 	RECT rcOutput;
 
 	if ((DisplayArea.Area.cx != 0) &&
@@ -1360,7 +1360,7 @@ HRESULT EVRPresenter::CalculateOutputRectangle(IMFMediaType *pProposedType, RECT
 		rcOutput.bottom = SrcHeight;
 	}
 
-	MFRatio InputPAR = mtProposed.GetPixelAspectRatio();
+	const MFRatio InputPAR = mtProposed.GetPixelAspectRatio();
 	MFRatio OutputPAR = {1, 1};
 
 	*prcOutput = CorrectAspectRatio(rcOutput, InputPAR, OutputPAR);
@@ -1538,7 +1538,7 @@ HRESULT EVRPresenter::ProcessOutput()
 	DWORD Status = 0;
 	LONGLONG MixerStartTime = 0, MixerEndTime = 0;
 	MFTIME SystemTime = 0;
-	bool bRepaint = m_Repaint;
+	const bool bRepaint = m_Repaint;
 
 	MFT_OUTPUT_DATA_BUFFER DataBuffer = {};
 
@@ -1578,7 +1578,7 @@ HRESULT EVRPresenter::ProcessOutput()
 	hr = m_Mixer->ProcessOutput(0, 1, &DataBuffer, &Status);
 
 	if (FAILED(hr)) {
-		HRESULT hr2 = m_SamplePool.ReturnSample(pSample);
+		const HRESULT hr2 = m_SamplePool.ReturnSample(pSample);
 		if (FAILED(hr2)) {
 			hr = hr2;
 		} else {
@@ -1625,7 +1625,7 @@ HRESULT EVRPresenter::DeliverSample(IMFSample *pSample, BOOL bRepaint)
 	HRESULT hr;
 	EVRPresentEngine::DeviceState State = EVRPresentEngine::DeviceState::OK;
 
-	bool bPresentNow = ((m_RenderState != RenderState::Started) || IsScrubbing() || bRepaint);
+	const bool bPresentNow = ((m_RenderState != RenderState::Started) || IsScrubbing() || bRepaint);
 
 	hr = m_PresentEngine->CheckDeviceState(&State);
 
@@ -1766,7 +1766,7 @@ float EVRPresenter::GetMaxRate(BOOL bThin)
 
 		GetFrameRate(m_MediaType.Get(), &fps);
 
-		UINT MonitorRateHz = m_PresentEngine->RefreshRate();
+		const UINT MonitorRateHz = m_PresentEngine->RefreshRate();
 
 		if (fps.Denominator && fps.Numerator && MonitorRateHz) {
 			fMaxRate = static_cast<float>(::MulDiv(MonitorRateHz, fps.Denominator, fps.Numerator));

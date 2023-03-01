@@ -111,7 +111,7 @@ bool H264AccessUnit::ParseHeader()
 							int LastScale = 8, NextScale = 8;
 							for (int j = 0; j < (i < 6 ? 16 : 64); j++) {
 								if (NextScale != 0) {
-									int DeltaScale = Bitstream.GetSE_V();
+									const int DeltaScale = Bitstream.GetSE_V();
 									NextScale = (LastScale + DeltaScale + 256) % 256;
 									LastScale = NextScale;
 								}

@@ -226,7 +226,7 @@ FileStreamGenericC::SizeType FileStreamGenericC::GetSize()
 
 	// MSVC
 
-	__int64 Size = ::_filelengthi64(::_fileno(m_File.get()));
+	const __int64 Size = ::_filelengthi64(::_fileno(m_File.get()));
 	if (Size < 0) {
 		return 0;
 	}

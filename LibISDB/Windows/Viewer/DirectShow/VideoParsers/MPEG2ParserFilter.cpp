@@ -183,10 +183,10 @@ HRESULT MPEG2ParserFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
 HRESULT MPEG2ParserFilter::Transform(IMediaSample *pSample)
 {
 	BYTE *pData = nullptr;
-	HRESULT hr = pSample->GetPointer(&pData);
+	const HRESULT hr = pSample->GetPointer(&pData);
 	if (FAILED(hr))
 		return hr;
-	LONG DataSize = pSample->GetActualDataLength();
+	const LONG DataSize = pSample->GetActualDataLength();
 	m_pOutSample = pSample;
 
 	CAutoLock Lock(&m_ParserLock);
@@ -250,7 +250,7 @@ HRESULT MPEG2ParserFilter::StopStreaming()
 
 HRESULT MPEG2ParserFilter::BeginFlush()
 {
-	HRESULT hr =
+	const HRESULT hr =
 #ifndef MPEG2PARSERFILTER_INPLACE
 		CTransformFilter
 #else

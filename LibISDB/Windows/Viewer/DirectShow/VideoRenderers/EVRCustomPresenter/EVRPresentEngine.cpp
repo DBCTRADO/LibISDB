@@ -157,7 +157,7 @@ HRESULT EVRPresentEngine::SetVideoWindow(HWND hwnd)
 
 	UpdateDestRect();
 
-	HRESULT hr = CreateD3DDevice();
+	const HRESULT hr = CreateD3DDevice();
 
 	return hr;
 }

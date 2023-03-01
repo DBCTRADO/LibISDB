@@ -552,7 +552,7 @@ void LogoDownloaderFilter::OnNITSection(const PSITableBase *pTable, const PSISec
 							ServiceListDescriptor::ServiceInfo Info;
 
 							if (pServiceListDesc->GetServiceInfo(j, &Info)) {
-								int Index = GetServiceIndexByID(Info.ServiceID);
+								const int Index = GetServiceIndexByID(Info.ServiceID);
 								if (Index >= 0) {
 									const uint8_t ServiceType = Info.ServiceType;
 									if (m_ServiceList[Index].ServiceType != ServiceType) {
@@ -595,7 +595,7 @@ bool LogoDownloaderFilter::MapDataES(int Index)
 		LIBISDB_STR("LogoDownloaderFilter::MapDataES() : SID {:04X} / {} stream(s)\n"),
 		Info.ServiceID, Info.ESList.size());
 
-	for (uint16_t PID : Info.ESList) {
+	for (const uint16_t PID : Info.ESList) {
 		m_PIDMapManager.MapTarget(
 			PID,
 			new DSMCCSection(
@@ -612,7 +612,7 @@ bool LogoDownloaderFilter::UnmapDataES(int Index)
 		return false;
 
 	ServiceInfo &Info = m_ServiceList[Index];
-	for (uint16_t PID : Info.ESList) {
+	for (const uint16_t PID : Info.ESList) {
 		m_PIDMapManager.UnmapTarget(PID);
 	}
 

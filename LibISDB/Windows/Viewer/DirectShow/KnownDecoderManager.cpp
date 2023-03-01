@@ -154,7 +154,7 @@ bool KnownDecoderManager::SaveVideoDecoderSettings(IBaseFilter *pFilter)
 		return false;
 
 	ITVTestVideoDecoder *pDecoder;
-	HRESULT hr = pFilter->QueryInterface(IID_PPV_ARGS(&pDecoder));
+	const HRESULT hr = pFilter->QueryInterface(IID_PPV_ARGS(&pDecoder));
 	if (FAILED(hr))
 		return false;
 

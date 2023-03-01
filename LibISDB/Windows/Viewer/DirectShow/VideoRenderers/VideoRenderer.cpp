@@ -95,7 +95,7 @@ bool VideoRenderer_Default::Initialize(
 		return false;
 	}
 
-	HRESULT hr = pGraphBuilder->Render(pInputPin);
+	const HRESULT hr = pGraphBuilder->Render(pInputPin);
 	if (FAILED(hr)) {
 		SetHRESULTError(hr, LIBISDB_STR("映像レンダラを構築できません。"));
 		return false;

@@ -110,7 +110,7 @@ HRESULT EVRScheduler::StartScheduler(IMFClock *pClock)
 
 	{
 		HANDLE Objects[] = {m_hThreadReadyEvent, m_hSchedulerThread};
-		DWORD Wait = ::WaitForMultipleObjects(_countof(Objects), Objects, FALSE, INFINITE);
+		const DWORD Wait = ::WaitForMultipleObjects(_countof(Objects), Objects, FALSE, INFINITE);
 		if (Wait != WAIT_OBJECT_0) {
 			hr = E_UNEXPECTED;
 			goto Done;
@@ -320,7 +320,7 @@ unsigned int EVRScheduler::SchedulerThread()
 	::SetEvent(m_hThreadReadyEvent);
 
 	do {
-		DWORD Result = ::MsgWaitForMultipleObjects(0, nullptr, FALSE, Wait, QS_POSTMESSAGE);
+		const DWORD Result = ::MsgWaitForMultipleObjects(0, nullptr, FALSE, Wait, QS_POSTMESSAGE);
 
 		if (Result == WAIT_TIMEOUT) {
 			hr = ProcessSamplesInQueue(&Wait);

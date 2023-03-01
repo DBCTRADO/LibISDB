@@ -95,7 +95,7 @@ bool TSEngine::BuildEngine(std::initializer_list<FilterBase *> FilterList)
 	size_t i = 0;
 
 	for (++it; it != FilterList.end(); ++it) {
-		FilterGraph::IDType ID = RegisterFilter(*it);
+		const FilterGraph::IDType ID = RegisterFilter(*it);
 
 		ConnectionList[i].UpstreamFilterID = PrevID;
 		ConnectionList[i].DownstreamFilterID = ID;
@@ -155,7 +155,7 @@ FilterGraph::IDType TSEngine::RegisterFilter(FilterBase *pFilter)
 	if (LIBISDB_TRACE_ERROR_IF(pFilter == nullptr))
 		return 0;
 
-	FilterGraph::IDType ID = m_FilterGraph.RegisterFilter(pFilter);
+	const FilterGraph::IDType ID = m_FilterGraph.RegisterFilter(pFilter);
 	if (ID == 0)
 		return 0;
 
@@ -179,7 +179,7 @@ bool TSEngine::OpenSource(const CStringView &Name)
 
 	// ソースフィルタを開く
 	Log(Logger::LogType::Information, LIBISDB_STR("Opening source..."));
-	bool OK = m_pSource->OpenSource(Name);
+	const bool OK = m_pSource->OpenSource(Name);
 	if (!OK) {
 		SetError(m_pSource->GetLastErrorDescription());
 	}
@@ -271,7 +271,7 @@ bool TSEngine::SetService(const ServiceSelectInfo &ServiceSelInfo, bool Reserve)
 	}
 
 	if (!OneSeg && (ServiceID != SERVICE_ID_INVALID)) {
-		int Index = GetSelectableServiceIndexByID(ServiceID);
+		const int Index = GetSelectableServiceIndexByID(ServiceID);
 		if (Index < 0) {
 			if (!Reserve || (m_CurTransportStreamID != TRANSPORT_STREAM_ID_INVALID))
 				return false;
@@ -562,7 +562,7 @@ bool TSEngine::SetAudioStream(int StreamIndex)
 
 	SetAudioPID(AudioPID, false);
 
-	uint8_t AudioStreamType = m_pAnalyzer->GetAudioStreamType(ServiceIndex, StreamIndex);
+	const uint8_t AudioStreamType = m_pAnalyzer->GetAudioStreamType(ServiceIndex, StreamIndex);
 
 	if (m_AudioStreamType != AudioStreamType) {
 		LIBISDB_TRACE(LIBISDB_STR("Audio stream_type changed ({:02x} -> {:02x})\n"), m_AudioStreamType, AudioStreamType);

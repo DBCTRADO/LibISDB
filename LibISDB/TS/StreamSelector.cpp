@@ -126,7 +126,7 @@ bool StreamSelector::SetTarget(uint16_t ServiceID, StreamFlag StreamFlags)
 	if (StreamFlags == StreamFlag::All)
 		return SetTarget(ServiceID, nullptr);
 
-	StreamTypeTable StreamTable(StreamFlags);
+	const StreamTypeTable StreamTable(StreamFlags);
 
 	return SetTarget(ServiceID, &StreamTable);
 }
@@ -154,17 +154,17 @@ void StreamSelector::MakeTargetPIDTable()
 			if (PMT.PCRPID != PID_INVALID)
 				m_TargetPIDTable[PMT.PCRPID] = true;
 
-			for (uint16_t ECMPID : PMT.ECMPIDList)
+			for (const uint16_t ECMPID : PMT.ECMPIDList)
 				m_TargetPIDTable[ECMPID] = true;
 
-			for (ESInfo ES : PMT.ESList) {
+			for (const ESInfo ES : PMT.ESList) {
 				if (!m_TargetStreamTypeEnabled || m_TargetStreamType[ES.StreamType])
 					m_TargetPIDTable[ES.PID] = true;
 			}
 		}
 	}
 
-	for (uint16_t EMMPID : m_EMMPIDList)
+	for (const uint16_t EMMPID : m_EMMPIDList)
 		m_TargetPIDTable[EMMPID] = true;
 }
 
@@ -295,7 +295,7 @@ bool StreamSelector::MakePAT(const TSPacket *pSrcPacket, TSPacket *pDstPacket)
 
 	if (!pSrcPacket->GetPayloadUnitStartIndicator())
 		return false;
-	size_t UnitStartPos = pPayloadData[0] + 1;
+	const size_t UnitStartPos = pPayloadData[0] + 1;
 	pPayloadData += UnitStartPos;
 	HeaderSize += UnitStartPos;
 	if (HeaderSize >= TS_PACKET_SIZE)
@@ -308,16 +308,16 @@ bool StreamSelector::MakePAT(const TSPacket *pSrcPacket, TSPacket *pDstPacket)
 	if (pPayloadData[0] != 0)	// table_id 不正
 		return false;
 
-	uint16_t SectionLength = static_cast<uint16_t>(((pPayloadData[1] & 0x0F) << 8) | pPayloadData[2]);
+	const uint16_t SectionLength = static_cast<uint16_t>(((pPayloadData[1] & 0x0F) << 8) | pPayloadData[2]);
 	if (SectionLength > TS_PACKET_SIZE - HeaderSize - 3 - 4 )
 		return false;
 
-	uint32_t CRC = Load32(&pPayloadData[3 + SectionLength - 4]);
+	const uint32_t CRC = Load32(&pPayloadData[3 + SectionLength - 4]);
 	if (CRC32MPEG2::Calc(pPayloadData, 3 + SectionLength - 4) != CRC)
 		return false;
 
-	uint16_t TSID = Load16(&pPayloadData[3]);
-	uint8_t Version = (pPayloadData[5] & 0x3E) >> 1;
+	const uint16_t TSID = Load16(&pPayloadData[3]);
+	const uint8_t Version = (pPayloadData[5] & 0x3E) >> 1;
 	if (TSID != m_LastTSID) {
 		m_Version = 0;
 	} else if ((m_TargetPMTPID != m_LastPMTPID) || (Version != m_LastVersion)) {
@@ -333,7 +333,7 @@ bool StreamSelector::MakePAT(const TSPacket *pSrcPacket, TSPacket *pDstPacket)
 	bool HasPMTPID = false;
 	while (Pos < static_cast<size_t>(SectionLength) - (5 + 4)) {
 		//uint16_t ProgramNumber = Load16(&pProgramData[Pos]);
-		uint16_t PID = Load16(&pProgramData[Pos + 2]) & 0x1FFF_u16;
+		const uint16_t PID = Load16(&pProgramData[Pos + 2]) & 0x1FFF_u16;
 
 		if ((PID == 0x0010) || (PID == m_TargetPMTPID)) {
 			std::memcpy(pDstData + 8 + NewProgramListSize, pProgramData + Pos, 4);
@@ -357,7 +357,7 @@ bool StreamSelector::MakePAT(const TSPacket *pSrcPacket, TSPacket *pDstPacket)
 	Store32(&pDstData[8 + NewProgramListSize], CRC32MPEG2::Calc(pDstData, 8 + NewProgramListSize));
 
 #ifdef LIBISDB_DEBUG
-	TSPacket::ParseResult Result = pDstPacket->ParsePacket();
+	const TSPacket::ParseResult Result = pDstPacket->ParsePacket();
 	LIBISDB_ASSERT(Result == TSPacket::ParseResult::OK);
 #else
 	pDstPacket->ParsePacket();

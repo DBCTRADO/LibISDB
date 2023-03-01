@@ -154,17 +154,18 @@ bool H265AccessUnit::ParseHeader()
 					// scaling_list_data
 					for (int SizeId = 0; SizeId < 4; SizeId++) {
 						for (int MatrixId = 0; MatrixId < ((SizeId == 3) ? 2 : 6); MatrixId++) {
-							bool bScalingListPredModeFlag = Bitstream.GetFlag();
+							const bool bScalingListPredModeFlag = Bitstream.GetFlag();
 							if (!bScalingListPredModeFlag) {
 								Bitstream.GetUE_V();	// scaling_list_pred_matrix_id_delta
 							} else {
-								int NextCoef = 8, CoefNum = std::min(64, 1 << (4 + (SizeId << 1)));
+								int NextCoef = 8;
+								const int CoefNum = std::min(64, 1 << (4 + (SizeId << 1)));
 								if (SizeId > 1) {
-									int ScalingListDcCoefMinus8 = Bitstream.GetSE_V();
+									const int ScalingListDcCoefMinus8 = Bitstream.GetSE_V();
 									NextCoef = ScalingListDcCoefMinus8 + 8;
 								}
 								for (int i = 0; i < CoefNum; i++) {
-									int ScalingListDeltaCoef = Bitstream.GetSE_V();
+									const int ScalingListDeltaCoef = Bitstream.GetSE_V();
 									NextCoef = (NextCoef + ScalingListDeltaCoef + 256) % 256;
 								}
 							}
@@ -194,19 +195,19 @@ bool H265AccessUnit::ParseHeader()
 					Bitstream.GetUE_V();	// abs_delta_rps_minus1
 					int NumPicsNew = 0;
 					for (int j = 0; j <= NumPics; j++) {
-						bool bUsedByCurrPicFlag = Bitstream.GetFlag();
+						const bool bUsedByCurrPicFlag = Bitstream.GetFlag();
 						if (bUsedByCurrPicFlag) {
 							NumPicsNew++;
 						} else {
-							bool bUseDeltaFlag = Bitstream.GetFlag();
+							const bool bUseDeltaFlag = Bitstream.GetFlag();
 							if (bUseDeltaFlag)
 								NumPicsNew++;
 						}
 					}
 					NumPics = NumPicsNew;
 				} else {
-					int NumNegativePics = Bitstream.GetUE_V();
-					int NumPositivePics = Bitstream.GetUE_V();
+					const int NumNegativePics = Bitstream.GetUE_V();
+					const int NumPositivePics = Bitstream.GetUE_V();
 					NumPics = NumNegativePics + NumPositivePics;
 					for (int j = 0; j < NumNegativePics; j++) {
 						Bitstream.GetUE_V();	// delta_poc_s0_minus1
@@ -324,7 +325,7 @@ uint16_t H265AccessUnit::GetHorizontalSize() const noexcept
 {
 	uint16_t Width = m_Header.SPS.PicWidthInLumaSamples;
 	if (m_Header.SPS.ConformanceWindowFlag) {
-		uint16_t Crop = (m_Header.SPS.ConfWinLeftOffset + m_Header.SPS.ConfWinRightOffset) * GetSubWidthC();
+		const uint16_t Crop = (m_Header.SPS.ConfWinLeftOffset + m_Header.SPS.ConfWinRightOffset) * GetSubWidthC();
 		if (Crop < Width)
 			Width -= Crop;
 	}
@@ -336,7 +337,7 @@ uint16_t H265AccessUnit::GetVerticalSize() const noexcept
 {
 	uint16_t Height = m_Header.SPS.PicHeightInLumaSamples;
 	if (m_Header.SPS.ConformanceWindowFlag) {
-		uint16_t Crop = (m_Header.SPS.ConfWinTopOffset + m_Header.SPS.ConfWinBottomOffset) * GetSubHeightC();
+		const uint16_t Crop = (m_Header.SPS.ConfWinTopOffset + m_Header.SPS.ConfWinBottomOffset) * GetSubHeightC();
 		if (Crop < Height)
 			Height -= Crop;
 	}

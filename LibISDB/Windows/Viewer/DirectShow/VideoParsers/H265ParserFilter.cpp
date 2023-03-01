@@ -88,10 +88,10 @@ HRESULT H265ParserFilter::CheckInputType(const CMediaType *mtIn)
 HRESULT H265ParserFilter::Transform(IMediaSample *pSample)
 {
 	BYTE *pData = nullptr;
-	HRESULT hr = pSample->GetPointer(&pData);
+	const HRESULT hr = pSample->GetPointer(&pData);
 	if (FAILED(hr))
 		return hr;
-	LONG DataSize = pSample->GetActualDataLength();
+	const LONG DataSize = pSample->GetActualDataLength();
 
 	CAutoLock Lock(&m_ParserLock);
 
@@ -151,7 +151,7 @@ HRESULT H265ParserFilter::StopStreaming()
 
 HRESULT H265ParserFilter::BeginFlush()
 {
-	HRESULT hr = CTransInPlaceFilter::BeginFlush();
+	const HRESULT hr = CTransInPlaceFilter::BeginFlush();
 
 	CAutoLock Lock(&m_ParserLock);
 

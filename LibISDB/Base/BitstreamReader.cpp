@@ -78,7 +78,7 @@ bool BitstreamReader::GetFlag() noexcept
 int BitstreamReader::GetUE_V() noexcept
 {
 	int Info;
-	int Length = GetVLCSymbol(&Info);
+	const int Length = GetVLCSymbol(&Info);
 
 	if (Length < 0)
 		return -1;
@@ -89,12 +89,12 @@ int BitstreamReader::GetUE_V() noexcept
 int BitstreamReader::GetSE_V() noexcept
 {
 	int Info;
-	int Length = GetVLCSymbol(&Info);
+	const int Length = GetVLCSymbol(&Info);
 
 	if (Length < 0)
 		return -1;
-	unsigned int n = (1U << (Length >> 1)) + Info - 1;
-	int Value = (n + 1) >> 1;
+	const unsigned int n = (1U << (Length >> 1)) + Info - 1;
+	const int Value = (n + 1) >> 1;
 	return (n & 0x01) != 0 ? Value : -Value;
 }
 

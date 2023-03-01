@@ -720,7 +720,7 @@ void BonDriverSourceFilter::StreamingMain()
 		if (!m_RequestQueue.empty()) {
 			StreamingRequest &Req = m_RequestQueue.front();
 			Req.IsProcessing = true;
-			StreamingRequest Request = Req;
+			const StreamingRequest Request = Req;
 			Lock.Unlock();
 
 			switch (Request.Type) {
@@ -856,7 +856,7 @@ bool BonDriverSourceFilter::WaitAllRequests(const std::chrono::milliseconds &Tim
 bool BonDriverSourceFilter::HasPendingRequest()
 {
 	m_RequestLock.Lock();
-	bool Pending = !m_RequestQueue.empty();
+	const bool Pending = !m_RequestQueue.empty();
 	m_RequestLock.Unlock();
 	return Pending;
 }
@@ -916,7 +916,7 @@ void BonDriverSourceFilter::SetChannelWait()
 	}
 
 	if (Wait > 0) {
-		TickClock::ClockType Interval = m_Clock.Get() - Time;
+		const TickClock::ClockType Interval = m_Clock.Get() - Time;
 		if (Interval < Wait) {
 			LIBISDB_TRACE(LIBISDB_STR("SetChannel wait {}\n"), Wait - Interval);
 			std::this_thread::sleep_for(

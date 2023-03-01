@@ -184,14 +184,14 @@ int TSPacketCounterFilter::GetServiceIndexByID(uint16_t ServiceID) const
 
 void TSPacketCounterFilter::MapServiceESs(size_t Index)
 {
-	for (uint16_t PID : m_ServiceList[Index].ESPIDList)
+	for (const uint16_t PID : m_ServiceList[Index].ESPIDList)
 		m_PIDMapManager.MapTarget(PID, &m_ESPIDMapTarget);
 }
 
 
 void TSPacketCounterFilter::UnmapServiceESs(size_t Index)
 {
-	for (uint16_t PID : m_ServiceList[Index].ESPIDList)
+	for (const uint16_t PID : m_ServiceList[Index].ESPIDList)
 		m_PIDMapManager.UnmapTarget(PID);
 }
 

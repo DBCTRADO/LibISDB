@@ -106,7 +106,7 @@ bool Thread::Wait(const std::chrono::milliseconds &Timeout) const
 	if (m_hThread == nullptr)
 		return false;
 
-	DWORD Wait = static_cast<DWORD>(std::min(Timeout.count(), static_cast<std::chrono::milliseconds::rep>(0xFFFFFFFEUL)));
+	const DWORD Wait = static_cast<DWORD>(std::min(Timeout.count(), static_cast<std::chrono::milliseconds::rep>(0xFFFFFFFEUL)));
 
 	return ::WaitForSingleObject(m_hThread, Wait) == WAIT_OBJECT_0;
 }

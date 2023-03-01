@@ -153,9 +153,9 @@ bool ARIBStringDecoder::DecodeInternal(
 	// 一応 UNICODE でなくてもコンパイルできるようにはしているが、
 	// 日本語ロケール(CP932)以外では多くの文字が変換できないため実用にならない
 	InternalString String;
-	bool Result = DecodeString(pSrcData, SrcLength, &String);
+	const bool Result = DecodeString(pSrcData, SrcLength, &String);
 	if (!String.empty()) {
-		int Length = ::WideCharToMultiByte(
+		const int Length = ::WideCharToMultiByte(
 			CP_ACP, 0, String.data(), static_cast<int>(String.length()), nullptr, 0, nullptr, nullptr);
 		if (Length > 0) {
 			DstString->resize(Length);
@@ -440,7 +440,7 @@ void ARIBStringDecoder::DecodeChar(uint16_t Code, CodeSet Set, InternalString *p
 	}
 
 	if ((m_RPC > 1) && (pDstString->length() > OldLength)) {
-		String Str = pDstString->substr(OldLength, pDstString->length() - OldLength);
+		const String Str = pDstString->substr(OldLength, pDstString->length() - OldLength);
 		int Count = m_RPC;
 		while (--Count > 0)
 			*pDstString += Str;
@@ -454,7 +454,7 @@ void ARIBStringDecoder::PutKanjiChar(uint16_t Code, InternalString *pDstString)
 	if (Code >= 0x7521)
 		return PutSymbolsChar(Code, pDstString);
 
-	uint8_t First = Code >> 8, Second = Code & 0x00FF;
+	const uint8_t First = Code >> 8, Second = Code & 0x00FF;
 
 	// 全角 -> 半角英数字変換
 	if (m_UseCharSize && (m_CharSize == CharSize::Medium)) {
@@ -516,7 +516,7 @@ void ARIBStringDecoder::PutKanjiChar(uint16_t Code, InternalString *pDstString)
 
 	// Shift_JIS (CP932) -> UTF-16
 	WCHAR Unicode[2];
-	int Length = ::MultiByteToWideChar(932, MB_PRECOMPOSED, ShiftJIS, 2, Unicode, static_cast<int>(std::size(Unicode)));
+	const int Length = ::MultiByteToWideChar(932, MB_PRECOMPOSED, ShiftJIS, 2, Unicode, static_cast<int>(std::size(Unicode)));
 	if (Length > 0)
 		pDstString->append(Unicode, Length);
 	else
@@ -527,7 +527,7 @@ void ARIBStringDecoder::PutKanjiChar(uint16_t Code, InternalString *pDstString)
 #ifdef LIBISDB_ARIB_STR_IS_UTF8
 	// JIS -> UTF-8 漢字コード変換
 	char Buffer[4];
-	size_t Length = JISX0213KanjiToUTF8(1, Code, Buffer, std::size(Buffer));
+	const size_t Length = JISX0213KanjiToUTF8(1, Code, Buffer, std::size(Buffer));
 	if (Length > 0)
 		pDstString->append(Buffer, Length);
 	else
@@ -535,7 +535,7 @@ void ARIBStringDecoder::PutKanjiChar(uint16_t Code, InternalString *pDstString)
 #else
 	// JIS -> wchar_t 漢字コード変換
 	wchar_t Buffer[2];
-	size_t Length = JISX0213KanjiToWChar(1, Code, Buffer, std::size(Buffer));
+	const size_t Length = JISX0213KanjiToWChar(1, Code, Buffer, std::size(Buffer));
 	if (Length > 0)
 		pDstString->append(Buffer, Length);
 	else
@@ -551,7 +551,7 @@ void ARIBStringDecoder::PutKanjiPlane2Char(uint16_t Code, InternalString *pDstSt
 #ifdef LIBISDB_ARIB_STR_IS_UTF8
 	// JIS X 0213 漢字集合2面 -> UTF-8
 	char Buffer[4];
-	size_t Length = JISX0213KanjiToUTF8(2, Code, Buffer, std::size(Buffer));
+	const size_t Length = JISX0213KanjiToUTF8(2, Code, Buffer, std::size(Buffer));
 	if (Length > 0)
 		pDstString->append(Buffer, Length);
 	else
@@ -559,7 +559,7 @@ void ARIBStringDecoder::PutKanjiPlane2Char(uint16_t Code, InternalString *pDstSt
 #else
 	// JIS X 0213 漢字集合2面 -> wchar_t
 	wchar_t Buffer[2];
-	size_t Length = JISX0213KanjiToWChar(2, Code, Buffer, std::size(Buffer));
+	const size_t Length = JISX0213KanjiToWChar(2, Code, Buffer, std::size(Buffer));
 	if (Length > 0)
 		pDstString->append(Buffer, Length);
 	else

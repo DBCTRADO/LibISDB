@@ -240,7 +240,7 @@ HRESULT AudioDecoderFilter::DecideBufferSize(IMemAllocator *pAllocator, ALLOCATO
 
 	// アロケータプロパティを設定しなおす
 	ALLOCATOR_PROPERTIES Actual;
-	HRESULT hr = pAllocator->SetProperties(pprop, &Actual);
+	const HRESULT hr = pAllocator->SetProperties(pprop, &Actual);
 	if (FAILED(hr))
 		return hr;
 
@@ -298,7 +298,7 @@ HRESULT AudioDecoderFilter::StopStreaming()
 
 HRESULT AudioDecoderFilter::BeginFlush()
 {
-	HRESULT hr = CTransformFilter::BeginFlush();
+	const HRESULT hr = CTransformFilter::BeginFlush();
 
 	CAutoLock AutoLock(&m_cPropLock);
 
@@ -314,7 +314,7 @@ HRESULT AudioDecoderFilter::BeginFlush()
 
 HRESULT AudioDecoderFilter::NewSegment(REFERENCE_TIME tStart, REFERENCE_TIME tStop, double dRate)
 {
-	HRESULT hr = CTransformFilter::NewSegment(tStart, tStop, dRate);
+	const HRESULT hr = CTransformFilter::NewSegment(tStart, tStop, dRate);
 
 	CAutoLock AutoLock(&m_cPropLock);
 
@@ -817,7 +817,6 @@ HRESULT AudioDecoderFilter::ProcessPCM(
 	const int OutChannels = Surround ? 6 : 2;
 
 	// メディアタイプの更新
-	bool MediaTypeChanged = false;
 	WAVEFORMATEX *pwfx = reinterpret_cast<WAVEFORMATEX *>(m_MediaType.Format());
 	if ((*m_MediaType.FormatType() != FORMAT_WaveFormatEx)
 			|| (!Surround && (pwfx->wFormatTag != WAVE_FORMAT_PCM))
@@ -1245,7 +1244,7 @@ size_t AudioDecoderFilter::DownMixSurround(int16_t *pDst, const int16_t *pSrc, s
 				Data[i] = static_cast<double>(pSrc[Pos * 6 + ChannelMap[i]]);
 
 			for (int i = 0; i < 2; i++) {
-				int Value = static_cast<int>((
+				const int Value = static_cast<int>((
 					Data[0] * m_DownMixMatrix.Matrix[i][0] +
 					Data[1] * m_DownMixMatrix.Matrix[i][1] +
 					Data[2] * m_DownMixMatrix.Matrix[i][2] +
@@ -1262,14 +1261,14 @@ size_t AudioDecoderFilter::DownMixSurround(int16_t *pDst, const int16_t *pSrc, s
 		m_Decoder->GetDownmixInfo(&Info);
 
 		for (size_t Pos = 0; Pos < Samples; Pos++) {
-			int Left = static_cast<int>((
+			const int Left = static_cast<int>((
 				static_cast<double>(pSrc[Pos * 6 + ChannelMap[AudioDecoder::CHANNEL_6_FL ]]) * Info.Front +
 				static_cast<double>(pSrc[Pos * 6 + ChannelMap[AudioDecoder::CHANNEL_6_BL ]]) * Info.Rear +
 				static_cast<double>(pSrc[Pos * 6 + ChannelMap[AudioDecoder::CHANNEL_6_FC ]]) * Info.Center +
 				static_cast<double>(pSrc[Pos * 6 + ChannelMap[AudioDecoder::CHANNEL_6_LFE]]) * Info.LFE
 				) * Level);
 
-			int Right = static_cast<int>((
+			const int Right = static_cast<int>((
 				static_cast<double>(pSrc[Pos * 6 + ChannelMap[AudioDecoder::CHANNEL_6_FR ]]) * Info.Front +
 				static_cast<double>(pSrc[Pos * 6 + ChannelMap[AudioDecoder::CHANNEL_6_BR ]]) * Info.Rear +
 				static_cast<double>(pSrc[Pos * 6 + ChannelMap[AudioDecoder::CHANNEL_6_FC ]]) * Info.Center +
@@ -1304,7 +1303,7 @@ size_t AudioDecoderFilter::MapSurroundChannels(int16_t *pDst, const int16_t *pSr
 				Data[j] = static_cast<double>(pSrc[i * 6 + ChannelMap[j]]);
 
 			for (int j = 0; j < 6; j++) {
-				int Value = static_cast<int>(
+				const int Value = static_cast<int>(
 					Data[0] * m_MixingMatrix.Matrix[j][0] +
 					Data[1] * m_MixingMatrix.Matrix[j][1] +
 					Data[2] * m_MixingMatrix.Matrix[j][2] +
@@ -1347,7 +1346,7 @@ void AudioDecoderFilter::GainControl(int16_t *pBuffer, size_t Samples, float Gai
 		p = pBuffer;
 		pEnd= p + Samples;
 		while (p < pEnd) {
-			int Value = (static_cast<int>(*p) * Level) / Factor;
+			const int Value = (static_cast<int>(*p) * Level) / Factor;
 			*p++ = ClampSample16(Value);
 		}
 	}

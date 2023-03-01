@@ -1043,7 +1043,7 @@ const DescriptorBlock * AnalyzerFilter::GetExtendedEventDescriptor(int ServiceIn
 		for (i = 0; i < pEventGroup->GetEventCount(); i++) {
 			EventGroupDescriptor::EventInfo EventInfo;
 			if (pEventGroup->GetEventInfo(i, &EventInfo)) {
-				int Index = GetServiceIndexByID(EventInfo.ServiceID);
+				const int Index = GetServiceIndexByID(EventInfo.ServiceID);
 				if (Index >= 0) {
 					const EITTable *pEITTable = pEITPfTable->GetPfActualTable(EventInfo.ServiceID, Next);
 					if ((pEITTable == nullptr)
@@ -1586,7 +1586,7 @@ bool AnalyzerFilter::GetInterpolatedTOTTime(ReturnArg<DateTime> Time, OptionalRe
 	if (m_TOTInterpolation.PCRPID != PID_INVALID) {
 		for (size_t i = 0; i < m_ServiceList.size(); i++) {
 			if (m_ServiceList[i].PCRPID == m_TOTInterpolation.PCRPID) {
-				uint64_t PCRTime = GetPCRTimeStamp(static_cast<int>(i));
+				const uint64_t PCRTime = GetPCRTimeStamp(static_cast<int>(i));
 
 				if (PCRTime != PCR_INVALID) {
 					long long Diff;
@@ -1967,7 +1967,7 @@ void AnalyzerFilter::OnPMTSection(const PSITableBase *pTable, const PSISection *
 	}
 
 	// component_tag 順にソート
-	auto ComponentTagCmp =
+	const auto ComponentTagCmp =
 		[](const ESInfo &Info1, const ESInfo &Info2) -> bool {
 			return Info1.ComponentTag < Info2.ComponentTag;
 		};
@@ -1976,7 +1976,7 @@ void AnalyzerFilter::OnPMTSection(const PSITableBase *pTable, const PSISection *
 	InsertionSort(Info.CaptionESList, ComponentTagCmp);
 	InsertionSort(Info.DataCarrouselESList, ComponentTagCmp);
 
-	if (uint16_t PCRPID = pPMTTable->GetPCRPID(); PCRPID < 0x1FFF) {
+	if (const uint16_t PCRPID = pPMTTable->GetPCRPID(); PCRPID < 0x1FFF) {
 		Info.PCRPID = PCRPID;
 		if (m_PIDMapManager.GetMapTarget(PCRPID) == nullptr)
 			m_PIDMapManager.MapTarget(PCRPID, new PCRTable);
@@ -2214,7 +2214,7 @@ void AnalyzerFilter::OnNITSection(const PSITableBase *pTable, const PSISection *
 						if (pServiceListDesc->GetServiceInfo(j, &Info)) {
 							StreamInfo.ServiceList.push_back(Info);
 
-							int Index = GetServiceIndexByID(Info.ServiceID);
+							const int Index = GetServiceIndexByID(Info.ServiceID);
 							if (Index >= 0) {
 								ServiceInfo &Service = m_ServiceList[Index];
 								if (Service.ServiceType == SERVICE_TYPE_INVALID)
@@ -2318,7 +2318,7 @@ void AnalyzerFilter::OnTOTSection(const PSITableBase *pTable, const PSISection *
 		}
 
 		if (Index >= 0) {
-			uint64_t PCRTime = GetPCRTimeStamp(Index);
+			const uint64_t PCRTime = GetPCRTimeStamp(Index);
 			if (PCRTime != PCR_INVALID) {
 				PCRPID = m_ServiceList[Index].PCRPID;
 				m_TOTInterpolation.PCRTime = PCRTime;

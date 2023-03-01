@@ -238,7 +238,7 @@ bool EPGDatabase::GetEventInfo(
 	bool Found = false;
 	auto itService = m_ServiceMap.find(ServiceInfo(NetworkID, TransportStreamID, ServiceID));
 	if (itService != m_ServiceMap.end()) {
-		TimeEventInfo Key(Time);
+		const TimeEventInfo Key(Time);
 		auto itTime = itService->second.TimeMap.upper_bound(Key);
 		if (itTime != itService->second.TimeMap.begin()) {
 			--itTime;
@@ -270,7 +270,7 @@ bool EPGDatabase::GetNextEventInfo(
 	bool Found = false;
 	auto itService = m_ServiceMap.find(ServiceInfo(NetworkID, TransportStreamID, ServiceID));
 	if (itService != m_ServiceMap.end()) {
-		TimeEventInfo Key(Time);
+		const TimeEventInfo Key(Time);
 		auto itTime = itService->second.TimeMap.upper_bound(Key);
 		if (itTime != itService->second.TimeMap.end()) {
 			auto itEvent = itService->second.EventMap.find(itTime->EventID);
@@ -351,7 +351,7 @@ bool EPGDatabase::EnumEventsSortedByTime(
 	TimeEventMap::const_iterator itTime, itEnd;
 
 	if ((pEarliest != nullptr) && pEarliest->IsValid()) {
-		TimeEventInfo Key(*pEarliest);
+		const TimeEventInfo Key(*pEarliest);
 		itTime = itService->second.TimeMap.upper_bound(Key);
 		if (itTime != itService->second.TimeMap.begin()) {
 			auto itPrev = itTime;
@@ -536,7 +536,7 @@ bool EPGDatabase::UpdateSection(
 		pEITTable->GetOriginalNetworkID(),
 		pEITTable->GetTransportStreamID(),
 		pEITTable->GetServiceID());
-	auto [itService, ServiceInserted] = m_ServiceMap.emplace(
+	const auto [itService, ServiceInserted] = m_ServiceMap.emplace(
 		std::piecewise_construct,
 		std::forward_as_tuple(Key),
 		std::forward_as_tuple());
@@ -987,7 +987,7 @@ bool EPGDatabase::MergeEventMap(
 	// XXX: 本来 schedule はセグメント単位で更新した方がよい
 
 	for (auto &Event : Map.EventMap) {
-		TimeEventInfo Time(Event.second);
+		const TimeEventInfo Time(Event.second);
 
 		// 既に終了している番組を除外
 		if (DiscardEndedEvents

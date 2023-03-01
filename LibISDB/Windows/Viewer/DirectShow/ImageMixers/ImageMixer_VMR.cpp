@@ -100,7 +100,7 @@ bool ImageMixer_VMR::SetText(LPCTSTR pszText, int x, int y, HFONT hfont, COLORRE
 	hfontOld = static_cast<HFONT>(::SelectObject(m_hdc, hfont));
 	OldTextColor = ::SetTextColor(m_hdc, Color);
 	OldBkColor = ::SetBkColor(m_hdc, TransColor);
-	int OldBkMode = ::SetBkMode(m_hdc, OPAQUE);
+	const int OldBkMode = ::SetBkMode(m_hdc, OPAQUE);
 	::DrawText(m_hdc, pszText, -1, &rc, DT_LEFT | DT_TOP | DT_NOPREFIX);
 	::SetBkMode(m_hdc, OldBkMode);
 	::SetBkColor(m_hdc, OldBkColor);

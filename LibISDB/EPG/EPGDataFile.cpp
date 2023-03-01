@@ -488,7 +488,7 @@ bool EPGDataFile::Load()
 				}
 			}
 		} while (ChunkHeader.Tag != EPGData::Tag::End);
-	} catch (Exception Code) {
+	} catch (const Exception Code) {
 		ExceptionLog(Code);
 		return false;
 	} catch (std::bad_alloc) {
@@ -527,7 +527,7 @@ bool EPGDataFile::LoadHeader()
 		return false;
 
 	FileStream File;
-	FileStream::OpenFlag FileOpenFlags = FileStream::OpenFlag::Read | FileStream::OpenFlag::ShareRead;
+	const FileStream::OpenFlag FileOpenFlags = FileStream::OpenFlag::Read | FileStream::OpenFlag::ShareRead;
 
 	if (!File.Open(m_FileName, FileOpenFlags))
 		return false;
@@ -605,7 +605,7 @@ bool EPGDataFile::Save()
 			ValidServiceCount++;
 	}
 
-	auto ErrorCleanup = [&]() {
+	const auto ErrorCleanup = [&]() {
 		File.Close();
 
 #ifdef LIBISDB_WINDOWS
@@ -634,7 +634,7 @@ bool EPGDataFile::Save()
 
 		if (!!(m_OpenFlags & OpenFlag::Flush))
 			File.Flush();
-	} catch (Exception Code) {
+	} catch (const Exception Code) {
 		ExceptionLog(Code);
 		ErrorCleanup();
 		return false;

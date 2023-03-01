@@ -47,7 +47,7 @@ HRESULT GetFrameRate(IMFMediaType *pType, MFRatio *pRatio)
 HRESULT GetVideoDisplayArea(IMFMediaType *pType, MFVideoArea *pArea)
 {
 	HRESULT hr = S_OK;
-	bool PanScan = ::MFGetAttributeUINT32(pType, MF_MT_PAN_SCAN_ENABLED, FALSE) != FALSE;
+	const bool PanScan = ::MFGetAttributeUINT32(pType, MF_MT_PAN_SCAN_ENABLED, FALSE) != FALSE;
 
 	if (PanScan) {
 		hr = pType->GetBlob(MF_MT_PAN_SCAN_APERTURE, reinterpret_cast<UINT8 *>(pArea), sizeof(MFVideoArea), nullptr);

@@ -152,7 +152,7 @@ namespace LibISDB::DirectShow
 			}
 
 			if (!m_Type) {
-				HRESULT hr = CreateEmptyType();
+				const HRESULT hr = CreateEmptyType();
 				if (FAILED(hr)) {
 					return hr;
 				}
@@ -200,7 +200,7 @@ namespace LibISDB::DirectShow
 
 			GUID guidSubType = GUID_NULL;
 
-			HRESULT hr = GetSubType(&guidSubType);
+			const HRESULT hr = GetSubType(&guidSubType);
 			if (SUCCEEDED(hr)) {
 				*pFourCC = guidSubType.Data1;
 			}
@@ -614,7 +614,7 @@ namespace LibISDB::DirectShow
 		{
 			MFRatio PAR = {0, 0};
 
-			HRESULT hr = ::MFGetAttributeRatio(GetMediaType(), MF_MT_PIXEL_ASPECT_RATIO, (UINT32*)&PAR.Numerator, (UINT32*)&PAR.Denominator);
+			const HRESULT hr = ::MFGetAttributeRatio(GetMediaType(), MF_MT_PIXEL_ASPECT_RATIO, (UINT32*)&PAR.Numerator, (UINT32*)&PAR.Denominator);
 			if (FAILED(hr)) {
 				PAR.Numerator = 1;
 				PAR.Denominator = 1;

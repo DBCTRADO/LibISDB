@@ -156,7 +156,7 @@ size_t DataBuffer::AddData(const void *pData, size_t DataSize)
 		if (LIBISDB_TRACE_ERROR_IF(DataSize > std::numeric_limits<size_t>::max() - m_DataSize))
 			return m_DataSize;
 
-		size_t NewSize = m_DataSize + DataSize;
+		const size_t NewSize = m_DataSize + DataSize;
 		if (AllocateBuffer(NewSize) < NewSize)
 			return m_DataSize;
 

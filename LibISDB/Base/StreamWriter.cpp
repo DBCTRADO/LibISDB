@@ -99,7 +99,7 @@ size_t FileStreamWriter::Write(const void *pBuffer, size_t Size)
 		return 0;
 	}
 
-	size_t Write = m_File->Write(pBuffer, Size);
+	const size_t Write = m_File->Write(pBuffer, Size);
 
 	m_WriteSize += Write;
 

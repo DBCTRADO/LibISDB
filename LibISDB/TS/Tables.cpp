@@ -632,7 +632,7 @@ bool NITTable::OnTableUpdate(const PSISection *pCurSection, const PSISection *pO
 	m_NetworkDescriptorBlock.ParseBlock(&pData[Pos], DescriptorLength);
 	Pos += DescriptorLength;
 
-	uint16_t StreamLoopLength = Load16(&pData[Pos]) & 0x0FFF;
+	const uint16_t StreamLoopLength = Load16(&pData[Pos]) & 0x0FFF;
 	Pos += 2;
 	if (Pos + StreamLoopLength > DataSize)
 		return false;
@@ -897,8 +897,8 @@ unsigned long long EITMultiTable::GetSectionTableUniqueID(const PSISection *pSec
 		return pSection->GetTableIDExtension();
 
 	const uint8_t *pData = pSection->GetPayloadData();
-	uint16_t TransportStreamID = Load16(&pData[0]);
-	uint16_t NetworkID         = Load16(&pData[2]);
+	const uint16_t TransportStreamID = Load16(&pData[0]);
+	const uint16_t NetworkID         = Load16(&pData[2]);
 
 	return MakeTableUniqueID(NetworkID, TransportStreamID, pSection->GetTableIDExtension());
 }

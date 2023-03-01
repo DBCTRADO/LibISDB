@@ -63,7 +63,7 @@ HRESULT SamplePool::GetSample(IMFSample **ppSample)
 
 	IMFSample *pSample = nullptr;
 
-	HRESULT hr = m_VideoSampleQueue.RemoveFront(&pSample);
+	const HRESULT hr = m_VideoSampleQueue.RemoveFront(&pSample);
 
 	if (SUCCEEDED(hr)) {
 		m_PendingCount++;
@@ -85,7 +85,7 @@ HRESULT SamplePool::ReturnSample(IMFSample *pSample)
 		return MF_E_NOT_INITIALIZED;
 	}
 
-	HRESULT hr = m_VideoSampleQueue.InsertBack(pSample);
+	const HRESULT hr = m_VideoSampleQueue.InsertBack(pSample);
 
 	if (SUCCEEDED(hr)) {
 		m_PendingCount--;

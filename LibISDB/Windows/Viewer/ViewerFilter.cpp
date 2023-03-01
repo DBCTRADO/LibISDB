@@ -1111,7 +1111,7 @@ bool ViewerFilter::AdjustVideoPosition()
 				int NewDestWidth = ::MulDiv(m_VideoInfo.OriginalWidth, DestWidth, rcSrc.right - rcSrc.left);
 				if (NewDestWidth > WindowWidth)
 					NewDestWidth = WindowWidth;
-				int NewSrcWidth = ::MulDiv(rcSrc.right - rcSrc.left, NewDestWidth, DestWidth);
+				const int NewSrcWidth = ::MulDiv(rcSrc.right - rcSrc.left, NewDestWidth, DestWidth);
 				rcSrc.left = (m_VideoInfo.OriginalWidth - NewSrcWidth) / 2;
 				rcSrc.right = rcSrc.left + NewSrcWidth;
 				LIBISDB_TRACE(
@@ -1361,7 +1361,7 @@ bool ViewerFilter::GetEffectiveAspectRatio(ReturnArg<int> AspectX, ReturnArg<int
 			return false;
 		X = X * 3 * m_VideoInfo.OriginalWidth / m_VideoInfo.DisplayWidth;
 		Y = Y * 3 * m_VideoInfo.OriginalHeight / m_VideoInfo.DisplayHeight;
-		int d = std::gcd(X, Y);
+		const int d = std::gcd(X, Y);
 		if (d != 0) {
 			X /= d;
 			Y /= d;

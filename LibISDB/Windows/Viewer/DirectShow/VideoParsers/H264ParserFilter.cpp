@@ -173,7 +173,7 @@ HRESULT H264ParserFilter::DecideBufferSize(IMemAllocator * pAllocator, ALLOCATOR
 
 	// アロケータプロパティを設定しなおす
 	ALLOCATOR_PROPERTIES Actual;
-	HRESULT hr = pAllocator->SetProperties(pprop, &Actual);
+	const HRESULT hr = pAllocator->SetProperties(pprop, &Actual);
 	if (FAILED(hr))
 		return hr;
 
@@ -221,7 +221,7 @@ HRESULT H264ParserFilter::StopStreaming()
 
 HRESULT H264ParserFilter::BeginFlush()
 {
-	HRESULT hr = CTransformFilter::BeginFlush();
+	const HRESULT hr = CTransformFilter::BeginFlush();
 
 	CAutoLock Lock(&m_ParserLock);
 
@@ -239,7 +239,7 @@ HRESULT H264ParserFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
 	HRESULT hr = pIn->GetPointer(&pInData);
 	if (FAILED(hr))
 		return hr;
-	LONG InDataSize = pIn->GetActualDataLength();
+	const LONG InDataSize = pIn->GetActualDataLength();
 
 	// 出力データポインタを取得する
 	BYTE *pOutData = nullptr;
@@ -288,7 +288,7 @@ HRESULT H264ParserFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
 					if (m_PrevTime < 0) {
 						bReset = true;
 					} else {
-						LONGLONG Diff = (m_PrevTime + CalcFrameTime(m_SampleCount, m_Adjust1Seg)) - StartTime;
+						const LONGLONG Diff = (m_PrevTime + CalcFrameTime(m_SampleCount, m_Adjust1Seg)) - StartTime;
 						if (std::llabs(Diff) > MAX_SAMPLE_TIME_JITTER) {
 							bReset = true;
 							LIBISDB_TRACE(
@@ -473,8 +473,8 @@ void H264ParserFilter::OnAccessUnit(const H264Parser *pParser, const H264AccessU
 				m_SampleQueue.push_back(pSampleData);
 			} else {
 				if (m_PrevTime >= 0) {
-					REFERENCE_TIME StartTime = m_PrevTime + CalcFrameTime(m_SampleCount, m_Adjust1Seg);
-					REFERENCE_TIME EndTime = m_PrevTime + CalcFrameTime(m_SampleCount + 1, m_Adjust1Seg);
+					const REFERENCE_TIME StartTime = m_PrevTime + CalcFrameTime(m_SampleCount, m_Adjust1Seg);
+					const REFERENCE_TIME EndTime = m_PrevTime + CalcFrameTime(m_SampleCount + 1, m_Adjust1Seg);
 					pSampleData->SetTime(StartTime, EndTime);
 				}
 				m_OutSampleQueue.push_back(pSampleData);

@@ -323,7 +323,7 @@ FileStreamPOSIX::SizeType FileStreamPOSIX::GetSize()
 		return 0;
 	}
 
-	off64_t Size = filelength64(m_File);
+	const off64_t Size = filelength64(m_File);
 	if (Size < 0) {
 		return 0;
 	}

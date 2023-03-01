@@ -132,7 +132,7 @@ int ServiceListDescriptor::GetServiceIndexByID(uint16_t ServiceID) const
 
 uint8_t ServiceListDescriptor::GetServiceTypeByID(uint16_t ServiceID) const
 {
-	int Index = GetServiceIndexByID(ServiceID);
+	const int Index = GetServiceIndexByID(ServiceID);
 	if (Index >= 0)
 		return m_ServiceList[Index].ServiceType;
 	return SERVICE_TYPE_INVALID;

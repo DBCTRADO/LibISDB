@@ -86,7 +86,7 @@ bool FilterGraph::Pause()
 		} else {
 			for (int i = 0; i < 20; i++) {
 				OAFilterState fs;
-				HRESULT hr = m_MediaControl->GetState(100, &fs);
+				const HRESULT hr = m_MediaControl->GetState(100, &fs);
 
 				if ((hr == S_OK || hr == VFW_S_CANT_CUE) && (fs == State_Paused)) {
 					Result = true;

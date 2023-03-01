@@ -110,7 +110,7 @@ STDMETHODIMP_(ULONG) VideoRenderer_VMR7Renderless::AddRef()
 
 STDMETHODIMP_(ULONG) VideoRenderer_VMR7Renderless::Release()
 {
-	LONG Result = ::InterlockedDecrement(&m_RefCount);
+	const LONG Result = ::InterlockedDecrement(&m_RefCount);
 	if (Result == 0)
 		delete this;
 	return Result;
@@ -169,7 +169,7 @@ static HRESULT WINAPI DDSurfEnumFunc(LPDIRECTDRAWSURFACE7 pdds, DDSURFACEDESC2 *
 	DDSURFACEDESC2 ddsd = {};
 
 	ddsd.dwSize = sizeof(ddsd);
-	HRESULT hr = pdds->GetSurfaceDesc(&ddsd);
+	const HRESULT hr = pdds->GetSurfaceDesc(&ddsd);
 	if (SUCCEEDED(hr)) {
 		if (ddsd.ddsCaps.dwCaps & DDSCAPS_PRIMARYSURFACE) {
 			*ppdds = pdds;

@@ -504,7 +504,7 @@ bool HasPropertyPage(IBaseFilter *pFilter)
 
 	if (pFilter != nullptr) {
 		ISpecifyPropertyPages *pProp;
-		HRESULT hr = pFilter->QueryInterface(IID_PPV_ARGS(&pProp));
+		const HRESULT hr = pFilter->QueryInterface(IID_PPV_ARGS(&pProp));
 		if (SUCCEEDED(hr)) {
 			CAUUID caGUID = {0, nullptr};
 

@@ -277,7 +277,7 @@ bool AC3Decoder::DecodeFrame(const uint8_t *pData, size_t *pDataSize, ReturnArg<
 
 	if (m_FramePos < 7) {
 		// a52_syncinfo に7バイト必要
-		int Remain = std::min(static_cast<int>(DataSize - Pos), 7 - m_FramePos);
+		const int Remain = std::min(static_cast<int>(DataSize - Pos), 7 - m_FramePos);
 		std::memcpy(&m_FrameBuffer[m_FramePos], &pData[Pos], Remain);
 		m_FramePos += Remain;
 		if (m_FramePos < 7)
@@ -312,7 +312,7 @@ bool AC3Decoder::DecodeFrame(const uint8_t *pData, size_t *pDataSize, ReturnArg<
 		}
 	}
 
-	int Remain = std::min(static_cast<int>(DataSize - Pos), m_FrameLength - m_FramePos);
+	const int Remain = std::min(static_cast<int>(DataSize - Pos), m_FrameLength - m_FramePos);
 	std::memcpy(&m_FrameBuffer[m_FramePos], &pData[Pos], Remain);
 	m_FramePos += Remain;
 	if (m_FramePos < m_FrameLength)

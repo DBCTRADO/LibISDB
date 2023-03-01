@@ -141,7 +141,7 @@ size_t StringVFormatArgs(
 {
 	if (LIBISDB_TRACE_ERROR_IF(pOutString == nullptr || MaxOutLength < 1))
 		return 0;
-	StringBufferOutputIterator<char> it(pOutString, MaxOutLength - 1);
+	const StringBufferOutputIterator<char> it(pOutString, MaxOutLength - 1);
 	auto itEnd = std::vformat_to(it, Format, Args);
 	*itEnd.Current() = 0;
 	return itEnd.Current() - pOutString;
@@ -153,7 +153,7 @@ size_t StringVFormatArgs(
 {
 	if (LIBISDB_TRACE_ERROR_IF(pOutString == nullptr || MaxOutLength < 1))
 		return 0;
-	StringBufferOutputIterator<wchar_t> it(pOutString, MaxOutLength - 1);
+	const StringBufferOutputIterator<wchar_t> it(pOutString, MaxOutLength - 1);
 	auto itEnd = std::vformat_to(it, Format, Args);
 	*itEnd.Current() = 0;
 	return itEnd.Current() - pOutString;
@@ -202,7 +202,7 @@ size_t StringVFormatArgs(
 {
 	if (LIBISDB_TRACE_ERROR_IF(pOutString == nullptr || MaxOutLength < 1))
 		return 0;
-	StringBufferOutputIterator<char> it(pOutString, MaxOutLength - 1);
+	const StringBufferOutputIterator<char> it(pOutString, MaxOutLength - 1);
 	auto itEnd = std::vformat_to(it, Locale, Format, Args);
 	*itEnd.Current() = 0;
 	return itEnd.Current() - pOutString;
@@ -215,7 +215,7 @@ size_t StringVFormatArgs(
 {
 	if (LIBISDB_TRACE_ERROR_IF(pOutString == nullptr || MaxOutLength < 1))
 		return 0;
-	StringBufferOutputIterator<wchar_t> it(pOutString, MaxOutLength - 1);
+	const StringBufferOutputIterator<wchar_t> it(pOutString, MaxOutLength - 1);
 	auto itEnd = std::vformat_to(it, Locale, Format, Args);
 	*itEnd.Current() = 0;
 	return itEnd.Current() - pOutString;

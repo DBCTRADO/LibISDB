@@ -50,7 +50,7 @@ COMMemoryPointer<> VideoRenderer_madVR::GetCurrentImage()
 
 		if (SUCCEEDED(m_Renderer.QueryInterface(&FrameGrabber))) {
 			LPVOID pDIB = nullptr;
-			HRESULT hr = FrameGrabber->GrabFrame(
+			const HRESULT hr = FrameGrabber->GrabFrame(
 				ZOOM_100_PERCENT,
 				0,
 				CHROMA_UPSCALING_USER_SELECTED,

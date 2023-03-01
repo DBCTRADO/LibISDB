@@ -210,7 +210,7 @@ STDMETHODIMP_(ULONG) VMR9Allocator::AddRef()
 
 STDMETHODIMP_(ULONG) VMR9Allocator::Release()
 {
-	LONG Result = ::InterlockedDecrement(&m_RefCount);
+	const LONG Result = ::InterlockedDecrement(&m_RefCount);
 	if (Result == 0)
 		delete this;
 	return Result;
@@ -888,7 +888,7 @@ COMMemoryPointer<> VideoRenderer_VMR9Renderless::GetCurrentImage()
 							pSurface->UnlockRect();
 #endif
 
-							size_t BitsSize = (desc.Width * 3 + 3) / 4 * 4 * Height;
+							const size_t BitsSize = (desc.Width * 3 + 3) / 4 * 4 * Height;
 							pDib = static_cast<BYTE *>(::CoTaskMemAlloc(sizeof(BITMAPINFOHEADER) + BitsSize));
 							if (pDib != nullptr) {
 								::CopyMemory(pDib, &bmi.bmiHeader, sizeof(BITMAPINFOHEADER));

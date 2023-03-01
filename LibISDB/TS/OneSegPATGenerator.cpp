@@ -159,7 +159,7 @@ bool OneSegPATGenerator::GetPATPacket(TSPacket *pPacket)
 	std::memset(&pData[Pos], 0xFF, TS_PACKET_SIZE - Pos);
 
 #ifdef LIBISDB_DEBUG
-	TSPacket::ParseResult Result = pPacket->ParsePacket();
+	const TSPacket::ParseResult Result = pPacket->ParsePacket();
 	LIBISDB_ASSERT(Result == TSPacket::ParseResult::OK);
 #else
 	pPacket->ParsePacket();

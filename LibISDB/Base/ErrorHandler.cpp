@@ -121,7 +121,7 @@ CharType * ErrorString::DuplicateString(const CharType *pSrc) noexcept
 	if (pSrc == nullptr)
 		return nullptr;
 
-	size_t Size = (StringLength(pSrc) + 1) * sizeof(CharType);
+	const size_t Size = (StringLength(pSrc) + 1) * sizeof(CharType);
 	CharType *pNewString = static_cast<CharType *>(std::malloc(Size));
 	if (pNewString == nullptr)
 		return nullptr;
