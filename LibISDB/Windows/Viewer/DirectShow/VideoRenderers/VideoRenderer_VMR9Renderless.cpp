@@ -593,7 +593,7 @@ bool VMR9Allocator::WaitCapture(DWORD TimeOut)
 
 bool VMR9Allocator::GetCaptureSurface(IDirect3DSurface9 **ppSurface)
 {
-	return m_CaptureSurface.QueryInterface(ppSurface);
+	return SUCCEEDED(m_CaptureSurface.QueryInterface(ppSurface));
 }
 
 
