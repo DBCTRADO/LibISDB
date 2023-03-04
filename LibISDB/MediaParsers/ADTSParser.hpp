@@ -112,7 +112,6 @@ namespace LibISDB
 		bool SyncFrame(uint8_t Data);
 
 		bool m_IsStoring;
-		uint16_t m_StoreCRC;
 	};
 
 }	// namespace LibISDB
