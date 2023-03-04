@@ -39,7 +39,7 @@ namespace LibISDB
 		: public DataBuffer
 	{
 	public:
-		ADTSFrame();
+		ADTSFrame() noexcept;
 
 		bool ParseHeader();
 		void Reset();

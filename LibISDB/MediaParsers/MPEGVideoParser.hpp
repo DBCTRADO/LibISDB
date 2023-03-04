@@ -39,11 +39,11 @@ namespace LibISDB
 		: public PESParser::PacketHandler
 	{
 	public:
-		MPEGVideoParserBase();
+		MPEGVideoParserBase() noexcept;
 
 		bool StorePacket(const PESPacket *pPacket);
 		virtual bool StoreES(const uint8_t *pData, size_t Size) = 0;
-		virtual void Reset();
+		virtual void Reset() noexcept;
 
 	protected:
 	// PESParser::PacketHandler

@@ -39,10 +39,10 @@ namespace LibISDB
 		: public DataBuffer
 	{
 	public:
-		MPEG2Sequence();
+		MPEG2Sequence() noexcept;
 
 		bool ParseHeader();
-		void Reset();
+		void Reset() noexcept;
 
 		uint16_t GetHorizontalSize() const noexcept { return m_Header.HorizontalSize; }
 		uint16_t GetVerticalSize() const noexcept { return m_Header.VerticalSize; }
@@ -120,7 +120,7 @@ namespace LibISDB
 
 	// MPEGVideoParserBase
 		bool StoreES(const uint8_t *pData, size_t Size) override;
-		void Reset() override;
+		void Reset() noexcept override;
 
 	protected:
 	// MPEGVideoParserBase

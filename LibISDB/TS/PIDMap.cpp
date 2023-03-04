@@ -33,7 +33,7 @@ namespace LibISDB
 {
 
 
-PIDMapManager::PIDMapManager()
+PIDMapManager::PIDMapManager() noexcept
 	: m_MapCount(0)
 {
 	m_PIDMap.fill(nullptr);

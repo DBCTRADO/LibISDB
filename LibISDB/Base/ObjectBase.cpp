@@ -33,7 +33,7 @@ namespace LibISDB
 {
 
 
-ObjectBase::ObjectBase()
+ObjectBase::ObjectBase() noexcept
 	: m_pLogger(nullptr)
 {
 }

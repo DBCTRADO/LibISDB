@@ -80,10 +80,10 @@ namespace LibISDB
 	constexpr bool IsSSE2Available() { return true; }
 	constexpr bool IsSSE2Enabled() { return true; }
 #else
-	bool IsSSE2Available();
-	bool IsSSE2Enabled();
+	bool IsSSE2Available() noexcept;
+	bool IsSSE2Enabled() noexcept;
 #endif
-	void SetSSE2Enabled(bool Enabled);
+	void SetSSE2Enabled(bool Enabled) noexcept;
 #endif
 
 }	// namespace LibISDB

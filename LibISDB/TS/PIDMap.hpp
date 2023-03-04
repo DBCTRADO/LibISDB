@@ -51,7 +51,7 @@ namespace LibISDB
 	class PIDMapManager
 	{
 	public:
-		PIDMapManager();
+		PIDMapManager() noexcept;
 		~PIDMapManager();
 
 		bool StorePacket(const TSPacket *pPacket);

@@ -59,8 +59,8 @@ namespace LibISDB
 		virtual bool StartStreaming();
 		virtual bool StopStreaming();
 
-		virtual int GetInputCount() const { return 0; }
-		virtual int GetOutputCount() const { return 0; }
+		virtual int GetInputCount() const noexcept { return 0; }
+		virtual int GetOutputCount() const noexcept { return 0; }
 
 		virtual FilterSink * GetInputSink(int Index = 0) { return nullptr; }
 
@@ -99,8 +99,8 @@ namespace LibISDB
 		: public FilterBase
 	{
 	public:
-		int GetInputCount() const override { return 0; }
-		int GetOutputCount() const override { return 1; }
+		int GetInputCount() const noexcept override { return 0; }
+		int GetOutputCount() const noexcept override { return 1; }
 
 		FilterSink * GetInputSink(int Index = 0) override { return nullptr; }
 
@@ -120,7 +120,7 @@ namespace LibISDB
 	{
 	public:
 	// FilterBase
-		int GetInputCount() const override { return 1; }
+		int GetInputCount() const noexcept override { return 1; }
 
 		FilterSink * GetInputSink(int Index = 0) override;
 
@@ -138,7 +138,7 @@ namespace LibISDB
 	{
 	public:
 	// FilterBase
-		int GetInputCount() const override { return 1; }
+		int GetInputCount() const noexcept override { return 1; }
 
 		FilterSink * GetInputSink(int Index = 0) override;
 
@@ -155,8 +155,8 @@ namespace LibISDB
 		, public FilterSink
 	{
 	public:
-		int GetInputCount() const override { return 1; }
-		int GetOutputCount() const override { return OutputCount; }
+		int GetInputCount() const noexcept override { return 1; }
+		int GetOutputCount() const noexcept override { return OutputCount; }
 
 		FilterSink * GetInputSink(int Index = 0) override
 		{

@@ -34,7 +34,7 @@ namespace LibISDB
 	template<typename T> class ReturnArg
 	{
 	public:
-		ReturnArg(T *ptr) : m_ptr(ptr) {}
+		ReturnArg(T *ptr) noexcept : m_ptr(ptr) {}
 
 		ReturnArg & operator = (const T &rhs)
 		{
@@ -54,11 +54,11 @@ namespace LibISDB
 
 		T & operator * () { return *m_ptr; }
 		const T & operator * () const { return *m_ptr; }
-		T * operator -> () { return m_ptr; }
-		const T * operator -> () const { return m_ptr; }
+		T * operator -> () noexcept { return m_ptr; }
+		const T * operator -> () const noexcept { return m_ptr; }
 
 	protected:
-		ReturnArg() : m_ptr(nullptr) {}
+		ReturnArg() noexcept : m_ptr(nullptr) {}
 
 		T *m_ptr;
 	};
@@ -67,8 +67,8 @@ namespace LibISDB
 		: public ReturnArg<T>
 	{
 	public:
-		OptionalReturnArg() {}
-		OptionalReturnArg(std::nullopt_t) {}
+		OptionalReturnArg() = default;
+		OptionalReturnArg(std::nullopt_t) noexcept {}
 		using ReturnArg<T>::ReturnArg;
 		using ReturnArg<T>::operator =;
 	};

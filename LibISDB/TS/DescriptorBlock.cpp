@@ -40,7 +40,7 @@ DescriptorBlock::DescriptorBlock(const DescriptorBlock &Src)
 }
 
 
-DescriptorBlock::DescriptorBlock(DescriptorBlock &&Src)
+DescriptorBlock::DescriptorBlock(DescriptorBlock &&Src) noexcept
 {
 	*this = std::move(Src);
 }
@@ -61,7 +61,7 @@ DescriptorBlock & DescriptorBlock::operator = (const DescriptorBlock &Src)
 }
 
 
-DescriptorBlock & DescriptorBlock::operator = (DescriptorBlock &&Src)
+DescriptorBlock & DescriptorBlock::operator = (DescriptorBlock &&Src) noexcept
 {
 	if (&Src != this) {
 		Reset();
@@ -105,7 +105,7 @@ const DescriptorBase * DescriptorBlock::ParseBlock(const uint8_t *pData, size_t 
 }
 
 
-void DescriptorBlock::Reset()
+void DescriptorBlock::Reset() noexcept
 {
 	m_DescriptorList.clear();
 }

@@ -369,19 +369,19 @@ bool StreamSelector::MakePAT(const TSPacket *pSrcPacket, TSPacket *pDstPacket)
 
 
 
-StreamSelector::StreamTypeTable::StreamTypeTable()
+StreamSelector::StreamTypeTable::StreamTypeTable() noexcept
 {
 	Set();
 }
 
 
-StreamSelector::StreamTypeTable::StreamTypeTable(StreamFlag Flags)
+StreamSelector::StreamTypeTable::StreamTypeTable(StreamFlag Flags) noexcept
 {
 	FromStreamFlags(Flags);
 }
 
 
-void StreamSelector::StreamTypeTable::FromStreamFlags(StreamFlag Flags)
+void StreamSelector::StreamTypeTable::FromStreamFlags(StreamFlag Flags) noexcept
 {
 	static const uint8_t StreamTypeList[] = {
 		STREAM_TYPE_MPEG1_VIDEO,

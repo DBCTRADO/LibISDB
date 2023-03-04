@@ -33,7 +33,7 @@ namespace LibISDB
 {
 
 
-StreamingThread::StreamingThread()
+StreamingThread::StreamingThread() noexcept
 	: m_StreamingThreadEndSignal(false)
 	, m_StreamingThreadTimeout(10 * 1000)
 	, m_StreamingThreadIdleWait(10)

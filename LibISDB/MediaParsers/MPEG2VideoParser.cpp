@@ -34,7 +34,7 @@ namespace LibISDB
 {
 
 
-MPEG2Sequence::MPEG2Sequence()
+MPEG2Sequence::MPEG2Sequence() noexcept
 	: m_Header()
 {
 }
@@ -147,7 +147,7 @@ bool MPEG2Sequence::ParseHeader()
 }
 
 
-void MPEG2Sequence::Reset()
+void MPEG2Sequence::Reset() noexcept
 {
 	ClearSize();
 
@@ -221,7 +221,7 @@ bool MPEG2VideoParser::StoreES(const uint8_t *pData, size_t Size)
 }
 
 
-void MPEG2VideoParser::Reset()
+void MPEG2VideoParser::Reset() noexcept
 {
 	MPEGVideoParserBase::Reset();
 

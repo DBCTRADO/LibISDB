@@ -41,7 +41,7 @@ namespace LibISDB
 		: protected Thread
 	{
 	public:
-		StreamingThread();
+		StreamingThread() noexcept;
 		~StreamingThread();
 
 		bool StartStreamingThread();

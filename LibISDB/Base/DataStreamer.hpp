@@ -61,7 +61,7 @@ namespace LibISDB
 			void Reset() noexcept { *this = Statistics(); }
 		};
 
-		DataStreamer();
+		DataStreamer() noexcept;
 		~DataStreamer();
 
 	// ObjectBase

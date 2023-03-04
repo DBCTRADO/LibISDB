@@ -57,7 +57,7 @@ namespace LibISDB
 		PESPacket(size_t BufferSize);
 
 		bool ParseHeader();
-		void Reset();
+		void Reset() noexcept;
 
 		uint8_t GetStreamID() const noexcept { return m_Header.StreamID; }
 		uint16_t GetPacketLength() const noexcept { return m_Header.PacketLength; }
@@ -114,10 +114,10 @@ namespace LibISDB
 			virtual void OnPESPacket(const PESParser *pParser, const PESPacket *pPacket) = 0;
 		};
 
-		PESParser(PacketHandler *pPacketHandler);
+		PESParser(PacketHandler *pPacketHandler) noexcept;
 
 		bool StorePacket(const TSPacket *pPacket);
-		void Reset();
+		void Reset() noexcept;
 
 	protected:
 		virtual void OnPESPacket(const PESPacket *pPacket) const;

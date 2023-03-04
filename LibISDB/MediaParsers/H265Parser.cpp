@@ -35,7 +35,7 @@ namespace LibISDB
 {
 
 
-H265AccessUnit::H265AccessUnit()
+H265AccessUnit::H265AccessUnit() noexcept
 {
 	Reset();
 }
@@ -314,7 +314,7 @@ bool H265AccessUnit::ParseHeader()
 }
 
 
-void H265AccessUnit::Reset()
+void H265AccessUnit::Reset() noexcept
 {
 	m_FoundSPS = false;
 	m_Header = Header();
@@ -433,7 +433,7 @@ bool H265Parser::StoreES(const uint8_t *pData, size_t Size)
 }
 
 
-void H265Parser::Reset()
+void H265Parser::Reset() noexcept
 {
 	MPEGVideoParserBase::Reset();
 

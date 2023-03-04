@@ -58,7 +58,7 @@ enum {
 };
 
 
-static unsigned int GetSupportedInstructions()
+static unsigned int GetSupportedInstructions() noexcept
 {
 	int CPUInfo[4];
 
@@ -94,7 +94,7 @@ static unsigned int GetSupportedInstructions()
 class CPUIdentify
 {
 public:
-	CPUIdentify()
+	CPUIdentify() noexcept
 	{
 		m_Available = GetSupportedInstructions();
 		m_Enabled = m_Available;
@@ -117,17 +117,17 @@ public:
 			(m_Available & INSTRUCTION_SSE4_2) ? LIBISDB_STR("avail") : LIBISDB_STR("n/a"));
 	}
 
-	bool IsAvailable(unsigned int Instruction) const
+	bool IsAvailable(unsigned int Instruction) const noexcept
 	{
 		return (m_Available & Instruction) == Instruction;
 	}
 
-	bool IsEnabled(unsigned int Instruction) const
+	bool IsEnabled(unsigned int Instruction) const noexcept
 	{
 		return (m_Enabled & Instruction) == Instruction;
 	}
 
-	void SetEnabled(unsigned int Instruction, bool Enabled)
+	void SetEnabled(unsigned int Instruction, bool Enabled) noexcept
 	{
 		if (Enabled)
 			m_Enabled |= (Instruction & m_Available);
@@ -155,20 +155,20 @@ static CPUIdentify g_CPUIdentify;
 
 
 #ifndef LIBISDB_NATIVE_SSE2
-bool IsSSE2Available()
+bool IsSSE2Available() noexcept
 {
 	return g_CPUIdentify.IsAvailable(INSTRUCTION_SSE2);
 }
 
 
-bool IsSSE2Enabled()
+bool IsSSE2Enabled() noexcept
 {
 	return g_CPUIdentify.IsEnabled(INSTRUCTION_SSE2);
 }
 #endif
 
 
-void SetSSE2Enabled(bool Enabled)
+void SetSSE2Enabled(bool Enabled) noexcept
 {
 	g_CPUIdentify.SetEnabled(INSTRUCTION_SSE2, Enabled);
 }

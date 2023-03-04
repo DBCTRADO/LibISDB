@@ -46,7 +46,7 @@ void PSITableBase::Reset()
 }
 
 
-unsigned long PSITableBase::GetCRCErrorCount() const
+unsigned long PSITableBase::GetCRCErrorCount() const noexcept
 {
 	return m_PSISectionParser.GetCRCErrorCount();
 }

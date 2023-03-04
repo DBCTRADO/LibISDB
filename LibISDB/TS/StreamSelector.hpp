@@ -69,17 +69,17 @@ namespace LibISDB
 		class StreamTypeTable
 		{
 		public:
-			StreamTypeTable();
-			StreamTypeTable(StreamFlag Flags);
+			StreamTypeTable() noexcept;
+			StreamTypeTable(StreamFlag Flags) noexcept;
 
 			bool operator [] (size_t Index) const { return m_Bitset[Index]; }
 
-			void Set() { m_Bitset.set(); }
+			void Set() noexcept { m_Bitset.set(); }
 			void Set(size_t Pos, bool Value = true) { m_Bitset.set(Pos, Value); }
-			void Reset() { m_Bitset.reset(); }
+			void Reset() noexcept { m_Bitset.reset(); }
 			void Reset(size_t Pos) { m_Bitset.reset(Pos); }
 
-			void FromStreamFlags(StreamFlag Flags);
+			void FromStreamFlags(StreamFlag Flags) noexcept;
 
 		private:
 			std::bitset<256> m_Bitset;

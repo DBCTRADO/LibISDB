@@ -40,7 +40,7 @@ namespace LibISDB
 {
 
 
-FileStreamWindows::FileStreamWindows()
+FileStreamWindows::FileStreamWindows() noexcept
 	: m_hFile(INVALID_HANDLE_VALUE)
 
 	, m_PreallocationUnit(0)

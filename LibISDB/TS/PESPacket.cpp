@@ -130,7 +130,7 @@ bool PESPacket::ParseHeader()
 }
 
 
-void PESPacket::Reset()
+void PESPacket::Reset() noexcept
 {
 	ClearSize();
 
@@ -198,7 +198,7 @@ size_t PESPacket::GetPayloadSize() const
 
 
 
-PESParser::PESParser(PacketHandler *pPacketHandler)
+PESParser::PESParser(PacketHandler *pPacketHandler) noexcept
 	: m_pPacketHandler(pPacketHandler)
 	, m_PESPacket(0x10005_z)
 	, m_IsStoring(false)
@@ -240,7 +240,7 @@ bool PESParser::StorePacket(const TSPacket *pPacket)
 }
 
 
-void PESParser::Reset()
+void PESParser::Reset() noexcept
 {
 	m_PESPacket.Reset();
 	m_IsStoring = false;

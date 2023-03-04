@@ -611,7 +611,7 @@ void StreamBuffer::Reader::Close()
 
 
 
-StreamBuffer::SequentialReader::SequentialReader()
+StreamBuffer::SequentialReader::SequentialReader() noexcept
 	: m_Pos(StreamBuffer::POS_INVALID)
 {
 }

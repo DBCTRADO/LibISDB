@@ -109,7 +109,7 @@ namespace LibISDB
 {
 
 
-FileStreamPOSIX::FileStreamPOSIX()
+FileStreamPOSIX::FileStreamPOSIX() noexcept
 	: m_File(-1)
 	, m_EOF(false)
 	, m_Closer(DefaultCloser())
@@ -117,7 +117,7 @@ FileStreamPOSIX::FileStreamPOSIX()
 }
 
 
-FileStreamPOSIX::FileStreamPOSIX(const Closer &closer)
+FileStreamPOSIX::FileStreamPOSIX(const Closer &closer) noexcept
 	: m_File(-1)
 	, m_EOF(false)
 	, m_Closer(closer)

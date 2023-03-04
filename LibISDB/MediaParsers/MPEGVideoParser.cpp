@@ -33,7 +33,7 @@ namespace LibISDB
 {
 
 
-MPEGVideoParserBase::MPEGVideoParserBase()
+MPEGVideoParserBase::MPEGVideoParserBase() noexcept
 	: m_SyncState(0xFFFFFFFF_u32)
 {
 }
@@ -48,7 +48,7 @@ bool MPEGVideoParserBase::StorePacket(const PESPacket *pPacket)
 }
 
 
-void MPEGVideoParserBase::Reset()
+void MPEGVideoParserBase::Reset() noexcept
 {
 	m_SyncState = 0xFFFFFFFF_u32;
 }

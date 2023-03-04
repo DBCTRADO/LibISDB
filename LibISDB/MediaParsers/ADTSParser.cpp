@@ -33,7 +33,7 @@ namespace LibISDB
 {
 
 
-ADTSFrame::ADTSFrame()
+ADTSFrame::ADTSFrame() noexcept
 	: m_Header()
 {
 }

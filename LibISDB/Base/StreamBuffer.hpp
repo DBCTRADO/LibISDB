@@ -69,7 +69,7 @@ namespace LibISDB
 		class SequentialReader : public Reader
 		{
 		public:
-			SequentialReader();
+			SequentialReader() noexcept;
 			~SequentialReader();
 
 			bool Open(const std::shared_ptr<StreamBuffer> &Buffer) override;

@@ -121,14 +121,14 @@ bool PSISection::ParseHeader(bool IsExtended, bool IgnoreSectionNumber)
 }
 
 
-void PSISection::Reset()
+void PSISection::Reset() noexcept
 {
 	ClearSize();
 	m_Header = PSIHeader();
 }
 
 
-const uint8_t * PSISection::GetPayloadData() const
+const uint8_t * PSISection::GetPayloadData() const noexcept
 {
 	const size_t HeaderSize = (m_Header.SectionSyntaxIndicator ? 8 : 3);
 
@@ -139,7 +139,7 @@ const uint8_t * PSISection::GetPayloadData() const
 }
 
 
-uint16_t PSISection::GetPayloadSize() const
+uint16_t PSISection::GetPayloadSize() const noexcept
 {
 	const size_t HeaderSize = (m_Header.SectionSyntaxIndicator ? 8 : 3);
 
@@ -253,7 +253,7 @@ void PSISectionParser::StorePacket(const TSPacket *pPacket)
 }
 
 
-void PSISectionParser::Reset()
+void PSISectionParser::Reset() noexcept
 {
 	m_IsPayloadStoring = false;
 	m_StoreSize = 0;
@@ -268,7 +268,7 @@ void PSISectionParser::SetPSISectionHandler(PSISectionHandler *pSectionHandler)
 }
 
 
-unsigned long PSISectionParser::GetCRCErrorCount() const
+unsigned long PSISectionParser::GetCRCErrorCount() const noexcept
 {
 	return m_CRCErrorCount;
 }

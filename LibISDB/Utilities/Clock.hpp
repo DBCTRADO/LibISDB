@@ -99,7 +99,7 @@ namespace LibISDB
 		static constexpr ClockType ClocksPerSec = 1000000_u64;
 		typedef std::chrono::microseconds DurationType;
 
-		HighPrecisionTickClock()
+		HighPrecisionTickClock() noexcept
 		{
 			if (!::QueryPerformanceFrequency(&m_Frequency))
 				m_Frequency.QuadPart = 0;

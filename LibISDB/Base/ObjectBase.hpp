@@ -40,7 +40,7 @@ namespace LibISDB
 		: public ErrorHandler
 	{
 	public:
-		ObjectBase();
+		ObjectBase() noexcept;
 		virtual ~ObjectBase() = default;
 
 		virtual const CharType * GetObjectName() const noexcept = 0;

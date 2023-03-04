@@ -43,13 +43,13 @@ namespace LibISDB
 {
 
 
-FileStreamGenericC::FileStreamGenericC()
+FileStreamGenericC::FileStreamGenericC() noexcept
 	: m_File(nullptr, DefaultCloser())
 {
 }
 
 
-FileStreamGenericC::FileStreamGenericC(const Closer &closer)
+FileStreamGenericC::FileStreamGenericC(const Closer &closer) noexcept
 	: m_File(nullptr, closer)
 {
 }

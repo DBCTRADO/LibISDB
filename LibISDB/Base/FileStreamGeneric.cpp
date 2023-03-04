@@ -34,11 +34,6 @@ namespace LibISDB
 {
 
 
-FileStreamGeneric::FileStreamGeneric()
-{
-}
-
-
 FileStreamGeneric::~FileStreamGeneric()
 {
 	Close();

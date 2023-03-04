@@ -36,13 +36,13 @@ namespace LibISDB
 {
 
 
-CADescriptor::CADescriptor()
+CADescriptor::CADescriptor() noexcept
 {
 	Reset();
 }
 
 
-void CADescriptor::Reset()
+void CADescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -71,7 +71,7 @@ bool CADescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-void NetworkNameDescriptor::Reset()
+void NetworkNameDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -106,7 +106,7 @@ bool NetworkNameDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-void ServiceListDescriptor::Reset()
+void ServiceListDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -174,13 +174,13 @@ bool ServiceListDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-SatelliteDeliverySystemDescriptor::SatelliteDeliverySystemDescriptor()
+SatelliteDeliverySystemDescriptor::SatelliteDeliverySystemDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void SatelliteDeliverySystemDescriptor::Reset()
+void SatelliteDeliverySystemDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -215,13 +215,13 @@ bool SatelliteDeliverySystemDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-CableDeliverySystemDescriptor::CableDeliverySystemDescriptor()
+CableDeliverySystemDescriptor::CableDeliverySystemDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void CableDeliverySystemDescriptor::Reset()
+void CableDeliverySystemDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -254,13 +254,13 @@ bool CableDeliverySystemDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-ServiceDescriptor::ServiceDescriptor()
+ServiceDescriptor::ServiceDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void ServiceDescriptor::Reset()
+void ServiceDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -328,13 +328,13 @@ bool ServiceDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-LinkageDescriptor::LinkageDescriptor()
+LinkageDescriptor::LinkageDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void LinkageDescriptor::Reset()
+void LinkageDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -365,13 +365,13 @@ bool LinkageDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-ShortEventDescriptor::ShortEventDescriptor()
+ShortEventDescriptor::ShortEventDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void ShortEventDescriptor::Reset()
+void ShortEventDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -439,13 +439,13 @@ bool ShortEventDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-ExtendedEventDescriptor::ExtendedEventDescriptor()
+ExtendedEventDescriptor::ExtendedEventDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void ExtendedEventDescriptor::Reset()
+void ExtendedEventDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -515,13 +515,13 @@ bool ExtendedEventDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-ComponentDescriptor::ComponentDescriptor()
+ComponentDescriptor::ComponentDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void ComponentDescriptor::Reset()
+void ComponentDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -567,13 +567,13 @@ bool ComponentDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-StreamIDDescriptor::StreamIDDescriptor()
+StreamIDDescriptor::StreamIDDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void StreamIDDescriptor::Reset()
+void StreamIDDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -596,13 +596,13 @@ bool StreamIDDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-ContentDescriptor::ContentDescriptor()
+ContentDescriptor::ContentDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void ContentDescriptor::Reset()
+void ContentDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -647,7 +647,7 @@ bool ContentDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-void LocalTimeOffsetDescriptor::Reset()
+void LocalTimeOffsetDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -702,13 +702,13 @@ bool LocalTimeOffsetDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-HierarchicalTransmissionDescriptor::HierarchicalTransmissionDescriptor()
+HierarchicalTransmissionDescriptor::HierarchicalTransmissionDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void HierarchicalTransmissionDescriptor::Reset()
+void HierarchicalTransmissionDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -733,13 +733,13 @@ bool HierarchicalTransmissionDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-DigitalCopyControlDescriptor::DigitalCopyControlDescriptor()
+DigitalCopyControlDescriptor::DigitalCopyControlDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void DigitalCopyControlDescriptor::Reset()
+void DigitalCopyControlDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -831,13 +831,13 @@ bool DigitalCopyControlDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-AudioComponentDescriptor::AudioComponentDescriptor()
+AudioComponentDescriptor::AudioComponentDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void AudioComponentDescriptor::Reset()
+void AudioComponentDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -904,13 +904,13 @@ bool AudioComponentDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-HyperLinkDescriptor::HyperLinkDescriptor()
+HyperLinkDescriptor::HyperLinkDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void HyperLinkDescriptor::Reset()
+void HyperLinkDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1015,13 +1015,13 @@ bool HyperLinkDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-TargetRegionDescriptor::TargetRegionDescriptor()
+TargetRegionDescriptor::TargetRegionDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void TargetRegionDescriptor::Reset()
+void TargetRegionDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1062,13 +1062,13 @@ bool TargetRegionDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-VideoDecodeControlDescriptor::VideoDecodeControlDescriptor()
+VideoDecodeControlDescriptor::VideoDecodeControlDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void VideoDecodeControlDescriptor::Reset()
+void VideoDecodeControlDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1097,13 +1097,13 @@ bool VideoDecodeControlDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-DownloadContentDescriptor::DownloadContentDescriptor()
+DownloadContentDescriptor::DownloadContentDescriptor() noexcept
 	: m_Info()
 {
 }
 
 
-void DownloadContentDescriptor::Reset()
+void DownloadContentDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1212,13 +1212,13 @@ bool DownloadContentDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-CAEMMTSDescriptor::CAEMMTSDescriptor()
+CAEMMTSDescriptor::CAEMMTSDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void CAEMMTSDescriptor::Reset()
+void CAEMMTSDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1247,13 +1247,13 @@ bool CAEMMTSDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-CAContractInfoDescriptor::CAContractInfoDescriptor()
+CAContractInfoDescriptor::CAContractInfoDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void CAContractInfoDescriptor::Reset()
+void CAContractInfoDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1341,13 +1341,13 @@ bool CAContractInfoDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-CAServiceDescriptor::CAServiceDescriptor()
+CAServiceDescriptor::CAServiceDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void CAServiceDescriptor::Reset()
+void CAServiceDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1394,13 +1394,13 @@ bool CAServiceDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-TSInformationDescriptor::TSInformationDescriptor()
+TSInformationDescriptor::TSInformationDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void TSInformationDescriptor::Reset()
+void TSInformationDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1480,13 +1480,13 @@ bool TSInformationDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-ExtendedBroadcasterDescriptor::ExtendedBroadcasterDescriptor()
+ExtendedBroadcasterDescriptor::ExtendedBroadcasterDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void ExtendedBroadcasterDescriptor::Reset()
+void ExtendedBroadcasterDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1547,13 +1547,13 @@ bool ExtendedBroadcasterDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-LogoTransmissionDescriptor::LogoTransmissionDescriptor()
+LogoTransmissionDescriptor::LogoTransmissionDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void LogoTransmissionDescriptor::Reset()
+void LogoTransmissionDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1613,13 +1613,13 @@ bool LogoTransmissionDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-SeriesDescriptor::SeriesDescriptor()
+SeriesDescriptor::SeriesDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void SeriesDescriptor::Reset()
+void SeriesDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1679,13 +1679,13 @@ bool SeriesDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-EventGroupDescriptor::EventGroupDescriptor()
+EventGroupDescriptor::EventGroupDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void EventGroupDescriptor::Reset()
+void EventGroupDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1753,13 +1753,13 @@ bool EventGroupDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-SIParameterDescriptor::SIParameterDescriptor()
+SIParameterDescriptor::SIParameterDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void SIParameterDescriptor::Reset()
+void SIParameterDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1911,7 +1911,7 @@ bool SIParameterDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-void BroadcasterNameDescriptor::Reset()
+void BroadcasterNameDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -1946,13 +1946,13 @@ bool BroadcasterNameDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-ComponentGroupDescriptor::ComponentGroupDescriptor()
+ComponentGroupDescriptor::ComponentGroupDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void ComponentGroupDescriptor::Reset()
+void ComponentGroupDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -2042,13 +2042,13 @@ bool ComponentGroupDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-LDTLinkageDescriptor::LDTLinkageDescriptor()
+LDTLinkageDescriptor::LDTLinkageDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void LDTLinkageDescriptor::Reset()
+void LDTLinkageDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -2104,13 +2104,13 @@ bool LDTLinkageDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-AccessControlDescriptor::AccessControlDescriptor()
+AccessControlDescriptor::AccessControlDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void AccessControlDescriptor::Reset()
+void AccessControlDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -2139,13 +2139,13 @@ bool AccessControlDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-TerrestrialDeliverySystemDescriptor::TerrestrialDeliverySystemDescriptor()
+TerrestrialDeliverySystemDescriptor::TerrestrialDeliverySystemDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void TerrestrialDeliverySystemDescriptor::Reset()
+void TerrestrialDeliverySystemDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -2194,13 +2194,13 @@ bool TerrestrialDeliverySystemDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-PartialReceptionDescriptor::PartialReceptionDescriptor()
+PartialReceptionDescriptor::PartialReceptionDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void PartialReceptionDescriptor::Reset()
+void PartialReceptionDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -2242,7 +2242,7 @@ bool PartialReceptionDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-void EmergencyInformationDescriptor::Reset()
+void EmergencyInformationDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -2305,13 +2305,13 @@ bool EmergencyInformationDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-DataComponentDescriptor::DataComponentDescriptor()
+DataComponentDescriptor::DataComponentDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void DataComponentDescriptor::Reset()
+void DataComponentDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 
@@ -2336,13 +2336,13 @@ bool DataComponentDescriptor::StoreContents(const uint8_t *pPayload)
 
 
 
-SystemManagementDescriptor::SystemManagementDescriptor()
+SystemManagementDescriptor::SystemManagementDescriptor() noexcept
 {
 	Reset();
 }
 
 
-void SystemManagementDescriptor::Reset()
+void SystemManagementDescriptor::Reset() noexcept
 {
 	DescriptorBase::Reset();
 

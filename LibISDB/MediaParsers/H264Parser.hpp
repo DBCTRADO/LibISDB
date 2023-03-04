@@ -45,10 +45,10 @@ namespace LibISDB
 			bool FixedFrameRateFlag;
 		};
 
-		H264AccessUnit();
+		H264AccessUnit() noexcept;
 
 		bool ParseHeader();
-		void Reset();
+		void Reset() noexcept;
 
 		uint16_t GetHorizontalSize() const noexcept;
 		uint16_t GetVerticalSize() const noexcept;
@@ -149,7 +149,7 @@ namespace LibISDB
 
 	// MPEGVideoParserBase
 		bool StoreES(const uint8_t *pData, size_t Size) override;
-		void Reset() override;
+		void Reset() noexcept override;
 
 	protected:
 	// MPEGVideoParserBase

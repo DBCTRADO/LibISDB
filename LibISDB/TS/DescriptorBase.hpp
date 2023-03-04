@@ -47,7 +47,7 @@ namespace LibISDB
 		uint8_t GetTag() const noexcept { return m_Tag; }
 		uint8_t GetLength() const noexcept { return m_Length; }
 
-		virtual void Reset();
+		virtual void Reset() noexcept;
 
 	protected:
 		virtual bool StoreContents(const uint8_t *pPayload);

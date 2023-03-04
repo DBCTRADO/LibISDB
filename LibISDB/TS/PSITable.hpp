@@ -66,7 +66,7 @@ namespace LibISDB
 
 		virtual void Reset();
 
-		unsigned long GetCRCErrorCount() const;
+		unsigned long GetCRCErrorCount() const noexcept;
 
 		void SetUniqueID(unsigned long long UniqueID) noexcept { m_UniqueID = UniqueID; }
 		unsigned long long GetUniqueID() const noexcept { return m_UniqueID; }
