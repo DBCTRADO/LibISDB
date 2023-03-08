@@ -40,7 +40,7 @@ DataModule::DataModule(uint32_t DownloadID, uint16_t BlockSize, uint16_t ModuleI
 	, m_ModuleID(ModuleID)
 	, m_ModuleSize(ModuleSize)
 	, m_ModuleVersion(ModuleVersion)
-	, m_NumBlocks((uint16_t)((ModuleSize - 1) / BlockSize + 1))
+	, m_NumBlocks(static_cast<uint16_t>((ModuleSize - 1) / BlockSize + 1))
 	, m_NumDownloadedBlocks(0)
 	, m_pData(nullptr)
 {
@@ -67,7 +67,7 @@ bool DataModule::StoreBlock(uint16_t BlockNumber, const void *pData, uint16_t Da
 		m_pData = new uint8_t[m_ModuleSize];
 
 	size_t Offset, Size;
-	Offset = (size_t)BlockNumber * m_BlockSize;
+	Offset = static_cast<size_t>(BlockNumber) * m_BlockSize;
 	if (BlockNumber < m_NumBlocks - 1)
 		Size = m_BlockSize;
 	else
@@ -127,7 +127,7 @@ bool DownloadInfoIndicationParser::ParseData(const uint8_t *pData, uint16_t Data
 
 	const uint8_t AdaptationLength = pData[9];
 //	const uint16_t MessageLength   = Load16(&pData[10]);
-	if (12 + (uint16_t)AdaptationLength > DataSize)
+	if (12 + static_cast<uint16_t>(AdaptationLength) > DataSize)
 		return false;
 	uint16_t Pos = 12 + AdaptationLength;
 
@@ -180,7 +180,7 @@ bool DownloadInfoIndicationParser::ParseData(const uint8_t *pData, uint16_t Data
 			switch (DescTag) {
 			case 0x02:	// Name descriptor
 				Module.ModuleDesc.Name.Length = DescLength;
-				Module.ModuleDesc.Name.pText = (const char *)(&pData[Pos + DescPos]);
+				Module.ModuleDesc.Name.pText = reinterpret_cast<const char *>(&pData[Pos + DescPos]);
 				break;
 
 			case 0x05:	// CRC32 descriptor
@@ -226,7 +226,7 @@ bool DownloadDataBlockParser::ParseData(const uint8_t *pData, uint16_t DataSize)
 
 	const uint8_t AdaptationLength = pData[9];
 //	const uint16_t MessageLength   = Load16(&pData[10]);
-	if (12 + (uint16_t)AdaptationLength + 6 >= DataSize)
+	if (12 + static_cast<uint16_t>(AdaptationLength) + 6 >= DataSize)
 		return false;
 
 	uint16_t Pos = 12 + AdaptationLength;

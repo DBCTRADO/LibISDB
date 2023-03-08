@@ -133,7 +133,7 @@ float FilterGraph::GetVolume() const
 			long lVolume;
 
 			if (SUCCEEDED(pBasicAudio->get_Volume(&lVolume)))
-				Volume = (float)lVolume / 100.0f;
+				Volume = static_cast<float>(lVolume) / 100.0f;
 			pBasicAudio->Release();
 		}
 	}

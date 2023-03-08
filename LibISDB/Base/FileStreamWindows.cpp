@@ -387,7 +387,7 @@ bool FileStreamWindows::Preallocate(SizeType Size)
 		return false;
 	}
 
-	if ((SizeType)FileSize.QuadPart >= Size) {
+	if (static_cast<SizeType>(FileSize.QuadPart) >= Size) {
 		SetError(std::errc::invalid_argument);
 		return false;
 	}

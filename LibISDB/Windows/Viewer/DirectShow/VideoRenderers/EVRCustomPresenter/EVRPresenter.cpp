@@ -200,7 +200,7 @@ HRESULT SetMixerSourceRect(IMFTransform *pMixer, const MFVideoNormalizedRect &nr
 
 	hr = pMixer->GetAttributes(&pAttributes);
 	if (SUCCEEDED(hr)) {
-		hr = pAttributes->SetBlob(VIDEO_ZOOM_RECT, (const UINT8*)&nrcSource, sizeof(nrcSource));
+		hr = pAttributes->SetBlob(VIDEO_ZOOM_RECT, reinterpret_cast<const UINT8*>(&nrcSource), sizeof(nrcSource));
 		pAttributes->Release();
 	}
 
@@ -1038,7 +1038,7 @@ HRESULT EVRPresenter::RenegotiateMediaType()
 						if (SUCCEEDED(hr)) {
 							VideoType mt(pMixerType);
 
-							mt.GetFrameDimensions((UINT32*)&m_NativeVideoSize.cx, (UINT32*)&m_NativeVideoSize.cy);
+							mt.GetFrameDimensions(reinterpret_cast<UINT32*>(&m_NativeVideoSize.cx), reinterpret_cast<UINT32*>(&m_NativeVideoSize.cy));
 							m_NativeAspectRatio = mt.GetPixelAspectRatio();
 
 							bFoundMediaType = true;
@@ -1595,7 +1595,7 @@ HRESULT EVRPresenter::ProcessOutput()
 			m_Clock->GetCorrelatedTime(0, &MixerEndTime, &SystemTime);
 
 			LONGLONG LatencyTime = MixerEndTime - MixerStartTime;
-			NotifyEvent(EC_PROCESSING_LATENCY, (LONG_PTR)&LatencyTime, 0);
+			NotifyEvent(EC_PROCESSING_LATENCY, reinterpret_cast<LONG_PTR>(&LatencyTime), 0);
 		}
 
 		hr = TrackSample(pSample);

@@ -283,9 +283,9 @@ void CaptionFilter::OnPATSection(const PSITableBase *pTable, const PSISection *p
 	m_ServiceList.resize(pPATTable->GetProgramCount());
 
 	for (size_t i = 0; i < m_ServiceList.size(); i++) {
-		const uint16_t PMTPID = pPATTable->GetPMTPID((uint16_t)i);
+		const uint16_t PMTPID = pPATTable->GetPMTPID(static_cast<uint16_t>(i));
 
-		m_ServiceList[i].ServiceID = pPATTable->GetProgramNumber((uint16_t)i);
+		m_ServiceList[i].ServiceID = pPATTable->GetProgramNumber(static_cast<uint16_t>(i));
 		m_ServiceList[i].PMTPID = PMTPID;
 		m_ServiceList[i].CaptionESList.clear();
 

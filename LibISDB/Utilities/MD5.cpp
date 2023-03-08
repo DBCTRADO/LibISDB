@@ -139,7 +139,7 @@ MD5Value CalcMD5(const uint8_t *pData, size_t DataSize) noexcept
 {
 	const uint8_t *pSrc = pData;
 	MD5Value MD5;
-	const uint64_t BitsSize = (uint64_t)DataSize << 3;
+	const uint64_t BitsSize = static_cast<uint64_t>(DataSize) << 3;
 	uint32_t BlockData[16];
 
 	MD5.Value32[0] = 0x67452301_u32;

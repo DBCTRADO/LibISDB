@@ -153,8 +153,8 @@ bool H264AccessUnit::ParseHeader()
 				if (m_Header.SPS.VUI.AspectRatioInfoPresentFlag) {
 					m_Header.SPS.VUI.AspectRatioIDC = static_cast<uint8_t>(Bitstream.GetBits(8));
 					if (m_Header.SPS.VUI.AspectRatioIDC == 255) {
-						m_Header.SPS.VUI.SARWidth = (uint16_t)Bitstream.GetBits(16);
-						m_Header.SPS.VUI.SARHeight = (uint16_t)Bitstream.GetBits(16);
+						m_Header.SPS.VUI.SARWidth = static_cast<uint16_t>(Bitstream.GetBits(16));
+						m_Header.SPS.VUI.SARHeight = static_cast<uint16_t>(Bitstream.GetBits(16));
 					}
 				}
 				m_Header.SPS.VUI.OverscanInfoPresentFlag = Bitstream.GetFlag();

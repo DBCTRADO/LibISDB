@@ -282,7 +282,7 @@ bool PSISectionParser::StoreHeader(const uint8_t *pData, uint8_t *pRemain)
 	}
 
 	const uint8_t HeaderSize = (m_IsExtended ? 8 : 3);
-	const uint8_t HeaderRemain = HeaderSize - (uint8_t)m_PSISection.GetSize();
+	const uint8_t HeaderRemain = HeaderSize - static_cast<uint8_t>(m_PSISection.GetSize());
 
 	if (HeaderRemain > *pRemain) {
 		// ヘッダの途中までしかまだデータが無い

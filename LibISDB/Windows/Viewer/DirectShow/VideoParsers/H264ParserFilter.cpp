@@ -276,7 +276,7 @@ HRESULT H264ParserFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
 						for (size_t i = 1; i <= Frames; i++) {
 							SampleData *pSampleData = m_SampleQueue.front();
 							m_SampleQueue.pop_front();
-							End = m_PrevTime + Duration * (REFERENCE_TIME)i / (REFERENCE_TIME)Frames;
+							End = m_PrevTime + Duration * static_cast<REFERENCE_TIME>(i) / static_cast<REFERENCE_TIME>(Frames);
 							pSampleData->SetTime(Start, End);
 							Start = End;
 							m_OutSampleQueue.push_back(pSampleData);
@@ -320,7 +320,7 @@ HRESULT H264ParserFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
 		do {
 			SampleData *pSampleData = m_OutSampleQueue.front();
 
-			hr = pOut->SetActualDataLength((long)pSampleData->GetSize());
+			hr = pOut->SetActualDataLength(static_cast<long>(pSampleData->GetSize()));
 			if (SUCCEEDED(hr)) {
 				::CopyMemory(pOutData, pSampleData->GetData(), pSampleData->GetSize());
 

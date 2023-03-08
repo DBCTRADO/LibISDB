@@ -262,7 +262,7 @@ uint8_t PESParser::StoreHeader(const uint8_t *pPayload, uint8_t Remain)
 	if (m_IsStoring)
 		return 0;
 
-	const uint8_t HeaderRemain = (uint8_t)(9 - m_PESPacket.GetSize());
+	const uint8_t HeaderRemain = static_cast<uint8_t>(9 - m_PESPacket.GetSize());
 
 	if (Remain >= HeaderRemain) {
 		// ヘッダストア完了、ヘッダを解析してペイロードのストアを開始する

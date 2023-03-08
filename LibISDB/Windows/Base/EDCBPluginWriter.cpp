@@ -181,7 +181,7 @@ size_t EDCBPluginWriter::Write(const void *pBuffer, size_t Size)
 #endif
 
 	DWORD Write = 0;
-	m_pAddTSBuff(m_ID, static_cast<BYTE *>(const_cast<void *>(pBuffer)), (DWORD)Size, &Write);
+	m_pAddTSBuff(m_ID, static_cast<BYTE *>(const_cast<void *>(pBuffer)), static_cast<DWORD>(Size), &Write);
 
 	return Write;
 }

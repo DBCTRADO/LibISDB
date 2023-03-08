@@ -61,8 +61,8 @@ bool VideoRenderer_Default::InitializeBasicVideo(
 		return false;
 	}
 
-	m_VideoWindow->put_Owner((OAHWND)hwndRender);
-	m_VideoWindow->put_MessageDrain((OAHWND)hwndMessageDrain);
+	m_VideoWindow->put_Owner(reinterpret_cast<OAHWND>(hwndRender));
+	m_VideoWindow->put_MessageDrain(reinterpret_cast<OAHWND>(hwndMessageDrain));
 	m_VideoWindow->put_WindowStyle(WS_CHILD | WS_CLIPSIBLINGS);
 	m_VideoWindow->put_BackgroundPalette(OATRUE);
 	m_VideoWindow->put_BorderColor(RGB(0, 0, 0));

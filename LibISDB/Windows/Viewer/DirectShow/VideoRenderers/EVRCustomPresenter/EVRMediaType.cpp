@@ -79,7 +79,7 @@ HRESULT GetDefaultStride(IMFMediaType *pType, LONG *pStride)
 	HRESULT hr;
 	LONG Stride = 0;
 
-	hr = pType->GetUINT32(MF_MT_DEFAULT_STRIDE, (UINT32*)&Stride);
+	hr = pType->GetUINT32(MF_MT_DEFAULT_STRIDE, reinterpret_cast<UINT32*>(&Stride));
 
 	if (FAILED(hr)) {
 		GUID Subtype = GUID_NULL;

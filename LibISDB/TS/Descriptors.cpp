@@ -202,7 +202,7 @@ bool SatelliteDeliverySystemDescriptor::StoreContents(const uint8_t *pPayload)
 		return false;
 
 	m_Frequency       = GetBCD(&pPayload[0], 8);
-	m_OrbitalPosition = (uint16_t)GetBCD(&pPayload[4], 4);
+	m_OrbitalPosition = static_cast<uint16_t>(GetBCD(&pPayload[4], 4));
 	m_WestEastFlag    = (pPayload[6] & 0x80) != 0;
 	m_Polarization    = (pPayload[6] >> 5) & 0x03;
 	m_Modulation      = pPayload[6] & 0x1F;
@@ -1601,7 +1601,7 @@ bool LogoTransmissionDescriptor::StoreContents(const uint8_t *pPayload)
 	} else if (m_LogoTransmissionType == TRANSMISSION_CHAR) {
 		// 簡易ロゴ方式
 		size_t i;
-		for (i = 0; (i < (size_t)m_Length - 1) && (i < MAX_LOGO_CHAR - 1); i++) {
+		for (i = 0; (i < static_cast<size_t>(m_Length) - 1) && (i < MAX_LOGO_CHAR - 1); i++) {
 			m_LogoChar[i] = pPayload[1 + i];
 		}
 		m_LogoChar[i] = '\0';
@@ -1666,8 +1666,8 @@ bool SeriesDescriptor::StoreContents(const uint8_t *pPayload)
 	m_ExpireDateValidFlag = (pPayload[2] & 0x01) != 0;
 	if (m_ExpireDateValidFlag)
 		MJDTimeToDateTime(Load16(&pPayload[3]), &m_ExpireDate);
-	m_EpisodeNumber       = (uint16_t)((pPayload[5] << 4) | (pPayload[6] >> 4));
-	m_LastEpisodeNumber   = (uint16_t)(((pPayload[6] & 0x0F) << 8) | pPayload[7]);
+	m_EpisodeNumber       = static_cast<uint16_t>((pPayload[5] << 4) | (pPayload[6] >> 4));
+	m_LastEpisodeNumber   = static_cast<uint16_t>(((pPayload[6] & 0x0F) << 8) | pPayload[7]);
 	if (m_Length > 8)
 		m_SeriesName.assign(&pPayload[8], m_Length - 8);
 	else
@@ -2177,7 +2177,7 @@ bool TerrestrialDeliverySystemDescriptor::StoreContents(const uint8_t *pPayload)
 	if (m_Length < 4)
 		return false;
 
-	m_AreaCode         = (uint16_t)((pPayload[0] << 4) | (pPayload[1] >> 4));
+	m_AreaCode         = static_cast<uint16_t>((pPayload[0] << 4) | (pPayload[1] >> 4));
 	m_GuardInterval    = (pPayload[1] & 0x0C) >> 2;
 	m_TransmissionMode = pPayload[1] & 0x03;
 	const int FrequencyCount = (m_Length - 2) / 2;
@@ -2216,7 +2216,7 @@ int PartialReceptionDescriptor::GetServiceCount() const
 
 uint16_t PartialReceptionDescriptor::GetServiceID(int Index) const
 {
-	if ((unsigned int)Index >= m_ServiceCount)
+	if (static_cast<unsigned int>(Index) >= m_ServiceCount)
 		return SERVICE_ID_INVALID;
 	return m_ServiceList[Index];
 }

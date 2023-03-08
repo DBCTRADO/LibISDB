@@ -907,8 +907,8 @@ unsigned long long EITMultiTable::GetSectionTableUniqueID(const PSISection *pSec
 unsigned long long EITMultiTable::MakeTableUniqueID(
 	uint16_t NetworkID, uint16_t TransportStreamID, uint16_t ServiceID)
 {
-	return ((unsigned long long)NetworkID << 32) |
-	       ((unsigned long long)TransportStreamID << 16) |
+	return (static_cast<unsigned long long>(NetworkID) << 32) |
+	       (static_cast<unsigned long long>(TransportStreamID) << 16) |
 	       ServiceID;
 }
 
@@ -1382,7 +1382,7 @@ uint16_t SDTTTable::GetServiceID() const
 
 uint8_t SDTTTable::GetNumOfContents() const
 {
-	return (uint8_t)m_ContentList.size();
+	return static_cast<uint8_t>(m_ContentList.size());
 }
 
 
@@ -1423,8 +1423,8 @@ bool SDTTTable::OnTableUpdate(const PSISection *pCurSection)
 	if (pCurSection->GetTableID() != TABLE_ID)
 		return false;
 
-	m_MakerID           = (uint8_t)(pCurSection->GetTableIDExtension() >> 8);
-	m_ModelID           = (uint8_t)(pCurSection->GetTableIDExtension() & 0xFF);
+	m_MakerID           = static_cast<uint8_t>(pCurSection->GetTableIDExtension() >> 8);
+	m_ModelID           = static_cast<uint8_t>(pCurSection->GetTableIDExtension() & 0xFF);
 	m_TransportStreamID = Load16(&pData[0]);
 	m_OriginalNetworkID = Load16(&pData[2]);
 	m_ServiceID         = Load16(&pData[4]);

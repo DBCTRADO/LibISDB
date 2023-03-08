@@ -73,7 +73,7 @@ bool H265AccessUnit::ParseHeader()
 		size_t NALUnitSize = NextPos - 3 - Pos;
 
 		NALUnitSize = EBSPToRBSP(&m_pData[Pos], NALUnitSize);
-		if (NALUnitSize == (size_t)-1)
+		if (NALUnitSize == static_cast<size_t>(-1))
 			break;
 
 		if (NALUnitType == 0x21) {
@@ -236,8 +236,8 @@ bool H265AccessUnit::ParseHeader()
 				if (m_Header.SPS.VUI.AspectRatioInfoPresentFlag) {
 					m_Header.SPS.VUI.AspectRatioIDC = static_cast<uint8_t>(Bitstream.GetBits(8));
 					if (m_Header.SPS.VUI.AspectRatioIDC == 0xFF) {	// EXTENDED_SAR
-						m_Header.SPS.VUI.SARWidth = (uint16_t)Bitstream.GetBits(16);
-						m_Header.SPS.VUI.SARHeight = (uint16_t)Bitstream.GetBits(16);
+						m_Header.SPS.VUI.SARWidth = static_cast<uint16_t>(Bitstream.GetBits(16));
+						m_Header.SPS.VUI.SARHeight = static_cast<uint16_t>(Bitstream.GetBits(16));
 					}
 				}
 				m_Header.SPS.VUI.OverscanInfoPresentFlag = Bitstream.GetFlag();

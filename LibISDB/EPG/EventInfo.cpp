@@ -245,7 +245,7 @@ int EventInfo::GetMainAudioIndex() const
 {
 	for (size_t i = 0; i < AudioList.size(); i++) {
 		if (AudioList[i].MainComponentFlag)
-			return (int)i;
+			return static_cast<int>(i);
 	}
 	return -1;
 }

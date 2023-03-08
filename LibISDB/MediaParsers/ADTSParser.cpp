@@ -179,7 +179,7 @@ bool ADTSParser::StoreES(const uint8_t *pData, size_t *pSize, ADTSFrame **ppFram
 			m_IsStoring = SyncFrame(pData[Pos++]);
 		} else {
 			// データをストアする
-			const size_t StoreRemain = (size_t)m_ADTSFrame.GetFrameLength() - m_ADTSFrame.GetSize();
+			const size_t StoreRemain = static_cast<size_t>(m_ADTSFrame.GetFrameLength()) - m_ADTSFrame.GetSize();
 			const size_t DataRemain = Size - Pos;
 
 			if (StoreRemain <= DataRemain) {

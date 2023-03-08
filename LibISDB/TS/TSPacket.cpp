@@ -206,10 +206,10 @@ uint8_t TSPacket::GetPayloadSize() const
 {
 	switch (m_Header.AdaptationFieldControl) {
 	case 1:	// ペイロードのみ
-		return (uint8_t)(TS_PACKET_SIZE - 4);
+		return static_cast<uint8_t>(TS_PACKET_SIZE - 4);
 
 	case 3:	// アダプテーションフィールド、ペイロードあり
-		return (uint8_t)(TS_PACKET_SIZE - m_AdaptationField.AdaptationFieldLength - 5);
+		return static_cast<uint8_t>(TS_PACKET_SIZE - m_AdaptationField.AdaptationFieldLength - 5);
 	}
 
 	// アダプテーションフィールドのみ or 例外

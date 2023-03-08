@@ -269,10 +269,10 @@ bool VideoRenderer_EVR::SetVideoPosition(
 			MFVideoNormalizedRect rcSrc;
 			RECT rcDest;
 
-			rcSrc.left   = (float)SourceRect.left   / (float)SourceWidth;
-			rcSrc.top    = (float)SourceRect.top    / (float)SourceHeight;
-			rcSrc.right  = (float)SourceRect.right  / (float)SourceWidth;
-			rcSrc.bottom = (float)SourceRect.bottom / (float)SourceHeight;
+			rcSrc.left   = static_cast<float>(SourceRect.left)   / static_cast<float>(SourceWidth);
+			rcSrc.top    = static_cast<float>(SourceRect.top)    / static_cast<float>(SourceHeight);
+			rcSrc.right  = static_cast<float>(SourceRect.right)  / static_cast<float>(SourceWidth);
+			rcSrc.bottom = static_cast<float>(SourceRect.bottom) / static_cast<float>(SourceHeight);
 			rcDest = DestRect;
 			::OffsetRect(&rcDest, WindowRect.left, WindowRect.top);
 #ifdef LIBISDB_EVR_USE_VIDEO_WINDOW

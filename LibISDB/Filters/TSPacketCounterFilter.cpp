@@ -173,7 +173,7 @@ int TSPacketCounterFilter::GetServiceIndexByID(uint16_t ServiceID) const
 {
 	int Index;
 
-	for (Index = (int)m_ServiceList.size() - 1; Index >= 0; Index--) {
+	for (Index = static_cast<int>(m_ServiceList.size()) - 1; Index >= 0; Index--) {
 		if (m_ServiceList[Index].ServiceID == ServiceID)
 			break;
 	}
