@@ -74,6 +74,34 @@ namespace LibISDB::DirectShow
 			return m_Type.Get();
 		}
 
+		template<typename T> HRESULT GetUINT32(const GUID &guidKey, T *pValue)
+		{
+			static_assert(sizeof(T) == sizeof(UINT32));
+			if (pValue == nullptr) {
+				return E_POINTER;
+			}
+			return GetMediaType()->GetUINT32(guidKey, reinterpret_cast<UINT32*>(pValue));
+		}
+
+		template<typename T> HRESULT SetUINT32(const GUID &guidKey, T Value)
+		{
+			static_assert(sizeof(T) <= sizeof(UINT32));
+			return GetMediaType()->SetUINT32(guidKey, static_cast<UINT32>(Value));
+		}
+
+		template<typename T> HRESULT GetBlob(const GUID &guidKey, T *pValue)
+		{
+			if (pValue == nullptr) {
+				return E_POINTER;
+			}
+			return GetMediaType()->GetBlob(guidKey, reinterpret_cast<UINT8*>(pValue), sizeof(T), nullptr);
+		}
+
+		template<typename T> HRESULT SetBlob(const GUID &guidKey, const T &Value)
+		{
+			return GetMediaType()->SetBlob(guidKey, reinterpret_cast<const UINT8*>(&Value), sizeof(T));
+		}
+
 	public:
 		MediaType() = default;
 
@@ -209,41 +237,32 @@ namespace LibISDB::DirectShow
 
 		HRESULT GetAllSamplesIndependent(BOOL *pbIndependent)
 		{
-			if (pbIndependent == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_ALL_SAMPLES_INDEPENDENT, (UINT32*)pbIndependent);
+			return GetUINT32(MF_MT_ALL_SAMPLES_INDEPENDENT, pbIndependent);
 		}
 
 		HRESULT SetAllSamplesIndependent(BOOL bIndependent)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_ALL_SAMPLES_INDEPENDENT, bIndependent);
+			return SetUINT32(MF_MT_ALL_SAMPLES_INDEPENDENT, bIndependent);
 		}
 
 		HRESULT GetFixedSizeSamples(BOOL *pbFixed)
 		{
-			if (pbFixed == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_FIXED_SIZE_SAMPLES, (UINT32*)pbFixed);
+			return GetUINT32(MF_MT_FIXED_SIZE_SAMPLES, pbFixed);
 		}
 
 		HRESULT SetFixedSizeSamples(BOOL bFixed)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_FIXED_SIZE_SAMPLES, bFixed);
+			return SetUINT32(MF_MT_FIXED_SIZE_SAMPLES, bFixed);
 		}
 
 		HRESULT GetSampleSize(UINT32 *pSize)
 		{
-			if (pSize == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_SAMPLE_SIZE, pSize);
+			return GetUINT32(MF_MT_SAMPLE_SIZE, pSize);
 		}
 
 		HRESULT SetSampleSize(UINT32 Size)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_SAMPLE_SIZE, Size);
+			return SetUINT32(MF_MT_SAMPLE_SIZE, Size);
 		}
 
 		HRESULT Unwrap(IMFMediaType **ppOriginal)
@@ -293,15 +312,12 @@ namespace LibISDB::DirectShow
 
 		HRESULT GetInterlaceMode(MFVideoInterlaceMode *pmode)
 		{
-			if (pmode == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_INTERLACE_MODE, (UINT32*)pmode);
+			return GetUINT32(MF_MT_INTERLACE_MODE, pmode);
 		}
 
 		HRESULT SetInterlaceMode(MFVideoInterlaceMode mode)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_INTERLACE_MODE, (UINT32)mode);
+			return SetUINT32(MF_MT_INTERLACE_MODE, mode);
 		}
 
 		HRESULT GetDefaultStride(LONG *pStride)
@@ -311,7 +327,7 @@ namespace LibISDB::DirectShow
 
 		HRESULT SetDefaultStride(LONG Stride)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_DEFAULT_STRIDE, Stride);
+			return SetUINT32(MF_MT_DEFAULT_STRIDE, Stride);
 		}
 
 		HRESULT GetFrameDimensions(UINT32 *pWidthInPixels, UINT32 *pHeightInPixels)
@@ -326,41 +342,32 @@ namespace LibISDB::DirectShow
 
 		HRESULT GetDataBitErrorRate(UINT32 *pRate)
 		{
-			if (pRate == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_AVG_BIT_ERROR_RATE, pRate);
+			return GetUINT32(MF_MT_AVG_BIT_ERROR_RATE, pRate);
 		}
 
 		HRESULT SetDataBitErrorRate(UINT32 rate)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_AVG_BIT_ERROR_RATE, rate);
+			return SetUINT32(MF_MT_AVG_BIT_ERROR_RATE, rate);
 		}
 
 		HRESULT GetAverageBitRate(UINT32 *pRate)
 		{
-			if (pRate == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_AVG_BITRATE, pRate);
+			return GetUINT32(MF_MT_AVG_BITRATE, pRate);
 		}
 
 		HRESULT SetAvgerageBitRate(UINT32 rate)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_AVG_BITRATE, rate);
+			return SetUINT32(MF_MT_AVG_BITRATE, rate);
 		}
 
 		HRESULT GetCustomVideoPrimaries(MT_CUSTOM_VIDEO_PRIMARIES *pPrimaries)
 		{
-			if (pPrimaries == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetBlob(MF_MT_CUSTOM_VIDEO_PRIMARIES, (UINT8*)pPrimaries, sizeof(MT_CUSTOM_VIDEO_PRIMARIES), nullptr);
+			return GetBlob(MF_MT_CUSTOM_VIDEO_PRIMARIES, pPrimaries);
 		}
 
 		HRESULT SetCustomVideoPrimaries(const MT_CUSTOM_VIDEO_PRIMARIES &primary)
 		{
-			return GetMediaType()->SetBlob(MF_MT_CUSTOM_VIDEO_PRIMARIES, (const UINT8*)&primary, sizeof(MT_CUSTOM_VIDEO_PRIMARIES));
+			return SetBlob(MF_MT_CUSTOM_VIDEO_PRIMARIES, primary);
 		}
 
 		HRESULT GetFrameRate(UINT32 *pNumerator, UINT32 *pDenominator)
@@ -376,7 +383,7 @@ namespace LibISDB::DirectShow
 			if (pRatio == nullptr) {
 				return E_POINTER;
 			}
-			return GetFrameRate((UINT32*)&pRatio->Numerator, (UINT32*)&pRatio->Denominator);
+			return GetFrameRate(reinterpret_cast<UINT32*>(&pRatio->Numerator), reinterpret_cast<UINT32*>(&pRatio->Denominator));
 		}
 
 		HRESULT SetFrameRate(UINT32 Numerator, UINT32 Denominator)
@@ -391,54 +398,42 @@ namespace LibISDB::DirectShow
 
 		HRESULT GetGeometricAperture(MFVideoArea *pArea)
 		{
-			if (pArea == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetBlob(MF_MT_GEOMETRIC_APERTURE, (UINT8*)pArea, sizeof(MFVideoArea), nullptr);
+			return GetBlob(MF_MT_GEOMETRIC_APERTURE, pArea);
 		}
 
 		HRESULT SetGeometricAperture(const MFVideoArea& area)
 		{
-			return GetMediaType()->SetBlob(MF_MT_GEOMETRIC_APERTURE, (UINT8*)&area, sizeof(MFVideoArea));
+			return SetBlob(MF_MT_GEOMETRIC_APERTURE, area);
 		}
 
 		HRESULT GetMaxKeyframeSpacing(UINT32 *pSpacing)
 		{
-			if (pSpacing == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_MAX_KEYFRAME_SPACING, pSpacing);
+			return GetUINT32(MF_MT_MAX_KEYFRAME_SPACING, pSpacing);
 		}
 
 		HRESULT SetMaxKeyframeSpacing(UINT32 Spacing)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_MAX_KEYFRAME_SPACING, Spacing);
+			return SetUINT32(MF_MT_MAX_KEYFRAME_SPACING, Spacing);
 		}
 
 		HRESULT GetMinDisplayAperture(MFVideoArea *pArea)
 		{
-			if (pArea == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetBlob(MF_MT_MINIMUM_DISPLAY_APERTURE, (UINT8*)pArea, sizeof(MFVideoArea), nullptr);
+			return GetBlob(MF_MT_MINIMUM_DISPLAY_APERTURE, pArea);
 		}
 
 		HRESULT SetMinDisplayAperture(const MFVideoArea &area)
 		{
-			return GetMediaType()->SetBlob(MF_MT_MINIMUM_DISPLAY_APERTURE, (const UINT8*)&area, sizeof(MFVideoArea));
+			return SetBlob(MF_MT_MINIMUM_DISPLAY_APERTURE, area);
 		}
 
 		HRESULT GetPadControlFlags(MFVideoPadFlags *pFlags)
 		{
-			if (pFlags == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_PAD_CONTROL_FLAGS, (UINT32*)pFlags);
+			return GetUINT32(MF_MT_PAD_CONTROL_FLAGS, pFlags);
 		}
 
 		HRESULT SetPadControlFlags(MFVideoPadFlags flags)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_PAD_CONTROL_FLAGS, flags);
+			return SetUINT32(MF_MT_PAD_CONTROL_FLAGS, flags);
 		}
 
 		HRESULT GetPaletteEntries(MFPaletteEntry *paEntries, UINT32 nEntries)
@@ -446,15 +441,15 @@ namespace LibISDB::DirectShow
 			if (paEntries == nullptr) {
 				return E_POINTER;
 			}
-			return GetMediaType()->GetBlob(MF_MT_PALETTE, (UINT8*)paEntries, sizeof(MFPaletteEntry) * nEntries, nullptr);
+			return GetMediaType()->GetBlob(MF_MT_PALETTE, reinterpret_cast<UINT8*>(paEntries), sizeof(MFPaletteEntry) * nEntries, nullptr);
 		}
 
-		HRESULT SetPaletteEntries(MFPaletteEntry *paEntries, UINT32 nEntries)
+		HRESULT SetPaletteEntries(const MFPaletteEntry *paEntries, UINT32 nEntries)
 		{
 			if (paEntries == nullptr) {
 				return E_POINTER;
 			}
-			return GetMediaType()->SetBlob(MF_MT_PALETTE, (UINT8*)paEntries, sizeof(MFPaletteEntry) * nEntries);
+			return GetMediaType()->SetBlob(MF_MT_PALETTE, reinterpret_cast<const UINT8*>(paEntries), sizeof(MFPaletteEntry) * nEntries);
 		}
 
 		HRESULT GetNumPaletteEntries(UINT32 *pEntries)
@@ -477,28 +472,22 @@ namespace LibISDB::DirectShow
 
 		HRESULT GetPanScanAperture(MFVideoArea *pArea)
 		{
-			if (pArea == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetBlob(MF_MT_PAN_SCAN_APERTURE, (UINT8*)pArea, sizeof(MFVideoArea), nullptr);
+			return GetBlob(MF_MT_PAN_SCAN_APERTURE, pArea);
 		}
 
 		HRESULT SetPanScanAperture(const MFVideoArea &area)
 		{
-			return GetMediaType()->SetBlob(MF_MT_PAN_SCAN_APERTURE, (const UINT8*)&area, sizeof(MFVideoArea));
+			return SetBlob(MF_MT_PAN_SCAN_APERTURE, area);
 		}
 
 		HRESULT IsPanScanEnabled(BOOL *pBool)
 		{
-			if (pBool == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_PAN_SCAN_ENABLED, (UINT32*)pBool);
+			return GetUINT32(MF_MT_PAN_SCAN_ENABLED, pBool);
 		}
 
 		HRESULT SetPanScanEnabled(BOOL bEnabled)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_PAN_SCAN_ENABLED, bEnabled);
+			return SetUINT32(MF_MT_PAN_SCAN_ENABLED, bEnabled);
 		}
 
 		HRESULT GetPixelAspectRatio(UINT32 *pNumerator, UINT32 *pDenominator)
@@ -521,93 +510,72 @@ namespace LibISDB::DirectShow
 
 		HRESULT GetSourceContentHint(MFVideoSrcContentHintFlags *pFlags)
 		{
-			if (pFlags == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_SOURCE_CONTENT_HINT, (UINT32*)pFlags);
+			return GetUINT32(MF_MT_SOURCE_CONTENT_HINT, pFlags);
 		}
 
 		HRESULT SetSourceContentHint(MFVideoSrcContentHintFlags Flags)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_SOURCE_CONTENT_HINT, (UINT32)Flags);
+			return SetUINT32(MF_MT_SOURCE_CONTENT_HINT, Flags);
 		}
 
 		HRESULT GetTransferFunction(MFVideoTransferFunction *pFxn)
 		{
-			if (pFxn == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_TRANSFER_FUNCTION, (UINT32*)pFxn);
+			return GetUINT32(MF_MT_TRANSFER_FUNCTION, pFxn);
 		}
 
 		HRESULT SetTransferFunction(MFVideoTransferFunction Fxn)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_TRANSFER_FUNCTION, (UINT32)Fxn);
+			return SetUINT32(MF_MT_TRANSFER_FUNCTION, Fxn);
 		}
 
 		HRESULT GetChromaSiting(MFVideoChromaSubsampling *pSampling)
 		{
-			if (pSampling == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_VIDEO_CHROMA_SITING, (UINT32*)pSampling);
+			return GetUINT32(MF_MT_VIDEO_CHROMA_SITING, pSampling);
 		}
 
 		HRESULT SetChromaSiting(MFVideoChromaSubsampling Sampling)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_VIDEO_CHROMA_SITING, (UINT32)Sampling);
+			return SetUINT32(MF_MT_VIDEO_CHROMA_SITING, Sampling);
 		}
 
 		HRESULT GetVideoLighting(MFVideoLighting *pLighting)
 		{
-			if (pLighting == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_VIDEO_LIGHTING, (UINT32*)pLighting);
+			return GetUINT32(MF_MT_VIDEO_LIGHTING, pLighting);
 		}
 
 		HRESULT SetVideoLighting(MFVideoLighting Lighting)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_VIDEO_LIGHTING, (UINT32)Lighting);
+			return SetUINT32(MF_MT_VIDEO_LIGHTING, Lighting);
 		}
 
 		HRESULT GetVideoNominalRange(MFNominalRange *pRange)
 		{
-			if (pRange == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_VIDEO_NOMINAL_RANGE, (UINT32*)pRange);
+			return GetUINT32(MF_MT_VIDEO_NOMINAL_RANGE, pRange);
 		}
 
 		HRESULT SetVideoNominalRange(MFNominalRange Range)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_VIDEO_NOMINAL_RANGE, (UINT32)Range);
+			return SetUINT32(MF_MT_VIDEO_NOMINAL_RANGE, Range);
 		}
 
 		HRESULT GetVideoPrimaries(MFVideoPrimaries *pPrimaries)
 		{
-			if (pPrimaries == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_VIDEO_PRIMARIES, (UINT32*)pPrimaries);
+			return GetUINT32(MF_MT_VIDEO_PRIMARIES, pPrimaries);
 		}
 
 		HRESULT SetVideoPrimaries(MFVideoPrimaries Primaries)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_VIDEO_PRIMARIES, (UINT32)Primaries);
+			return SetUINT32(MF_MT_VIDEO_PRIMARIES, Primaries);
 		}
 
 		HRESULT GetYUVMatrix(MFVideoTransferMatrix *pMatrix)
 		{
-			if (pMatrix == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_YUV_MATRIX, (UINT32*)pMatrix);
+			return GetUINT32(MF_MT_YUV_MATRIX, pMatrix);
 		}
 
 		HRESULT SetYUVMatrix(MFVideoTransferMatrix Matrix)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_YUV_MATRIX, (UINT32)Matrix);
+			return SetUINT32(MF_MT_YUV_MATRIX, Matrix);
 		}
 
 		MFRatio GetPixelAspectRatio()
@@ -624,7 +592,7 @@ namespace LibISDB::DirectShow
 
 		BOOL IsPanScanEnabled()
 		{
-			return (BOOL)::MFGetAttributeUINT32(GetMediaType(), MF_MT_PAN_SCAN_ENABLED, FALSE);
+			return ::MFGetAttributeUINT32(GetMediaType(), MF_MT_PAN_SCAN_ENABLED, FALSE) != 0;
 		}
 
 		HRESULT GetVideoDisplayArea(MFVideoArea *pArea)
@@ -659,54 +627,42 @@ namespace LibISDB::DirectShow
 
 		HRESULT GetAvgerageBytesPerSecond(UINT32 *pBytes)
 		{
-			if (pBytes == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, pBytes);
+			return GetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, pBytes);
 		}
 
 		HRESULT SetAvgerageBytesPerSecond(UINT32 Bytes)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, Bytes);
+			return SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, Bytes);
 		}
 
 		HRESULT GetBitsPerSample(UINT32 *pBits)
 		{
-			if (pBits == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, pBits);
+			return GetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, pBits);
 		}
 
 		HRESULT SetBitsPerSample(UINT32 Bits)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, Bits);
+			return SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, Bits);
 		}
 
 		HRESULT GetBlockAlignment(UINT32 *pBytes)
 		{
-			if (pBytes == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_AUDIO_BLOCK_ALIGNMENT, pBytes);
+			return GetUINT32(MF_MT_AUDIO_BLOCK_ALIGNMENT, pBytes);
 		}
 
 		HRESULT SetBlockAlignment(UINT32 Bytes)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_AUDIO_BLOCK_ALIGNMENT, Bytes);
+			return SetUINT32(MF_MT_AUDIO_BLOCK_ALIGNMENT, Bytes);
 		}
 
 		HRESULT GetChannelMask(UINT32 *pMask)
 		{
-			if (pMask == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_AUDIO_CHANNEL_MASK, pMask);
+			return GetUINT32(MF_MT_AUDIO_CHANNEL_MASK, pMask);
 		}
 
 		HRESULT SetChannelMask(UINT32 Mask)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_AUDIO_CHANNEL_MASK, Mask);
+			return SetUINT32(MF_MT_AUDIO_CHANNEL_MASK, Mask);
 		}
 
 		HRESULT GetFloatSamplesPerSecond(double *pfSampleRate)
@@ -724,49 +680,37 @@ namespace LibISDB::DirectShow
 
 		HRESULT GetNumChannels(UINT32 *pChannels)
 		{
-			if (pChannels == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_AUDIO_NUM_CHANNELS, pChannels);
+			return GetUINT32(MF_MT_AUDIO_NUM_CHANNELS, pChannels);
 		}
 
 		HRESULT SetNumChannels(UINT32 Channels)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, Channels);
+			return SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, Channels);
 		}
 
 		HRESULT GetSamplesPerBlock(UINT32 *pSamples)
 		{
-			if (pSamples == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_AUDIO_SAMPLES_PER_BLOCK, pSamples);
+			return GetUINT32(MF_MT_AUDIO_SAMPLES_PER_BLOCK, pSamples);
 		}
 
 		HRESULT SetSamplesPerBlock(UINT32 Samples)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_BLOCK, Samples);
+			return SetUINT32(MF_MT_AUDIO_SAMPLES_PER_BLOCK, Samples);
 		}
 
 		HRESULT GetSamplesPerSecond(UINT32 *pSampleRate)
 		{
-			if (pSampleRate) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, pSampleRate);
+			return GetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, pSampleRate);
 		}
 
 		HRESULT SetSamplesPerSecond(UINT32 SampleRate)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, SampleRate);
+			return SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, SampleRate);
 		}
 
 		HRESULT GetValidBitsPerSample(UINT32 *pBits)
 		{
-			if (pBits == nullptr) {
-				return E_POINTER;
-			}
-			HRESULT hr = GetMediaType()->GetUINT32(MF_MT_AUDIO_VALID_BITS_PER_SAMPLE, pBits);
+			HRESULT hr = GetUINT32(MF_MT_AUDIO_VALID_BITS_PER_SAMPLE, pBits);
 			if (FAILED(hr)) {
 				hr = GetBitsPerSample(pBits);
 			}
@@ -775,7 +719,7 @@ namespace LibISDB::DirectShow
 
 		HRESULT SetValidBitsPerSample(UINT32 Bits)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_AUDIO_VALID_BITS_PER_SAMPLE, Bits);
+			return SetUINT32(MF_MT_AUDIO_VALID_BITS_PER_SAMPLE, Bits);
 		}
 
 		UINT32 AvgerageBytesPerSecond()
@@ -854,54 +798,42 @@ namespace LibISDB::DirectShow
 
 		HRESULT GetStartTimeCode(UINT32 *pTime)
 		{
-			if (pTime == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_MPEG_START_TIME_CODE, pTime);
+			return GetUINT32(MF_MT_MPEG_START_TIME_CODE, pTime);
 		}
 
 		HRESULT SetStartTimeCode(UINT32 Time)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_MPEG_START_TIME_CODE, Time);
+			return SetUINT32(MF_MT_MPEG_START_TIME_CODE, Time);
 		}
 
 		HRESULT GetMPEG2Flags(UINT32 *pFlags)
 		{
-			if (pFlags == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_MPEG2_FLAGS, pFlags);
+			return GetUINT32(MF_MT_MPEG2_FLAGS, pFlags);
 		}
 
 		HRESULT SetMPEG2Flags(UINT32 Flags)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_MPEG2_FLAGS, Flags);
+			return SetUINT32(MF_MT_MPEG2_FLAGS, Flags);
 		}
 
 		HRESULT GetMPEG2Level(UINT32 *pLevel)
 		{
-			if (pLevel == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_MPEG2_LEVEL, pLevel);
+			return GetUINT32(MF_MT_MPEG2_LEVEL, pLevel);
 		}
 
 		HRESULT SetMPEG2Level(UINT32 Level)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_MPEG2_LEVEL, Level);
+			return SetUINT32(MF_MT_MPEG2_LEVEL, Level);
 		}
 
 		HRESULT GetMPEG2Profile(UINT32 *pProfile)
 		{
-			if (pProfile == nullptr) {
-				return E_POINTER;
-			}
-			return GetMediaType()->GetUINT32(MF_MT_MPEG2_PROFILE, pProfile);
+			return GetUINT32(MF_MT_MPEG2_PROFILE, pProfile);
 		}
 
 		HRESULT SetMPEG2Profile(UINT32 Profile)
 		{
-			return GetMediaType()->SetUINT32(MF_MT_MPEG2_PROFILE, Profile);
+			return SetUINT32(MF_MT_MPEG2_PROFILE, Profile);
 		}
 	};
 
