@@ -86,7 +86,7 @@ namespace LibISDB
 		bool OpenSource(const CStringView &Name) override;
 		bool CloseSource() override;
 		bool IsSourceOpen() const override;
-		SourceMode GetAvailableSourceModes() const noexcept { return SourceMode::Push; }
+		SourceMode GetAvailableSourceModes() const noexcept override { return SourceMode::Push; }
 
 	// BonDriverSourceFilter
 		bool LoadBonDriver(const CStringView &FileName);
