@@ -237,6 +237,9 @@
     <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder_FAAD2.hpp">
       <Filter>Viewer\DirectShow\AudioDecoders\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_MPCVideoRenderer.hpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\LibISDB\Windows\Base\BonDriver.cpp">
@@ -361,6 +364,9 @@
     </ClCompile>
     <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\AudioDecoders\AACDecoder_FAAD2.cpp">
       <Filter>Viewer\DirectShow\AudioDecoders\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibISDB\Windows\Viewer\DirectShow\VideoRenderers\VideoRenderer_MPCVideoRenderer.cpp">
+      <Filter>Viewer\DirectShow\VideoRenderers\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

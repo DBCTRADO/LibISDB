@@ -53,6 +53,7 @@ namespace LibISDB::DirectShow
 			OverlayMixer,       /**< Overlay Mixer */
 			madVR,              /**< madVR */
 			EVRCustomPresenter, /**< EVR Custom Presenter */
+			MPCVideoRenderer,   /**< MPC Video Renderer */
 		};
 
 		VideoRenderer() noexcept;

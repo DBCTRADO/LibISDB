@@ -34,6 +34,7 @@
 #include "VideoRenderer_EVR.hpp"
 #include "VideoRenderer_OverlayMixer.hpp"
 #include "VideoRenderer_madVR.hpp"
+#include "VideoRenderer_MPCVideoRenderer.hpp"
 #include "EVRCustomPresenter/VideoRenderer_EVRCustomPresenter.hpp"
 #include "../DirectShowUtilities.hpp"
 #include "../../../../Utilities/StringFormat.hpp"
@@ -390,6 +391,9 @@ VideoRenderer * VideoRenderer::CreateRenderer(RendererType Type)
 
 	case RendererType::EVRCustomPresenter:
 		return new VideoRenderer_EVRCustomPresenter;
+
+	case RendererType::MPCVideoRenderer:
+		return new VideoRenderer_MPCVideoRenderer;
 	}
 
 	return nullptr;
@@ -408,6 +412,7 @@ LPCTSTR VideoRenderer::EnumRendererName(int Index)
 		TEXT("Overlay Mixer"),
 		TEXT("madVR"),
 		TEXT("EVR Custom Presenter"),
+		TEXT("MPC Video Renderer"),
 	};
 
 	if (static_cast<unsigned int>(Index) >= std::size(pszRendererName))
@@ -465,6 +470,9 @@ bool VideoRenderer::IsAvailable(RendererType Type)
 
 	case RendererType::madVR:
 		return TestCreateInstance(VideoRenderer_madVR::GetCLSID());
+
+	case RendererType::MPCVideoRenderer:
+		return TestCreateInstance(VideoRenderer_MPCVideoRenderer::GetCLSID());
 	}
 
 	return false;
