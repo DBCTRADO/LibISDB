@@ -28,6 +28,9 @@
 #define LIBISDB_C_STRING_VIEW_H
 
 
+#include <format>
+
+
 namespace LibISDB
 {
 
@@ -52,6 +55,15 @@ namespace LibISDB
 	typedef basic_cstring_view<char32_t> u32cstring_view;
 
 }	// namespace LibISDB
+
+template<typename TChar, typename TTraits> struct std::formatter<LibISDB::basic_cstring_view<TChar, TTraits>, TChar>
+	: public std::formatter<std::basic_string_view<TChar, TTraits>, TChar>
+{
+	template<typename TContext> auto format(LibISDB::basic_cstring_view<TChar, TTraits> Value, TContext &Context)
+	{
+		return formatter<std::basic_string_view<TChar, TTraits>, TChar>::format(Value, Context);
+	}
+};
 
 
 #endif	// ifndef LIBISDB_C_STRING_VIEW_H
