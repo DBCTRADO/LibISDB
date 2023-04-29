@@ -777,10 +777,7 @@ bool EPGDatabase::UpdateSection(
 						for (int j = 0; j < EventCount; j++)
 							pGroupDesc->GetEventInfo(j, &GroupInfo.EventList[j]);
 
-						auto it = std::find(
-							pEvent->EventGroupList.begin(),
-							pEvent->EventGroupList.end(),
-							GroupInfo);
+						auto it = std::ranges::find(pEvent->EventGroupList, GroupInfo);
 						if (it == pEvent->EventGroupList.end()) {
 							pEvent->EventGroupList.push_back(GroupInfo);
 

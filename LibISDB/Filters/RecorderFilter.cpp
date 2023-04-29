@@ -183,16 +183,16 @@ std::shared_ptr<RecorderFilter::RecordingTask> RecorderFilter::GetTaskByIndex(in
 
 RecorderFilter::TaskList::iterator RecorderFilter::FindTask(const RecordingTask *pTask)
 {
-	return std::find_if(
-		m_TaskList.begin(), m_TaskList.end(),
+	return std::ranges::find_if(
+		m_TaskList,
 		[pTask](const TaskList::value_type &Task) -> bool { return Task.get() == pTask; });
 }
 
 
 RecorderFilter::TaskList::const_iterator RecorderFilter::FindTask(const RecordingTask *pTask) const
 {
-	return std::find_if(
-		m_TaskList.cbegin(), m_TaskList.cend(),
+	return std::ranges::find_if(
+		m_TaskList,
 		[pTask](const TaskList::value_type &Task) -> bool { return Task.get() == pTask; });
 }
 

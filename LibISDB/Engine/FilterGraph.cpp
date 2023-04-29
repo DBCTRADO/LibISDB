@@ -100,8 +100,8 @@ FilterGraph::IDType FilterGraph::RegisterFilter(FilterBase *pFilter)
 
 bool FilterGraph::UnregisterFilter(FilterBase *pFilter, bool Delete)
 {
-	auto it = std::find_if(
-		m_FilterList.begin(), m_FilterList.end(),
+	auto it = std::ranges::find_if(
+		m_FilterList,
 		[pFilter](auto &e) -> bool { return e.Filter.get() == pFilter; });
 	if (it == m_FilterList.end())
 		return false;
@@ -158,9 +158,7 @@ FilterBase * FilterGraph::GetFilterByIndex(size_t Index) const
 
 FilterBase * FilterGraph::GetFilterByID(IDType ID) const
 {
-	auto it = std::find_if(
-		m_FilterList.begin(), m_FilterList.end(),
-		[ID](auto &e) -> bool { return e.ID == ID; });
+	auto it = std::ranges::find(m_FilterList, ID, &FilterInfo::ID);
 	if (it == m_FilterList.end())
 		return nullptr;
 
@@ -180,8 +178,8 @@ FilterBase * FilterGraph::GetFilterByTypeID(const std::type_info &Type) const
 
 FilterBase * FilterGraph::GetFilterByTypeIndex(const std::type_index &Type) const
 {
-	auto it = std::find_if(
-		m_FilterList.begin(), m_FilterList.end(),
+	auto it = std::ranges::find_if(
+		m_FilterList,
 		[&Type](auto &e) -> bool { return std::type_index(typeid(*e.Filter)) == Type; });
 	if (it == m_FilterList.end())
 		return nullptr;
@@ -290,8 +288,8 @@ const FilterGraph::ConnectionInfo * FilterGraph::GetConnectionInfoByDownstreamID
 
 const FilterGraph::FilterInfo * FilterGraph::GetFilterInfoByTypeID(const std::type_info &Type) const
 {
-	auto it = std::find_if(
-		m_FilterList.begin(), m_FilterList.end(),
+	auto it = std::ranges::find_if(
+		m_FilterList,
 		[&Type](auto &e) -> bool { return typeid(*e.Filter) == Type; });
 	if (it == m_FilterList.end())
 		return nullptr;

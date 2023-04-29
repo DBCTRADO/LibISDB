@@ -55,7 +55,7 @@ namespace LibISDB
 
 			BlockLock Lock(m_Lock);
 
-			if (std::find(m_EventListenerList.begin(), m_EventListenerList.end(), pListener) != m_EventListenerList.end())
+			if (std::ranges::find(m_EventListenerList, pListener) != m_EventListenerList.end())
 				return false;
 
 			m_EventListenerList.push_back(pListener);
@@ -67,7 +67,7 @@ namespace LibISDB
 		{
 			BlockLock Lock(m_Lock);
 
-			auto it = std::find(m_EventListenerList.begin(), m_EventListenerList.end(), pListener);
+			auto it = std::ranges::find(m_EventListenerList, pListener);
 
 			if (it == m_EventListenerList.end())
 				return false;

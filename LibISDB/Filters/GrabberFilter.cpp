@@ -76,7 +76,7 @@ bool GrabberFilter::AddGrabber(Grabber *pGrabber)
 
 	BlockLock Lock(m_FilterLock);
 
-	auto it = std::find(m_GrabberList.begin(), m_GrabberList.end(), pGrabber);
+	auto it = std::ranges::find(m_GrabberList, pGrabber);
 	if (it != m_GrabberList.end())
 		return false;
 
@@ -90,7 +90,7 @@ bool GrabberFilter::RemoveGrabber(Grabber *pGrabber)
 {
 	BlockLock Lock(m_FilterLock);
 
-	auto it = std::find(m_GrabberList.begin(), m_GrabberList.end(), pGrabber);
+	auto it = std::ranges::find(m_GrabberList, pGrabber);
 	if (it == m_GrabberList.end())
 		return false;
 
