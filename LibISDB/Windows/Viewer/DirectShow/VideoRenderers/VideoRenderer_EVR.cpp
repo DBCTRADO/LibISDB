@@ -372,19 +372,7 @@ COMMemoryPointer<> VideoRenderer_EVR::GetCurrentImage()
 bool VideoRenderer_EVR::ShowCursor(bool Show)
 {
 #ifdef LIBISDB_EVR_USE_VIDEO_WINDOW
-	if (m_ShowCursor != Show) {
-		if (m_hwndVideo != nullptr) {
-			POINT pt;
-			RECT rc;
-
-			::GetCursorPos(&pt);
-			::GetWindowRect(m_hwndVideo, &rc);
-			if (::PtInRect(&rc, pt))
-				::SetCursor(Show ? ::LoadCursor(nullptr, IDC_ARROW) : nullptr);
-		}
-
-		m_ShowCursor = Show;
-	}
+	m_ShowCursor = Show;
 #endif
 
 	return true;

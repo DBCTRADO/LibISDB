@@ -149,19 +149,7 @@ bool VideoRenderer_MPCVideoRenderer::GetDestPosition(ReturnArg<RECT> Rect)
 
 bool VideoRenderer_MPCVideoRenderer::ShowCursor(bool Show)
 {
-	if (m_ShowCursor != Show) {
-		if (m_hwndVideo != nullptr) {
-			POINT pt;
-			RECT rc;
-
-			::GetCursorPos(&pt);
-			::GetWindowRect(m_hwndVideo, &rc);
-			if (::PtInRect(&rc, pt))
-				::SetCursor(Show ? ::LoadCursor(nullptr, IDC_ARROW) : nullptr);
-		}
-
-		m_ShowCursor = Show;
-	}
+	m_ShowCursor = Show;
 
 	return true;
 }
