@@ -59,7 +59,6 @@ namespace LibISDB::DirectShow
 		static VideoRenderer_MPCVideoRenderer * GetThis(HWND hwnd);
 		static LRESULT CALLBACK VideoWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		HWND m_hwndVideo = nullptr;
 		HWND m_hwndMessageDrain = nullptr;
 		bool m_ShowCursor = true;
 	};

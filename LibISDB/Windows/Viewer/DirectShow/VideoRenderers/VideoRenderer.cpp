@@ -83,8 +83,58 @@ bool VideoRenderer_Default::InitializeBasicVideo(
 	}
 
 	m_GraphBuilder = pGraphBuilder;
+	m_hwndRender = hwndRender;
+
+	if (!m_Renderer) {
+		IBaseFilter *pFilter = nullptr;
+		if (SUCCEEDED(pGraphBuilder->FindFilterByName(L"Video Renderer", &pFilter)))
+			m_Renderer.Attach(pFilter);
+	}
+
+	if (m_hwndVideo == nullptr && m_Renderer)
+		m_hwndVideo = FindVideoWindow();
 
 	return true;
+}
+
+
+HWND VideoRenderer_Default::FindVideoWindow()
+{
+	if (!m_Renderer)
+		return nullptr;
+
+	IEnumPins *pEnumPins;
+	if (FAILED(m_Renderer->EnumPins(&pEnumPins)))
+		return nullptr;
+
+	HWND hwndVideo = nullptr;
+	IPin *pPin;
+	ULONG cFetched;
+
+	while ((hwndVideo == nullptr) && (pEnumPins->Next(1, &pPin, &cFetched) == S_OK)) {
+		PIN_INFO Pin;
+
+		if (SUCCEEDED(pPin->QueryPinInfo(&Pin))){
+			if (Pin.dir == PINDIR_INPUT) {
+				IOverlay *pOverlay;
+				if (SUCCEEDED(pPin->QueryInterface(IID_PPV_ARGS(&pOverlay)))) {
+					HWND hwnd = nullptr;
+					if (SUCCEEDED(pOverlay->GetWindowHandle(&hwnd)))
+						hwndVideo = hwnd;
+					pOverlay->Release();
+				}
+			}
+
+			if (Pin.pFilter != nullptr)
+				Pin.pFilter->Release();
+		}
+
+		pPin->Release();
+	}
+
+	pEnumPins->Release();
+
+	return hwndVideo;
 }
 
 
@@ -323,14 +373,6 @@ bool VideoRenderer_Basic::SetVideoPosition(
 
 
 
-VideoRenderer::VideoRenderer() noexcept
-	: m_hwndRender(nullptr)
-	, m_Crop1088To1080(true)
-	, m_ClipToDevice(true)
-{
-}
-
-
 VideoRenderer::~VideoRenderer()
 {
 	LIBISDB_TRACE(LIBISDB_STR("VideoRenderer::~VideoRenderer()\n"));
@@ -341,6 +383,7 @@ bool VideoRenderer::Finalize()
 {
 	m_Renderer.Release();
 	m_GraphBuilder.Release();
+	m_hwndVideo = nullptr;
 
 	return true;
 }

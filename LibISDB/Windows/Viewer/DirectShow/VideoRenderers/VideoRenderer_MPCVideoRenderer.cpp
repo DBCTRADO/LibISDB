@@ -87,7 +87,6 @@ bool VideoRenderer_MPCVideoRenderer::Initialize(
 		return false;
 	}
 
-	m_hwndRender = hwndRender;
 	m_hwndMessageDrain = hwndMessageDrain;
 
 	return true;

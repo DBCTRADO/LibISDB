@@ -98,4 +98,12 @@ const CLSID & VideoRenderer_madVR::GetCLSID()
 }
 
 
+HWND VideoRenderer_madVR::FindVideoWindow()
+{
+	if (m_hwndRender == nullptr)
+		return nullptr;
+	return ::FindWindowEx(m_hwndRender, nullptr, TEXT("madVR"), nullptr);
+}
+
+
 }	// namespace LibISDB::DirectShow
