@@ -1046,6 +1046,7 @@ namespace LibISDB
 
 				// H-EIT[p/f], M-EIT, L-EIT
 				struct {
+					bool Valid;
 					uint8_t HEITTableCycle;   /**< table_cycle(H-EIT[p/f]) */
 					uint8_t MEITTableCycle;   /**< table_cycle(M-EIT) */
 					uint8_t LEITTableCycle;   /**< table_cycle(L-EIT) */
@@ -1068,7 +1069,7 @@ namespace LibISDB
 							uint8_t Cycle;        /**< cycle */
 						} CycleGroup[3];
 					} MediaTypeList[3];
-				} HEIT_Schedule;
+				} EIT_Schedule;
 			};
 		};
 

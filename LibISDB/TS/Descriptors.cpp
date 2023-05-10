@@ -1498,7 +1498,8 @@ bool ExtendedBroadcasterDescriptor::GetTerrestrialBroadcasterInfo(ReturnArg<Terr
 {
 	if (!Info)
 		return false;
-	if (m_BroadcasterType != BROADCASTER_TYPE_TERRESTRIAL)
+	if ((m_BroadcasterType != BROADCASTER_TYPE_TERRESTRIAL)
+			&& (m_BroadcasterType != BROADCASTER_TYPE_TERRESTRIAL_SOUND))
 		return false;
 
 	*Info = m_TerrestrialBroadcasterInfo;
@@ -1516,7 +1517,8 @@ bool ExtendedBroadcasterDescriptor::StoreContents(const uint8_t *pPayload)
 
 	m_BroadcasterType = pPayload[0] >> 4;
 
-	if (m_BroadcasterType == BROADCASTER_TYPE_TERRESTRIAL) {
+	if ((m_BroadcasterType == BROADCASTER_TYPE_TERRESTRIAL)
+			|| (m_BroadcasterType == BROADCASTER_TYPE_TERRESTRIAL_SOUND)) {
 		if (m_Length < 4)
 			return false;
 
@@ -1831,7 +1833,7 @@ bool SIParameterDescriptor::StoreContents(const uint8_t *pPayload)
 		case TABLE_ID_NBIT_MSG:
 		case TABLE_ID_NBIT_REF:
 			if (DescriptionLength == 1) {
-				Info.NIT.TableCycle = pPayload[Pos];
+				Info.NIT.TableCycle = GetBCD(&pPayload[Pos], 2);
 				OK = true;
 			}
 			break;
@@ -1840,7 +1842,7 @@ bool SIParameterDescriptor::StoreContents(const uint8_t *pPayload)
 		case TABLE_ID_LDT:
 		case TABLE_ID_CDT:
 			if (DescriptionLength == 2) {
-				Info.LDT.TableCycle = Load16(&pPayload[Pos]);
+				Info.LDT.TableCycle = GetBCD(&pPayload[Pos], 4);
 				OK = true;
 			}
 			break;
@@ -1848,9 +1850,10 @@ bool SIParameterDescriptor::StoreContents(const uint8_t *pPayload)
 		case TABLE_ID_EIT_PF_ACTUAL:
 			if (DescriptionLength == 4) {
 				// Terrestrial (H-EIT[p/f], M-EIT, L-EIT)
-				Info.HMLEIT.HEITTableCycle = pPayload[Pos + 0];
-				Info.HMLEIT.MEITTableCycle = pPayload[Pos + 1];
-				Info.HMLEIT.LEITTableCycle = pPayload[Pos + 2];
+				Info.HMLEIT.Valid = true;
+				Info.HMLEIT.HEITTableCycle = GetBCD(&pPayload[Pos + 0], 2);
+				Info.HMLEIT.MEITTableCycle = GetBCD(&pPayload[Pos + 1], 2);
+				Info.HMLEIT.LEITTableCycle = GetBCD(&pPayload[Pos + 2], 2);
 				Info.HMLEIT.NumOfMEITEvent = pPayload[Pos + 3] >> 4;
 				Info.HMLEIT.NumOfLEITEvent = pPayload[Pos + 3] & 0x0F;
 				OK = true;
@@ -1859,7 +1862,8 @@ bool SIParameterDescriptor::StoreContents(const uint8_t *pPayload)
 			[[fallthrough]];
 		case TABLE_ID_EIT_PF_OTHER:
 			if (DescriptionLength == 1) {
-				Info.EIT_PF.TableCycle = pPayload[Pos];
+				Info.EIT_PF.TableCycle = GetBCD(&pPayload[Pos], 2);
+				Info.HMLEIT.Valid = false;
 				OK = true;
 				break;
 			}
@@ -1868,30 +1872,30 @@ bool SIParameterDescriptor::StoreContents(const uint8_t *pPayload)
 		case TABLE_ID_EIT_SCHEDULE_ACTUAL:
 		case TABLE_ID_EIT_SCHEDULE_EXTENDED:
 		case TABLE_ID_EIT_SCHEDULE_OTHER:
-			Info.HEIT_Schedule.MediaTypeCount = 0;
+			Info.EIT_Schedule.MediaTypeCount = 0;
 
 			if (DescriptionLength >= 4) {
 				const size_t EndPos = Pos + DescriptionLength;
 
 				for (int i = 0; Pos + 4 <= EndPos; i++) {
-					Info.HEIT_Schedule.MediaTypeList[i].MediaType       = pPayload[Pos + 0] >> 6;
-					Info.HEIT_Schedule.MediaTypeList[i].Pattern         = (pPayload[Pos + 0] >> 4) & 0x03;
-					Info.HEIT_Schedule.MediaTypeList[i].EITOtherFlag    = (pPayload[Pos + 0] & 0x08) != 0;
-					Info.HEIT_Schedule.MediaTypeList[i].ScheduleRange   = GetBCD(pPayload[Pos + 1]);
-					Info.HEIT_Schedule.MediaTypeList[i].BaseCycle       = GetBCD(&pPayload[Pos + 2], 3);
-					Info.HEIT_Schedule.MediaTypeList[i].CycleGroupCount = pPayload[Pos + 3] & 0x03;
+					Info.EIT_Schedule.MediaTypeList[i].MediaType       = pPayload[Pos + 0] >> 6;
+					Info.EIT_Schedule.MediaTypeList[i].Pattern         = (pPayload[Pos + 0] >> 4) & 0x03;
+					Info.EIT_Schedule.MediaTypeList[i].EITOtherFlag    = (pPayload[Pos + 0] & 0x08) != 0;
+					Info.EIT_Schedule.MediaTypeList[i].ScheduleRange   = GetBCD(pPayload[Pos + 1]);
+					Info.EIT_Schedule.MediaTypeList[i].BaseCycle       = GetBCD(&pPayload[Pos + 2], 3);
+					Info.EIT_Schedule.MediaTypeList[i].CycleGroupCount = pPayload[Pos + 3] & 0x03;
 
 					Pos += 4;
-					if (Pos + Info.HEIT_Schedule.MediaTypeList[i].CycleGroupCount * 2 > EndPos)
+					if (Pos + Info.EIT_Schedule.MediaTypeList[i].CycleGroupCount * 2 > EndPos)
 						break;
 
-					for (int j = 0; j < Info.HEIT_Schedule.MediaTypeList[i].CycleGroupCount; j++) {
-						Info.HEIT_Schedule.MediaTypeList[i].CycleGroup[j].NumOfSegment = GetBCD(pPayload[Pos + 0]);
-						Info.HEIT_Schedule.MediaTypeList[i].CycleGroup[j].Cycle        = GetBCD(pPayload[Pos + 1]);
+					for (int j = 0; j < Info.EIT_Schedule.MediaTypeList[i].CycleGroupCount; j++) {
+						Info.EIT_Schedule.MediaTypeList[i].CycleGroup[j].NumOfSegment = GetBCD(pPayload[Pos + 0]);
+						Info.EIT_Schedule.MediaTypeList[i].CycleGroup[j].Cycle        = GetBCD(pPayload[Pos + 1]);
 						Pos += 2;
 					}
 
-					Info.HEIT_Schedule.MediaTypeCount++;
+					Info.EIT_Schedule.MediaTypeCount++;
 				}
 
 				OK = true;

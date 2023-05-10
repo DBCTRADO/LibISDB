@@ -73,6 +73,8 @@ void AnalyzerFilter::Reset()
 	m_PIDMapManager.MapTarget(PID_NIT, PSITableBase::CreateWithHandler<NITMultiTable>(&AnalyzerFilter::OnNITSection, this));
 	// SDTテーブルPIDマップ追加
 	m_PIDMapManager.MapTarget(PID_SDT, PSITableBase::CreateWithHandler<SDTTableSet>(&AnalyzerFilter::OnSDTSection, this));
+	// BITテーブルPIDマップ追加
+	m_PIDMapManager.MapTarget(PID_BIT, PSITableBase::CreateWithHandler<BITMultiTable>(&AnalyzerFilter::OnBITSection, this));
 #ifdef LIBISDB_ANALYZER_FILTER_EIT_SUPPORT
 	// H-EITテーブルPIDマップ追加
 	m_PIDMapManager.MapTarget(PID_HEIT, PSITableBase::CreateWithHandler<EITPfActualTable>(&AnalyzerFilter::OnEITSection, this));
@@ -1749,6 +1751,82 @@ bool AnalyzerFilter::GetCableDeliverySystemList(ReturnArg<CableDeliverySystemLis
 }
 
 
+bool AnalyzerFilter::GetBITNetworkList(ReturnArg<BITNetworkList> List) const
+{
+	if (!List)
+		return false;
+
+	BlockLock Lock(m_FilterLock);
+
+	List->clear();
+
+	const BITMultiTable *pBITMultiTable =
+		m_PIDMapManager.GetMapTarget<BITMultiTable>(PID_BIT);
+	if ((pBITMultiTable == nullptr) || !pBITMultiTable->IsBITComplete())
+		return false;
+
+	for (uint16_t SectionNo = 0; SectionNo < pBITMultiTable->GetBITSectionCount(); SectionNo++) {
+		const BITTable *pBITTable = pBITMultiTable->GetBITTable(SectionNo);
+		if (pBITTable == nullptr)
+			continue;
+
+		BITNetworkInfo &NetworkInfo = List->emplace_back();
+		NetworkInfo.OriginalNetworkID = pBITTable->GetOriginalNetworkID();
+
+		// BIT 第1ループ(ネットワークループ)
+		if (const DescriptorBlock *pDescBlock = pBITTable->GetBITDescriptorBlock();
+				pDescBlock != nullptr) {
+			pDescBlock->EnumDescriptors<SIParameterDescriptor>(
+				[&](const SIParameterDescriptor *pSIParameterDesc) {
+					SIParameterInfo &SIParameter = NetworkInfo.SIParameterList.emplace_back();
+					SIParameter.ParameterVersion = pSIParameterDesc->GetParameterVersion();
+					pSIParameterDesc->GetUpdateTime(&SIParameter.UpdateTime);
+					SIParameter.TableList.resize(pSIParameterDesc->GetTableCount());
+					for (int i = 0; i < pSIParameterDesc->GetTableCount(); i++)
+						pSIParameterDesc->GetTableInfo(i, &SIParameter.TableList[i]);
+				});
+		}
+
+		NetworkInfo.BroadcasterList.resize(pBITTable->GetBroadcasterCount());
+
+		// BIT 第2ループ(ブロードキャスタループ)
+		for (int i = 0; i < pBITTable->GetBroadcasterCount(); i++) {
+			BITBroadcasterInfo &BroadcasterInfo = NetworkInfo.BroadcasterList[i];
+			BroadcasterInfo.BroadcasterID = pBITTable->GetBroadcasterID(i);
+			BroadcasterInfo.BroadcasterType = 0xFF;
+
+			if (const DescriptorBlock *pDescBlock = pBITTable->GetBroadcasterDescriptorBlock(i);
+					pDescBlock != nullptr) {
+				if (const BroadcasterNameDescriptor *pBroadcasterNameDesc =
+							pDescBlock->GetDescriptor<BroadcasterNameDescriptor>();
+						pBroadcasterNameDesc != nullptr) {
+					ARIBString Name;
+					if (pBroadcasterNameDesc->GetBroadcasterName(&Name))
+						m_StringDecoder.Decode(Name, &BroadcasterInfo.BroadcasterName);
+				}
+
+				if (const ServiceListDescriptor *pServiceListDesc =
+							pDescBlock->GetDescriptor<ServiceListDescriptor>();
+						pServiceListDesc != nullptr) {
+					BroadcasterInfo.ServiceList.resize(pServiceListDesc->GetServiceCount());
+					for (int j = 0; j < pServiceListDesc->GetServiceCount(); j++)
+						pServiceListDesc->GetServiceInfo(j, &BroadcasterInfo.ServiceList[j]);
+				}
+
+				if (const ExtendedBroadcasterDescriptor *pExtendedBroadcasterDesc =
+							pDescBlock->GetDescriptor<ExtendedBroadcasterDescriptor>();
+						pExtendedBroadcasterDesc != nullptr) {
+					BroadcasterInfo.BroadcasterType = pExtendedBroadcasterDesc->GetBroadcasterType();
+					pExtendedBroadcasterDesc->GetTerrestrialBroadcasterInfo(&BroadcasterInfo.TerrestrialBroadcasterInfo);
+				}
+			}
+		}
+	}
+
+	return !List->empty();
+}
+
+
 bool AnalyzerFilter::GetEMMPIDList(ReturnArg<EMMPIDList> List) const
 {
 	if (!List)
@@ -2242,6 +2320,17 @@ void AnalyzerFilter::OnNITSection(const PSITableBase *pTable, const PSISection *
 
 	m_FilterLock.Unlock();
 	m_EventListenerList.CallEventListener(&EventListener::OnNITUpdated, this);
+	m_FilterLock.Lock();
+}
+
+
+void AnalyzerFilter::OnBITSection(const PSITableBase *pTable, const PSISection *pSection)
+{
+	// BIT が更新された
+	LIBISDB_TRACE(LIBISDB_STR("AnalyzerFilter::OnBITSection()\n"));
+
+	m_FilterLock.Unlock();
+	m_EventListenerList.CallEventListener(&EventListener::OnBITUpdated, this);
 	m_FilterLock.Lock();
 }
 
