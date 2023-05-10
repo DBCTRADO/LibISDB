@@ -161,6 +161,7 @@ const CharType * GetVideoComponentTypeText_ja(uint8_t ComponentType)
 	case 0x02: return LIBISDB_STR("480i[16:9] パンベクトルあり");
 	case 0x03: return LIBISDB_STR("480i[16:9]");
 	case 0x04: return LIBISDB_STR("480i[>16:9]");
+	case 0x83: return LIBISDB_STR("4320p[16:9]");
 	case 0x91: return LIBISDB_STR("2160p[4:3]");
 	case 0x92: return LIBISDB_STR("2160p[16:9] パンベクトルあり");
 	case 0x93: return LIBISDB_STR("2160p[16:9]");
