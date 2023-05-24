@@ -259,6 +259,12 @@ namespace LibISDB
 		unsigned long long m_CurTOTSeconds;
 		EventListenerList<EventListener> m_EventListenerList;
 
+		const ServiceEventMap * FindServiceEventMap(const ServiceInfo &Info) const;
+		const ServiceEventMap * FindServiceEventMap(
+			uint16_t NetworkID, uint16_t TransportStreamID, uint16_t ServiceID) const
+		{
+			return FindServiceEventMap(ServiceInfo(NetworkID, TransportStreamID, ServiceID));
+		}
 		bool MergeEventMap(
 			const ServiceInfo &Info, ServiceEventMap &Map,
 			MergeFlag Flags = MergeFlag::None,

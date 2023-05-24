@@ -111,10 +111,11 @@ bool EPGDatabase::IsServiceUpdated(uint16_t NetworkID, uint16_t TransportStreamI
 {
 	BlockLock Lock(m_Lock);
 
-	auto it = m_ServiceMap.find(ServiceInfo(NetworkID, TransportStreamID, ServiceID));
-	if (it == m_ServiceMap.end())
+	const ServiceEventMap *pService = FindServiceEventMap(NetworkID, TransportStreamID, ServiceID);
+	if (pService == nullptr)
 		return false;
-	return it->second.IsUpdated;
+
+	return pService->IsUpdated;
 }
 
 
@@ -142,26 +143,24 @@ bool EPGDatabase::GetEventList(
 
 	BlockLock Lock(m_Lock);
 
-	auto itService = m_ServiceMap.find(ServiceInfo(NetworkID, TransportStreamID, ServiceID));
-	if (itService == m_ServiceMap.end())
+	const ServiceEventMap *pService = FindServiceEventMap(NetworkID, TransportStreamID, ServiceID);
+	if (pService == nullptr)
 		return false;
 
-	const ServiceEventMap &Service = itService->second;
-
-	List->reserve(Service.EventMap.size());
+	List->reserve(pService->EventMap.size());
 
 	if (TimeMap) {
 		TimeMap->clear();
-		for (auto &Time : Service.TimeMap) {
-			auto itEvent = Service.EventMap.find(Time.EventID);
-			if ((itEvent != Service.EventMap.end())
+		for (auto &Time : pService->TimeMap) {
+			auto itEvent = pService->EventMap.find(Time.EventID);
+			if ((itEvent != pService->EventMap.end())
 					&& IsEventValid(itEvent->second)) {
 				List->push_back(itEvent->second);
 				TimeMap->insert(Time);
 			}
 		}
 	} else {
-		for (auto &Event : Service.EventMap) {
+		for (auto &Event : pService->EventMap) {
 			if (IsEventValid(Event.second))
 				List->push_back(Event.second);
 		}
@@ -182,17 +181,15 @@ bool EPGDatabase::GetEventListSortedByTime(
 
 	BlockLock Lock(m_Lock);
 
-	auto itService = m_ServiceMap.find(ServiceInfo(NetworkID, TransportStreamID, ServiceID));
-	if (itService == m_ServiceMap.end())
+	const ServiceEventMap *pService = FindServiceEventMap(NetworkID, TransportStreamID, ServiceID);
+	if (pService == nullptr)
 		return false;
 
-	const ServiceEventMap &Service = itService->second;
+	List->reserve(pService->EventMap.size());
 
-	List->reserve(Service.EventMap.size());
-
-	for (auto &Time : Service.TimeMap) {
-		auto itEvent = Service.EventMap.find(Time.EventID);
-		if ((itEvent != Service.EventMap.end())
+	for (auto &Time : pService->TimeMap) {
+		auto itEvent = pService->EventMap.find(Time.EventID);
+		if ((itEvent != pService->EventMap.end())
 				&& IsEventValid(itEvent->second)) {
 			List->push_back(itEvent->second);
 		}
@@ -211,10 +208,10 @@ bool EPGDatabase::GetEventInfo(
 
 	BlockLock Lock(m_Lock);
 
-	auto itService = m_ServiceMap.find(ServiceInfo(NetworkID, TransportStreamID, ServiceID));
-	if (itService != m_ServiceMap.end()) {
-		auto itEvent = itService->second.EventMap.find(EventID);
-		if ((itEvent != itService->second.EventMap.end())
+	const ServiceEventMap *pService = FindServiceEventMap(NetworkID, TransportStreamID, ServiceID);
+	if (pService != nullptr) {
+		auto itEvent = pService->EventMap.find(EventID);
+		if ((itEvent != pService->EventMap.end())
 				&& IsEventValid(itEvent->second)) {
 			*Info = itEvent->second;
 			SetCommonEventInfo(&*Info);
@@ -236,15 +233,15 @@ bool EPGDatabase::GetEventInfo(
 	BlockLock Lock(m_Lock);
 
 	bool Found = false;
-	auto itService = m_ServiceMap.find(ServiceInfo(NetworkID, TransportStreamID, ServiceID));
-	if (itService != m_ServiceMap.end()) {
+	const ServiceEventMap *pService = FindServiceEventMap(NetworkID, TransportStreamID, ServiceID);
+	if (pService != nullptr) {
 		const TimeEventInfo Key(Time);
-		auto itTime = itService->second.TimeMap.upper_bound(Key);
-		if (itTime != itService->second.TimeMap.begin()) {
+		auto itTime = pService->TimeMap.upper_bound(Key);
+		if (itTime != pService->TimeMap.begin()) {
 			--itTime;
 			if (itTime->StartTime + itTime->Duration > Key.StartTime) {
-				auto itEvent = itService->second.EventMap.find(itTime->EventID);
-				if ((itEvent != itService->second.EventMap.end())
+				auto itEvent = pService->EventMap.find(itTime->EventID);
+				if ((itEvent != pService->EventMap.end())
 						&& IsEventValid(itEvent->second)) {
 					*Info = itEvent->second;
 					SetCommonEventInfo(&*Info);
@@ -268,13 +265,13 @@ bool EPGDatabase::GetNextEventInfo(
 	BlockLock Lock(m_Lock);
 
 	bool Found = false;
-	auto itService = m_ServiceMap.find(ServiceInfo(NetworkID, TransportStreamID, ServiceID));
-	if (itService != m_ServiceMap.end()) {
+	const ServiceEventMap *pService = FindServiceEventMap(NetworkID, TransportStreamID, ServiceID);
+	if (pService != nullptr) {
 		const TimeEventInfo Key(Time);
-		auto itTime = itService->second.TimeMap.upper_bound(Key);
-		if (itTime != itService->second.TimeMap.end()) {
-			auto itEvent = itService->second.EventMap.find(itTime->EventID);
-			if ((itEvent != itService->second.EventMap.end())
+		auto itTime = pService->TimeMap.upper_bound(Key);
+		if (itTime != pService->TimeMap.end()) {
+			auto itEvent = pService->EventMap.find(itTime->EventID);
+			if ((itEvent != pService->EventMap.end())
 					&& IsEventValid(itEvent->second)) {
 				*Info = itEvent->second;
 				SetCommonEventInfo(&*Info);
@@ -296,11 +293,11 @@ bool EPGDatabase::EnumEventsUnsorted(
 
 	BlockLock Lock(m_Lock);
 
-	auto itService = m_ServiceMap.find(ServiceInfo(NetworkID, TransportStreamID, ServiceID));
-	if (itService == m_ServiceMap.end())
+	const ServiceEventMap *pService = FindServiceEventMap(NetworkID, TransportStreamID, ServiceID);
+	if (pService == nullptr)
 		return false;
 
-	for (auto &Event : itService->second.EventMap) {
+	for (auto &Event : pService->EventMap) {
 		if (!Callback(Event.second))
 			break;
 	}
@@ -318,13 +315,13 @@ bool EPGDatabase::EnumEventsSortedByTime(
 
 	BlockLock Lock(m_Lock);
 
-	auto itService = m_ServiceMap.find(ServiceInfo(NetworkID, TransportStreamID, ServiceID));
-	if (itService == m_ServiceMap.end())
+	const ServiceEventMap *pService = FindServiceEventMap(NetworkID, TransportStreamID, ServiceID);
+	if (pService == nullptr)
 		return false;
 
-	for (auto &Time : itService->second.TimeMap) {
-		auto itEvent = itService->second.EventMap.find(Time.EventID);
-		if (itEvent != itService->second.EventMap.end()) {
+	for (auto &Time : pService->TimeMap) {
+		auto itEvent = pService->EventMap.find(Time.EventID);
+		if (itEvent != pService->EventMap.end()) {
 			if (!Callback(itEvent->second))
 				break;
 		}
@@ -344,34 +341,34 @@ bool EPGDatabase::EnumEventsSortedByTime(
 
 	BlockLock Lock(m_Lock);
 
-	auto itService = m_ServiceMap.find(ServiceInfo(NetworkID, TransportStreamID, ServiceID));
-	if (itService == m_ServiceMap.end())
+	const ServiceEventMap *pService = FindServiceEventMap(NetworkID, TransportStreamID, ServiceID);
+	if (pService == nullptr)
 		return false;
 
 	TimeEventMap::const_iterator itTime, itEnd;
 
 	if ((pEarliest != nullptr) && pEarliest->IsValid()) {
 		const TimeEventInfo Key(*pEarliest);
-		itTime = itService->second.TimeMap.upper_bound(Key);
-		if (itTime != itService->second.TimeMap.begin()) {
+		itTime = pService->TimeMap.upper_bound(Key);
+		if (itTime != pService->TimeMap.begin()) {
 			auto itPrev = itTime;
 			--itPrev;
 			if (itPrev->StartTime + itPrev->Duration > Key.StartTime)
 				itTime = itPrev;
 		}
 	} else {
-		itTime = itService->second.TimeMap.begin();
+		itTime = pService->TimeMap.begin();
 	}
 
 	if ((pLatest != nullptr) && pLatest->IsValid()) {
-		itEnd = itService->second.TimeMap.lower_bound(TimeEventInfo(*pLatest));
+		itEnd = pService->TimeMap.lower_bound(TimeEventInfo(*pLatest));
 	} else {
-		itEnd = itService->second.TimeMap.end();
+		itEnd = pService->TimeMap.end();
 	}
 
 	for (;itTime != itEnd; ++itTime) {
-		auto itEvent = itService->second.EventMap.find(itTime->EventID);
-		if (itEvent != itService->second.EventMap.end()) {
+		auto itEvent = pService->EventMap.find(itTime->EventID);
+		if (itEvent != pService->EventMap.end()) {
 			if (!Callback(itEvent->second))
 				break;
 		}
@@ -920,6 +917,27 @@ void EPGDatabase::ResetTOTTime()
 {
 	m_CurTOTTime.Reset();
 	m_CurTOTSeconds = 0;
+}
+
+
+const EPGDatabase::ServiceEventMap * EPGDatabase::FindServiceEventMap(const ServiceInfo &Info) const
+{
+	if (Info.TransportStreamID != TRANSPORT_STREAM_ID_INVALID) {
+		auto it = m_ServiceMap.find(Info);
+		if (it != m_ServiceMap.end())
+			return &it->second;
+	} else {
+		auto it = std::ranges::find_if(
+			m_ServiceMap,
+			[&Info](const auto &Item) {
+				return Item.first.NetworkID == Info.NetworkID
+					&& Item.first.ServiceID == Info.ServiceID;
+			});
+		if (it != m_ServiceMap.end())
+			return &it->second;
+	}
+
+	return nullptr;
 }
 
 
