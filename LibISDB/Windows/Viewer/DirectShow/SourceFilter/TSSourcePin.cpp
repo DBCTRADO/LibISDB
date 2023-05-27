@@ -310,7 +310,7 @@ bool TSSourcePin::ProcessStream()
 		bool Discontinuity = false;
 
 		if (m_NewSegment.exchange(false, std::memory_order_acq_rel)) {
-			DeliverNewSegment(0, LONGLONG_MAX, 1.0);
+			DeliverNewSegment(0, std::numeric_limits<REFERENCE_TIME>::max(), 1.0);
 			Discontinuity = true;
 		}
 
