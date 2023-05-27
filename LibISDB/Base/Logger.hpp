@@ -49,7 +49,7 @@ namespace LibISDB
 
 		template<typename... TArgs> void Log(LogType Type, StringView Format, const TArgs&... Args)
 		{
-			LogV(Type, Format, MakeFormatArgs(Args));
+			LogV(Type, Format, MakeFormatArgs(Args...));
 		}
 		void LogV(LogType Type, StringView Format, FormatArgs Args);
 		void LogRaw(LogType Type, const CharType *pText);
