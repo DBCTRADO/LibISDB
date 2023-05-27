@@ -442,7 +442,7 @@ HRESULT AudioDecoderFilter::Transform(IMediaSample *pIn, IMediaSample *pOut)
 
 			if (m_StartTime >= 0) {
 				REFERENCE_TIME rtDuration, rtStart, rtEnd;
-				rtDuration = REFERENCE_TIME_SECOND * static_cast<LONGLONG>(SampleInfo.SampleCount) / FrameInfo.Info.Frequency;
+				rtDuration = REFERENCE_TIME_SECOND * static_cast<REFERENCE_TIME>(SampleInfo.SampleCount) / FrameInfo.Info.Frequency;
 				rtStart = m_StartTime;
 				m_StartTime += rtDuration;
 				// 音ずれ補正用時間シフト

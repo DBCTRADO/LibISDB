@@ -299,7 +299,7 @@ bool TSSourcePin::ProcessStream()
 					これも設定できるようにするか、あるいは時間での判定に統一する方がいいかも知れない。
 				*/
 				&& (m_SrcStream.GetPTSDuration() <
-						static_cast<LONGLONG>(m_SrcStream.GetQueueSize() * TS_PACKET_SIZE) * PoolPercentage / (2000000LL * 100LL / 90000LL))) {
+						static_cast<long long>(m_SrcStream.GetQueueSize() * TS_PACKET_SIZE) * PoolPercentage / (2000000LL * 100LL / 90000LL))) {
 			return false;
 		}
 
