@@ -156,7 +156,7 @@ interface __declspec(uuid("8B81E022-52C7-4B89-9F11-ACFD063AABB4")) IPinSegmentEx
 
 bool IsLAVVideoDecoderName(const String &Name)
 {
-	return StringCompareI(Name.c_str(), LIBISDB_STR("LAV Video Decoder")) == 0;
+	return StringEqualsI(Name, LIBISDB_STR("LAV Video Decoder"));
 }
 
 
@@ -584,7 +584,7 @@ bool ViewerFilter::OpenViewer(const OpenSettings &Settings)
 					bool Connected = false;
 
 					for (const auto &Filter : FilterList) {
-						if (StringCompareI(Name, Filter.FriendlyName) == 0) {
+						if (StringEqualsI(Name, Filter.FriendlyName)) {
 							COMPointer<IBaseFilter> FilterInterface;
 
 							hr = DirectShow::AppendFilterAndConnect(
@@ -2059,7 +2059,7 @@ void ViewerFilter::ApplyAdjustVideoSampleOptions()
 		if (m_1SegMode) {
 			Flags = DirectShow::VideoParser::AdjustSampleFlag::OneSeg;
 			// Microsoft DTV-DVD Video Decoder では何故か映像が出なくなってしまうため無効とする
-			if (StringCompareI(m_VideoDecoderName.c_str(), LIBISDB_STR("Microsoft DTV-DVD Video Decoder")) != 0) {
+			if (!StringEqualsI(m_VideoDecoderName, LIBISDB_STR("Microsoft DTV-DVD Video Decoder"))) {
 				if (m_Adjust1SegVideoSampleTime)
 					Flags |= DirectShow::VideoParser::AdjustSampleFlag::Time;
 				if (m_Adjust1SegFrameRate)
