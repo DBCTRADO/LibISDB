@@ -32,6 +32,8 @@ extern "C" {
 #include "../../../../../Thirdparty/a52dec/liba52/a52_internal.h"
 }
 
+#include <bit>
+
 #include "../../../../Base/DebugDef.hpp"
 
 
@@ -45,10 +47,10 @@ namespace LibISDB::DirectShow
 namespace
 {
 
-inline int16_t SampleToInt16(float Sample)
+constexpr int16_t SampleToInt16(float Sample)
 {
-	static_assert(sizeof(float) == sizeof(uint32_t));
-	const int32_t i = *reinterpret_cast<int32_t *>(&Sample);
+	static_assert(std::numeric_limits<float>::is_iec559);
+	const int32_t i = std::bit_cast<int32_t>(Sample);
 	if (i > 0x43C07FFF_i32)
 		return 32767;
 	if (i < 0x43BF8000_i32)
