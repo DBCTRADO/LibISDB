@@ -58,11 +58,11 @@ namespace LibISDB
 
 	void DebugTraceV(TraceType Type, std::string_view Format, std::format_args Args);
 	void DebugTraceV(TraceType Type, std::wstring_view Format, std::wformat_args Args);
-	template<typename... TArgs> void DebugTrace(TraceType Type, std::string_view Format, const TArgs&... Args)
+	template<typename... TArgs> void DebugTrace(TraceType Type, std::string_view Format, TArgs&&... Args)
 	{
 		DebugTraceV(Type, Format, std::make_format_args(Args...));
 	}
-	template<typename... TArgs> void DebugTrace(TraceType Type, std::wstring_view Format, const TArgs&... Args)
+	template<typename... TArgs> void DebugTrace(TraceType Type, std::wstring_view Format, TArgs&&... Args)
 	{
 		DebugTraceV(Type, Format, std::make_wformat_args(Args...));
 	}

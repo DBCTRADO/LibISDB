@@ -47,7 +47,7 @@ namespace LibISDB
 
 		static constexpr size_t MAX_LENGTH = 1024;
 
-		template<typename... TArgs> void Log(LogType Type, StringView Format, const TArgs&... Args)
+		template<typename... TArgs> void Log(LogType Type, StringView Format, TArgs&&... Args)
 		{
 			LogV(Type, Format, MakeFormatArgs(Args...));
 		}

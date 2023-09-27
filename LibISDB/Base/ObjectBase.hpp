@@ -49,7 +49,7 @@ namespace LibISDB
 		Logger * GetLogger() const noexcept { return m_pLogger; }
 
 	protected:
-		template<typename... TArgs> void Log(Logger::LogType Type, StringView Format, const TArgs&... Args)
+		template<typename... TArgs> void Log(Logger::LogType Type, StringView Format, TArgs&&... Args)
 		{
 			LogV(Type, Format, MakeFormatArgs(Args...));
 		}
