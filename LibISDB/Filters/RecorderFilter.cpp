@@ -233,7 +233,7 @@ bool RecorderFilter::RecordingDataStreamer::ReopenWriter(
 	BlockLock Lock(m_Lock);
 
 	if (!m_Writer) {
-		SetError(std::errc::no_stream_resources);
+		SetError(std::errc::operation_not_permitted);
 		return false;
 	}
 
