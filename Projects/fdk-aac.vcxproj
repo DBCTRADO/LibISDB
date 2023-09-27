@@ -33,43 +33,38 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="Common.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
@@ -78,58 +73,41 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|Win32'">
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|x64'">
-    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_MD|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalIncludeDirectories>$(ProjectDir)..\Thirdparty\fdk-aac\libAACdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libAACenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libArithCoding\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libDRCdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libFDK\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libMpegTPDec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libMpegTPEnc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libPCMutils\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSACdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSACenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSBRdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSBRenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSYS\include\;$(ProjectDir)..\Thirdparty\fdk-aac\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PreprocessorDefinitions>inline=__inline;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,13 +118,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ConformanceMode>true</ConformanceMode>
-      <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalIncludeDirectories>$(ProjectDir)..\Thirdparty\fdk-aac\libAACdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libAACenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libArithCoding\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libDRCdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libFDK\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libMpegTPDec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libMpegTPEnc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libPCMutils\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSACdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSACenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSBRdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSBRenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSYS\include\;$(ProjectDir)..\Thirdparty\fdk-aac\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PreprocessorDefinitions>inline=__inline;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -160,13 +136,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalIncludeDirectories>$(ProjectDir)..\Thirdparty\fdk-aac\libAACdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libAACenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libArithCoding\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libDRCdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libFDK\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libMpegTPDec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libMpegTPEnc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libPCMutils\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSACdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSACenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSBRdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSBRenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSYS\include\;$(ProjectDir)..\Thirdparty\fdk-aac\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>inline=__inline;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -182,13 +156,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalIncludeDirectories>$(ProjectDir)..\Thirdparty\fdk-aac\libAACdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libAACenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libArithCoding\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libDRCdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libFDK\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libMpegTPDec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libMpegTPEnc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libPCMutils\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSACdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSACenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSBRdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSBRenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSYS\include\;$(ProjectDir)..\Thirdparty\fdk-aac\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>inline=__inline;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -204,13 +176,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalIncludeDirectories>$(ProjectDir)..\Thirdparty\fdk-aac\libAACdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libAACenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libArithCoding\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libDRCdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libFDK\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libMpegTPDec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libMpegTPEnc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libPCMutils\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSACdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSACenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSBRdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSBRenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSYS\include\;$(ProjectDir)..\Thirdparty\fdk-aac\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>inline=__inline;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -226,13 +196,11 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ConformanceMode>true</ConformanceMode>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalIncludeDirectories>$(ProjectDir)..\Thirdparty\fdk-aac\libAACdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libAACenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libArithCoding\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libDRCdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libFDK\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libMpegTPDec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libMpegTPEnc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libPCMutils\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSACdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSACenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSBRdec\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSBRenc\include\;$(ProjectDir)..\Thirdparty\fdk-aac\libSYS\include\;$(ProjectDir)..\Thirdparty\fdk-aac\win32\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>inline=__inline;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
