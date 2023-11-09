@@ -263,6 +263,7 @@ bool GetLanguageText_ja(
 		{LANGUAGE_CODE_RUS, LIBISDB_STR("ロシア語"),   LIBISDB_STR("露語"),   LIBISDB_STR("露")},
 		{LANGUAGE_CODE_ZHO, LIBISDB_STR("中国語"),     LIBISDB_STR("中国語"), LIBISDB_STR("中")},
 		{LANGUAGE_CODE_KOR, LIBISDB_STR("韓国語"),     LIBISDB_STR("韓国語"), LIBISDB_STR("韓")},
+		{LANGUAGE_CODE_POR, LIBISDB_STR("ポルトガル語"), LIBISDB_STR("葡語"), LIBISDB_STR("葡")},
 		{LANGUAGE_CODE_SPA, LIBISDB_STR("スペイン語"), LIBISDB_STR("西語"),   LIBISDB_STR("西")},
 		{LANGUAGE_CODE_ETC, LIBISDB_STR("外国語"),     LIBISDB_STR("外国語"), LIBISDB_STR("外")},
 	};

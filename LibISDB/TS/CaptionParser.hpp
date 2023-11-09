@@ -104,8 +104,8 @@ namespace LibISDB
 		void OnPESPacket(const PESParser *pParser, const PESPacket *pPacket) override;
 
 		bool ParseManagementData(const uint8_t *pData, uint32_t DataSize);
-		bool ParseCaptionData(const uint8_t *pData, uint32_t DataSize);
-		bool ParseUnitData(const uint8_t *pData, uint32_t *pDataSize);
+		bool ParseCaptionData(const uint8_t *pData, uint32_t DataSize, uint8_t DataGroupIndex);
+		bool ParseUnitData(const uint8_t *pData, uint32_t *pDataSize, uint8_t DataGroupIndex);
 		bool ParseDRCSUnitData(const uint8_t *pData, uint32_t DataSize);
 		void OnCaption(const CharType *pText, const ARIBStringDecoder::FormatList *pFormatList);
 

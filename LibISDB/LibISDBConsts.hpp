@@ -154,6 +154,7 @@ namespace LibISDB
 	constexpr uint32_t LANGUAGE_CODE_RUS     = 0x727573_u32; // ロシア語
 	constexpr uint32_t LANGUAGE_CODE_ZHO     = 0x7A686F_u32; // 中国語
 	constexpr uint32_t LANGUAGE_CODE_KOR     = 0x6B6F72_u32; // 韓国語
+	constexpr uint32_t LANGUAGE_CODE_POR     = 0x706F72_u32; // ポルトガル語
 	constexpr uint32_t LANGUAGE_CODE_SPA     = 0x737061_u32; // スペイン語
 	constexpr uint32_t LANGUAGE_CODE_ETC     = 0x657463_u32; // その他
 	constexpr uint32_t LANGUAGE_CODE_INVALID = 0x000000_u32; // 無効
