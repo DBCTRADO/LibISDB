@@ -255,17 +255,17 @@ bool GetLanguageText_ja(
 		const CharType *pSimpleText;
 		const CharType *pShortText;
 	} LanguageList[] = {
-		{LANGUAGE_CODE_JPN, LIBISDB_STR("日本語"),     LIBISDB_STR("日本語"), LIBISDB_STR("日")},
-		{LANGUAGE_CODE_ENG, LIBISDB_STR("英語"),       LIBISDB_STR("英語"),   LIBISDB_STR("英")},
-		{LANGUAGE_CODE_DEU, LIBISDB_STR("ドイツ語"),   LIBISDB_STR("独語"),   LIBISDB_STR("独")},
-		{LANGUAGE_CODE_FRA, LIBISDB_STR("フランス語"), LIBISDB_STR("仏語"),   LIBISDB_STR("仏")},
-		{LANGUAGE_CODE_ITA, LIBISDB_STR("イタリア語"), LIBISDB_STR("伊語"),   LIBISDB_STR("伊")},
-		{LANGUAGE_CODE_RUS, LIBISDB_STR("ロシア語"),   LIBISDB_STR("露語"),   LIBISDB_STR("露")},
-		{LANGUAGE_CODE_ZHO, LIBISDB_STR("中国語"),     LIBISDB_STR("中国語"), LIBISDB_STR("中")},
-		{LANGUAGE_CODE_KOR, LIBISDB_STR("韓国語"),     LIBISDB_STR("韓国語"), LIBISDB_STR("韓")},
-		{LANGUAGE_CODE_POR, LIBISDB_STR("ポルトガル語"), LIBISDB_STR("葡語"), LIBISDB_STR("葡")},
-		{LANGUAGE_CODE_SPA, LIBISDB_STR("スペイン語"), LIBISDB_STR("西語"),   LIBISDB_STR("西")},
-		{LANGUAGE_CODE_ETC, LIBISDB_STR("外国語"),     LIBISDB_STR("外国語"), LIBISDB_STR("外")},
+		{LANGUAGE_CODE_JPN, LIBISDB_STR("日本語"),       LIBISDB_STR("日本語"), LIBISDB_STR("日")},
+		{LANGUAGE_CODE_ENG, LIBISDB_STR("英語"),         LIBISDB_STR("英語"),   LIBISDB_STR("英")},
+		{LANGUAGE_CODE_DEU, LIBISDB_STR("ドイツ語"),     LIBISDB_STR("独語"),   LIBISDB_STR("独")},
+		{LANGUAGE_CODE_FRA, LIBISDB_STR("フランス語"),   LIBISDB_STR("仏語"),   LIBISDB_STR("仏")},
+		{LANGUAGE_CODE_ITA, LIBISDB_STR("イタリア語"),   LIBISDB_STR("伊語"),   LIBISDB_STR("伊")},
+		{LANGUAGE_CODE_RUS, LIBISDB_STR("ロシア語"),     LIBISDB_STR("露語"),   LIBISDB_STR("露")},
+		{LANGUAGE_CODE_ZHO, LIBISDB_STR("中国語"),       LIBISDB_STR("中国語"), LIBISDB_STR("中")},
+		{LANGUAGE_CODE_KOR, LIBISDB_STR("韓国語"),       LIBISDB_STR("韓国語"), LIBISDB_STR("韓")},
+		{LANGUAGE_CODE_POR, LIBISDB_STR("ポルトガル語"), LIBISDB_STR("葡語"),   LIBISDB_STR("葡")},
+		{LANGUAGE_CODE_SPA, LIBISDB_STR("スペイン語"),   LIBISDB_STR("西語"),   LIBISDB_STR("西")},
+		{LANGUAGE_CODE_ETC, LIBISDB_STR("外国語"),       LIBISDB_STR("外国語"), LIBISDB_STR("外")},
 	};
 
 	if ((pText == nullptr) || (MaxText < 1))
