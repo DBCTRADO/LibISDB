@@ -29,7 +29,11 @@
 #include "VideoRenderer_madVR.hpp"
 #include <d3d9.h>
 #include <initguid.h>
+LIBISDB_PRAGMA_MSVC(warning(push))
+// warning C4828: The file contains a character starting at offset 0xNN that is illegal in the current source character set (codepage NN).
+LIBISDB_PRAGMA_MSVC(warning(disable: 4828))
 #include "../../../../../Thirdparty/madVR/mvrInterfaces.h"
+LIBISDB_PRAGMA_MSVC(warning(pop))
 #include "../../../../Base/DebugDef.hpp"
 
 
