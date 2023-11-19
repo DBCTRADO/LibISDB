@@ -1,19 +1,19 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -255,7 +255,7 @@ static void hybrid_free(hyb_info *hyb)
     if (hyb->temp)
         faad_free(hyb->temp);
 
-	faad_free(hyb);
+    faad_free(hyb);
 }
 
 /* real filter, size 2 */
@@ -263,6 +263,7 @@ static void channel_filter2(hyb_info *hyb, uint8_t frame_len, const real_t *filt
                             qmf_t *buffer, qmf_t **X_hybrid)
 {
     uint8_t i;
+    (void)hyb;  /* TODO: remove parameter? */
 
     for (i = 0; i < frame_len; i++)
     {
@@ -297,6 +298,7 @@ static void channel_filter4(hyb_info *hyb, uint8_t frame_len, const real_t *filt
 {
     uint8_t i;
     real_t input_re1[2], input_re2[2], input_im1[2], input_im2[2];
+    (void)hyb;  /* TODO: remove parameter? */
 
     for (i = 0; i < frame_len; i++)
     {
@@ -372,6 +374,7 @@ static void channel_filter8(hyb_info *hyb, uint8_t frame_len, const real_t *filt
     uint8_t i, n;
     real_t input_re1[4], input_re2[4], input_im1[4], input_im2[4];
     real_t x[4];
+    (void)hyb;  /* TODO: remove parameter? */
 
     for (i = 0; i < frame_len; i++)
     {
@@ -464,6 +467,7 @@ static void channel_filter12(hyb_info *hyb, uint8_t frame_len, const real_t *fil
     uint8_t i, n;
     real_t input_re1[6], input_re2[6], input_im1[6], input_im2[6];
     real_t out_re1[6], out_re2[6], out_im1[6], out_im2[6];
+    (void)hyb;  /* TODO: remove parameter? */
 
     for (i = 0; i < frame_len; i++)
     {
@@ -586,6 +590,7 @@ static void hybrid_synthesis(hyb_info *hyb, qmf_t X[32][64], qmf_t X_hybrid[32][
     uint8_t offset = 0;
     uint8_t qmf_bands = (use34) ? 5 : 3;
     uint8_t *resolution = (use34) ? hyb->resolution34 : hyb->resolution20;
+    (void)numTimeSlotsRate;  /* TODO: remove parameter? */
 
     for(band = 0; band < qmf_bands; band++)
     {
@@ -1034,8 +1039,8 @@ static void ps_data_decode(ps_info *ps)
 static void ps_decorrelate(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64],
                            qmf_t X_hybrid_left[32][32], qmf_t X_hybrid_right[32][32])
 {
-    uint8_t gr, n, m, bk;
-    uint8_t temp_delay;
+    uint8_t gr, n, bk;
+    uint8_t temp_delay = 0;
     uint8_t sb, maxsb;
     const complex_t *Phi_Fract_SubQmf;
     uint8_t temp_delay_ser[NO_ALLPASS_LINKS];
@@ -1192,10 +1197,10 @@ static void ps_decorrelate(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][
                 }
             }
 
-            /* calculate g_DecaySlope_filt for every m multiplied by filter_a[m] */
-            for (m = 0; m < NO_ALLPASS_LINKS; m++)
+            /* calculate g_DecaySlope_filt for every n multiplied by filter_a[n] */
+            for (n = 0; n < NO_ALLPASS_LINKS; n++)
             {
-                g_DecaySlope_filt[m] = MUL_F(g_DecaySlope, filter_a[m]);
+                g_DecaySlope_filt[n] = MUL_F(g_DecaySlope, filter_a[n]);
             }
 
 
@@ -1207,6 +1212,7 @@ static void ps_decorrelate(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][
             for (n = ps->border_position[0]; n < ps->border_position[ps->num_env]; n++)
             {
                 complex_t tmp, tmp0, R0;
+                uint8_t m;
 
                 if (gr < ps->num_hybrid_groups)
                 {
@@ -1232,7 +1238,6 @@ static void ps_decorrelate(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][
                     IM(ps->delay_Qmf[ps->delay_buf_index_delay[sb]][sb]) = IM(inputLeft);
                 } else {
                     /* allpass filter */
-                    uint8_t m;
                     complex_t Phi_Fract;
 
                     /* fetch parameters */
@@ -1367,10 +1372,11 @@ static void ps_decorrelate(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][
 
     /* update delay indices */
     ps->saved_delay = temp_delay;
-    for (m = 0; m < NO_ALLPASS_LINKS; m++)
-        ps->delay_buf_index_ser[m] = temp_delay_ser[m];
+    for (n = 0; n < NO_ALLPASS_LINKS; n++)
+        ps->delay_buf_index_ser[n] = temp_delay_ser[n];
 }
 
+#if 0
 #ifdef FIXED_POINT
 #define step(shift) \
     if ((0x40000000l >> shift) + root <= value)       \
@@ -1400,6 +1406,7 @@ static real_t ps_sqrt(real_t value)
 }
 #else
 #define ps_sqrt(A) sqrt(A)
+#endif
 #endif
 
 static const real_t ipdopd_cos_tab[] = {
@@ -1455,13 +1462,11 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
     uint8_t sb, maxsb;
     uint8_t env;
     uint8_t nr_ipdopd_par;
-    complex_t h11, h12, h21, h22;
-    complex_t H11, H12, H21, H22;
-    complex_t deltaH11, deltaH12, deltaH21, deltaH22;
-    complex_t tempLeft;
-    complex_t tempRight;
-    complex_t phaseLeft;
-    complex_t phaseRight;
+    complex_t h11, h12, h21, h22;  // COEF
+    complex_t H11, H12, H21, H22;  // COEF
+    complex_t deltaH11, deltaH12, deltaH21, deltaH22;  // COEF
+    complex_t tempLeft, tempRight; // FRAC
+    complex_t phaseLeft, phaseRight; // FRAC
     real_t L;
     const real_t *sf_iid;
     uint8_t no_iid_steps;
@@ -1491,14 +1496,38 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
 
         for (env = 0; env < ps->num_env; env++)
         {
+            uint8_t abs_iid = (uint8_t)abs(ps->iid_index[env][bk]);
+            /* index range is supposed to be -7...7 or -15...15 depending on iid_mode
+                (Table 8.24, ISO/IEC 14496-3:2005).
+                if it is outside these boundaries, this is most likely an error. sanitize
+                it and try to process further. */
+            if (ps->iid_index[env][bk] < -no_iid_steps) {
+                fprintf(stderr, "Warning: invalid iid_index: %d < %d\n", ps->iid_index[env][bk],
+                    -no_iid_steps);
+                ps->iid_index[env][bk] = -no_iid_steps;
+                abs_iid = no_iid_steps;
+            } else if (ps->iid_index[env][bk] > no_iid_steps) {
+                fprintf(stderr, "Warning: invalid iid_index: %d > %d\n", ps->iid_index[env][bk],
+                    no_iid_steps);
+                ps->iid_index[env][bk] = no_iid_steps;
+                abs_iid = no_iid_steps;
+            }
+            if (ps->icc_index[env][bk] < 0) {
+                fprintf(stderr, "Warning: invalid icc_index: %d < 0\n", ps->icc_index[env][bk]);
+                ps->icc_index[env][bk] = 0;
+            } else if (ps->icc_index[env][bk] > 7) {
+                fprintf(stderr, "Warning: invalid icc_index: %d > 7\n", ps->icc_index[env][bk]);
+                ps->icc_index[env][bk] = 7;
+            }
+
             if (ps->icc_mode < 3)
             {
                 /* type 'A' mixing as described in 8.6.4.6.2.1 */
-                real_t c_1, c_2;
-                real_t cosa, sina;
-                real_t cosb, sinb;
-                real_t ab1, ab2;
-                real_t ab3, ab4;
+                real_t c_1, c_2;  // COEF
+                real_t cosa, sina;  // COEF
+                real_t cosb, sinb;  // COEF
+                real_t ab1, ab2;  // COEF
+                real_t ab3, ab4;  // COEF
 
                 /*
                 c_1 = sqrt(2.0 / (1.0 + pow(10.0, quant_iid[no_iid_steps + iid_index] / 10.0)));
@@ -1508,20 +1537,6 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
                 */
 
                 //printf("%d\n", ps->iid_index[env][bk]);
-
-                /* index range is supposed to be -7...7 or -15...15 depending on iid_mode
-                   (Table 8.24, ISO/IEC 14496-3:2005).
-                   if it is outside these boundaries, this is most likely an error. sanitize
-                   it and try to process further. */
-                if (ps->iid_index[env][bk] < -no_iid_steps) {
-                    fprintf(stderr, "Warning: invalid iid_index: %d < %d\n", ps->iid_index[env][bk],
-                        -no_iid_steps);
-                    ps->iid_index[env][bk] = -no_iid_steps;
-                } else if (ps->iid_index[env][bk] > no_iid_steps) {
-                    fprintf(stderr, "Warning: invalid iid_index: %d > %d\n", ps->iid_index[env][bk],
-                        no_iid_steps);
-                    ps->iid_index[env][bk] = no_iid_steps;
-                }
 
                 /* calculate the scalefactors c_1 and c_2 from the intensity differences */
                 c_1 = sf_iid[no_iid_steps + ps->iid_index[env][bk]];
@@ -1533,23 +1548,11 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
 
                 if (ps->iid_mode >= 3)
                 {
-                    if (ps->iid_index[env][bk] < 0)
-                    {
-                        cosb =  cos_betas_fine[-ps->iid_index[env][bk]][ps->icc_index[env][bk]];
-                        sinb = -sin_betas_fine[-ps->iid_index[env][bk]][ps->icc_index[env][bk]];
-                    } else {
-                        cosb = cos_betas_fine[ps->iid_index[env][bk]][ps->icc_index[env][bk]];
-                        sinb = sin_betas_fine[ps->iid_index[env][bk]][ps->icc_index[env][bk]];
-                    }
+                    cosb = cos_betas_fine[abs_iid][ps->icc_index[env][bk]];
+                    sinb = sin_betas_fine[abs_iid][ps->icc_index[env][bk]];
                 } else {
-                    if (ps->iid_index[env][bk] < 0)
-                    {
-                        cosb =  cos_betas_normal[-ps->iid_index[env][bk]][ps->icc_index[env][bk]];
-                        sinb = -sin_betas_normal[-ps->iid_index[env][bk]][ps->icc_index[env][bk]];
-                    } else {
-                        cosb = cos_betas_normal[ps->iid_index[env][bk]][ps->icc_index[env][bk]];
-                        sinb = sin_betas_normal[ps->iid_index[env][bk]][ps->icc_index[env][bk]];
-                    }
+                    cosb = cos_betas_normal[abs_iid][ps->icc_index[env][bk]];
+                    sinb = sin_betas_normal[abs_iid][ps->icc_index[env][bk]];
                 }
 
                 ab1 = MUL_C(cosb, cosa);
@@ -1564,8 +1567,8 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
                 RE(h22) = MUL_C(c_1, (ab3 - ab4));
             } else {
                 /* type 'B' mixing as described in 8.6.4.6.2.2 */
-                real_t sina, cosa;
-                real_t cosg, sing;
+                real_t sina, cosa;  // COEF
+                real_t cosg, sing;  // COEF
 
                 /*
                 real_t c, rho, mu, alpha, gamma;
@@ -1602,15 +1605,11 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
 
                 if (ps->iid_mode >= 3)
                 {
-                    uint8_t abs_iid = abs(ps->iid_index[env][bk]);
-
                     cosa = sincos_alphas_B_fine[no_iid_steps + ps->iid_index[env][bk]][ps->icc_index[env][bk]];
                     sina = sincos_alphas_B_fine[30 - (no_iid_steps + ps->iid_index[env][bk])][ps->icc_index[env][bk]];
                     cosg = cos_gammas_fine[abs_iid][ps->icc_index[env][bk]];
                     sing = sin_gammas_fine[abs_iid][ps->icc_index[env][bk]];
                 } else {
-                    uint8_t abs_iid = abs(ps->iid_index[env][bk]);
-
                     cosa = sincos_alphas_B_normal[no_iid_steps + ps->iid_index[env][bk]][ps->icc_index[env][bk]];
                     sina = sincos_alphas_B_normal[14 - (no_iid_steps + ps->iid_index[env][bk])][ps->icc_index[env][bk]];
                     cosg = cos_gammas_normal[abs_iid][ps->icc_index[env][bk]];
@@ -1622,6 +1621,7 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
                 RE(h21) = MUL_C(COEF_SQRT2, MUL_C(-cosa, sing));
                 RE(h22) = MUL_C(COEF_SQRT2, MUL_C(sina, sing));
             }
+            IM(h11) = IM(h12) = IM(h21) = IM(h22) = 0;
 
             /* calculate phase rotation parameters H_xy */
             /* note that the imaginary part of these parameters are only calculated when
@@ -1630,18 +1630,19 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
             if ((ps->enable_ipdopd) && (bk < nr_ipdopd_par))
             {
                 int8_t i;
-                real_t xy, pq, xypq;
+                real_t xy, pq, xypq;  // FRAC
 
                 /* ringbuffer index */
                 i = ps->phase_hist;
 
                 /* previous value */
 #ifdef FIXED_POINT
-                /* divide by 4, shift right 2 bits */
-                RE(tempLeft)  = RE(ps->ipd_prev[bk][i]) >> 2;
-                IM(tempLeft)  = IM(ps->ipd_prev[bk][i]) >> 2;
-                RE(tempRight) = RE(ps->opd_prev[bk][i]) >> 2;
-                IM(tempRight) = IM(ps->opd_prev[bk][i]) >> 2;
+                /* divide by 4*2, shift right 3 bits;
+                   extra halving to avoid overflows; it is ok, because result is normalized */
+                RE(tempLeft)  = RE(ps->ipd_prev[bk][i]) >> 3;
+                IM(tempLeft)  = IM(ps->ipd_prev[bk][i]) >> 3;
+                RE(tempRight) = RE(ps->opd_prev[bk][i]) >> 3;
+                IM(tempRight) = IM(ps->opd_prev[bk][i]) >> 3;
 #else
                 RE(tempLeft)  = MUL_F(RE(ps->ipd_prev[bk][i]), FRAC_CONST(0.25));
                 IM(tempLeft)  = MUL_F(IM(ps->ipd_prev[bk][i]), FRAC_CONST(0.25));
@@ -1656,10 +1657,18 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
                 IM(ps->opd_prev[bk][i]) = ipdopd_sin_tab[abs(ps->opd_index[env][bk])];
 
                 /* add current value */
+#ifdef FIXED_POINT
+                /* extra halving to avoid overflows */
+                RE(tempLeft)  += RE(ps->ipd_prev[bk][i]) >> 1;
+                IM(tempLeft)  += IM(ps->ipd_prev[bk][i]) >> 1;
+                RE(tempRight) += RE(ps->opd_prev[bk][i]) >> 1;
+                IM(tempRight) += IM(ps->opd_prev[bk][i]) >> 1;
+#else
                 RE(tempLeft)  += RE(ps->ipd_prev[bk][i]);
                 IM(tempLeft)  += IM(ps->ipd_prev[bk][i]);
                 RE(tempRight) += RE(ps->opd_prev[bk][i]);
                 IM(tempRight) += IM(ps->opd_prev[bk][i]);
+#endif
 
                 /* ringbuffer index */
                 if (i == 0)
@@ -1670,11 +1679,11 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
 
                 /* get value before previous */
 #ifdef FIXED_POINT
-                /* dividing by 2, shift right 1 bit */
-                RE(tempLeft)  += (RE(ps->ipd_prev[bk][i]) >> 1);
-                IM(tempLeft)  += (IM(ps->ipd_prev[bk][i]) >> 1);
-                RE(tempRight) += (RE(ps->opd_prev[bk][i]) >> 1);
-                IM(tempRight) += (IM(ps->opd_prev[bk][i]) >> 1);
+                /* dividing by 2*2, shift right 2 bits; extra halving to avoid overflows */
+                RE(tempLeft)  += (RE(ps->ipd_prev[bk][i]) >> 2);
+                IM(tempLeft)  += (IM(ps->ipd_prev[bk][i]) >> 2);
+                RE(tempRight) += (RE(ps->opd_prev[bk][i]) >> 2);
+                IM(tempRight) += (IM(ps->opd_prev[bk][i]) >> 2);
 #else
                 RE(tempLeft)  += MUL_F(RE(ps->ipd_prev[bk][i]), FRAC_CONST(0.5));
                 IM(tempLeft)  += MUL_F(IM(ps->ipd_prev[bk][i]), FRAC_CONST(0.5));
@@ -1708,22 +1717,22 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
 
                 if (xy != 0)
                 {
-                    RE(phaseLeft) = DIV_R(RE(tempRight), xy);
-                    IM(phaseLeft) = DIV_R(IM(tempRight), xy);
+                    RE(phaseLeft) = DIV_F(RE(tempRight), xy);
+                    IM(phaseLeft) = DIV_F(IM(tempRight), xy);
                 } else {
                     RE(phaseLeft) = 0;
                     IM(phaseLeft) = 0;
                 }
 
-                xypq = MUL_R(xy, pq);
+                xypq = MUL_F(xy, pq);
 
                 if (xypq != 0)
                 {
-                    real_t tmp1 = MUL_R(RE(tempRight), RE(tempLeft)) + MUL_R(IM(tempRight), IM(tempLeft));
-                    real_t tmp2 = MUL_R(IM(tempRight), RE(tempLeft)) - MUL_R(RE(tempRight), IM(tempLeft));
+                    real_t tmp1 = MUL_F(RE(tempRight), RE(tempLeft)) + MUL_F(IM(tempRight), IM(tempLeft));
+                    real_t tmp2 = MUL_F(IM(tempRight), RE(tempLeft)) - MUL_F(RE(tempRight), IM(tempLeft));
 
-                    RE(phaseRight) = DIV_R(tmp1, xypq);
-                    IM(phaseRight) = DIV_R(tmp2, xypq);
+                    RE(phaseRight) = DIV_F(tmp1, xypq);
+                    IM(phaseRight) = DIV_F(tmp2, xypq);
                 } else {
                     RE(phaseRight) = 0;
                     IM(phaseRight) = 0;
@@ -1732,15 +1741,15 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
 #endif
 
                 /* MUL_F(COEF, REAL) = COEF */
-                IM(h11) = MUL_R(RE(h11), IM(phaseLeft));
-                IM(h12) = MUL_R(RE(h12), IM(phaseRight));
-                IM(h21) = MUL_R(RE(h21), IM(phaseLeft));
-                IM(h22) = MUL_R(RE(h22), IM(phaseRight));
+                IM(h11) = MUL_F(RE(h11), IM(phaseLeft));
+                IM(h12) = MUL_F(RE(h12), IM(phaseRight));
+                IM(h21) = MUL_F(RE(h21), IM(phaseLeft));
+                IM(h22) = MUL_F(RE(h22), IM(phaseRight));
 
-                RE(h11) = MUL_R(RE(h11), RE(phaseLeft));
-                RE(h12) = MUL_R(RE(h12), RE(phaseRight));
-                RE(h21) = MUL_R(RE(h21), RE(phaseLeft));
-                RE(h22) = MUL_R(RE(h22), RE(phaseRight));
+                RE(h11) = MUL_F(RE(h11), RE(phaseLeft));
+                RE(h12) = MUL_F(RE(h12), RE(phaseRight));
+                RE(h21) = MUL_F(RE(h21), RE(phaseLeft));
+                RE(h22) = MUL_F(RE(h22), RE(phaseRight));
             }
 
             /* length of the envelope n_e+1 - n_e (in time samples) */
@@ -1757,6 +1766,7 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
             RE(H12) = RE(ps->h12_prev[gr]);
             RE(H21) = RE(ps->h21_prev[gr]);
             RE(H22) = RE(ps->h22_prev[gr]);
+            IM(H11) = IM(H12) = IM(H21) = IM(H22) = 0;
 
             RE(ps->h11_prev[gr]) = RE(h11);
             RE(ps->h12_prev[gr]) = RE(h12);
@@ -1815,7 +1825,7 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
                 /* channel is an alias to the subband */
                 for (sb = ps->group_border[gr]; sb < maxsb; sb++)
                 {
-                    complex_t inLeft, inRight;
+                    complex_t inLeft, inRight;  // precision_of in(Left|Right) == precision_of X_(left|right)
 
                     /* load decorrelated samples */
                     if (gr < ps->num_hybrid_groups)
@@ -1830,6 +1840,8 @@ static void ps_mix_phase(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64
                         RE(inRight) = RE(X_right[n][sb]);
                         IM(inRight) = IM(X_right[n][sb]);
                     }
+
+                    /* precision_of temp(Left|Right) == precision_of X_(left|right) */
 
                     /* apply mixing */
                     RE(tempLeft) =  MUL_C(RE(H11), RE(inLeft)) + MUL_C(RE(H21), RE(inRight));
@@ -1913,6 +1925,7 @@ ps_info *ps_init(uint8_t sr_index, uint8_t numTimeSlotsRate)
             ps->num_sample_delay_ser[i] = delay_length_d[0][i];
         }
 #else
+        (void)sr_index;
         /* THESE ARE CONSTANTS NOW */
         ps->num_sample_delay_ser[i] = delay_length_d[i];
 #endif
@@ -1953,8 +1966,8 @@ ps_info *ps_init(uint8_t sr_index, uint8_t numTimeSlotsRate)
     for (i = 0; i < 50; i++)
     {
         RE(ps->h11_prev[i]) = 1;
-        IM(ps->h12_prev[i]) = 1;
-        RE(ps->h11_prev[i]) = 1;
+        IM(ps->h11_prev[i]) = 1;
+        RE(ps->h12_prev[i]) = 1;
         IM(ps->h12_prev[i]) = 1;
     }
 
@@ -1978,8 +1991,8 @@ ps_info *ps_init(uint8_t sr_index, uint8_t numTimeSlotsRate)
 /* main Parametric Stereo decoding function */
 uint8_t ps_decode(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64])
 {
-    qmf_t X_hybrid_left[32][32] = {{0}};
-    qmf_t X_hybrid_right[32][32] = {{0}};
+    qmf_t X_hybrid_left[32][32] = {{{0}}};
+    qmf_t X_hybrid_right[32][32] = {{{0}}};
 
     /* delta decoding of the bitstream data */
     ps_data_decode(ps);
@@ -2025,4 +2038,3 @@ uint8_t ps_decode(ps_info *ps, qmf_t X_left[38][64], qmf_t X_right[38][64])
 }
 
 #endif
-

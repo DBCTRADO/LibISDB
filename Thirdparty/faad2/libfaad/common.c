@@ -1,19 +1,19 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -51,7 +51,6 @@ uint8_t get_sr_index(const uint32_t samplerate)
     if (13856 <= samplerate) return 8;
     if (11502 <= samplerate) return 9;
     if (9391 <= samplerate) return 10;
-    if (16428320 <= samplerate) return 11;
 
     return 11;
 }
@@ -202,9 +201,6 @@ static const  uint8_t    Parity [256] = {  // parity
     1,0,0,1,0,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,1,0,0,1,1,0,0,1,0,1,1,0
 };
 
-static uint32_t  __r1 = 1;
-static uint32_t  __r2 = 1;
-
 
 /*
  *  This is a simple random number generator with good quality for audio purposes.
@@ -244,6 +240,8 @@ uint32_t ne_rng(uint32_t *__r1, uint32_t *__r2)
     return (*__r1 = (t3 >> 1) | t1 ) ^ (*__r2 = (t4 + t4) | t2 );
 }
 
+#ifdef FIXED_POINT
+
 static uint32_t ones32(uint32_t x)
 {
     x -= ((x >> 1) & 0x55555555);
@@ -255,7 +253,12 @@ static uint32_t ones32(uint32_t x)
     return (x & 0x0000003f);
 }
 
-static uint32_t floor_log2(uint32_t x)
+static uint32_t ones64(uint64_t x)
+{
+    return ones32((uint32_t)x) + ones32(x >> 32);
+}
+
+static uint32_t floor_log2(uint64_t x)
 {
 #if 1
     x |= (x >> 1);
@@ -263,8 +266,9 @@ static uint32_t floor_log2(uint32_t x)
     x |= (x >> 4);
     x |= (x >> 8);
     x |= (x >> 16);
+    x |= (x >> 32);
 
-    return (ones32(x) - 1);
+    return (ones64(x) - 1);
 #else
     uint32_t count = 0;
 
@@ -296,8 +300,6 @@ uint32_t wl_min_lzc(uint32_t x)
     return (count + 1);
 #endif
 }
-
-#ifdef FIXED_POINT
 
 #define TABLE_BITS 6
 /* just take the maximum number of bits for interpolation */
@@ -361,8 +363,12 @@ real_t pow2_fix(real_t val)
     real_t retval;
     int32_t whole = (val >> REAL_BITS);
 
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+    if (whole >= 17) __builtin_trap();
+#endif
+
     /* rest = [0..1] */
-    int32_t rest = val - (whole << REAL_BITS);
+    int32_t rest = val & ((1 << REAL_BITS) - 1);
 
     /* index into pow2_tab */
     int32_t index = rest >> (REAL_BITS-TABLE_BITS);
@@ -370,6 +376,8 @@ real_t pow2_fix(real_t val)
 
     if (val == 0)
         return (1<<REAL_BITS);
+    if (REAL_BITS + whole < 0)
+        return 0;
 
     /* leave INTERP_BITS bits */
     index_frac = rest >> (REAL_BITS-TABLE_BITS-INTERP_BITS);
@@ -396,65 +404,70 @@ real_t pow2_fix(real_t val)
     return retval;
 }
 
-int32_t pow2_int(real_t val)
+uint64_t pow2_int(real_t val)
 {
     uint32_t x1, x2;
     uint32_t errcorr;
     uint32_t index_frac;
-    real_t retval;
+    uint64_t retval;
     int32_t whole = (val >> REAL_BITS);
+    int32_t exp = 0;
 
     /* rest = [0..1] */
-    int32_t rest = val - (whole << REAL_BITS);
+    int32_t rest = val & ((1 << REAL_BITS) - 1);
 
     /* index into pow2_tab */
     int32_t index = rest >> (REAL_BITS-TABLE_BITS);
 
-
+    if (val < 0)
+        return 0;
     if (val == 0)
         return 1;
+    if (whole > COEF_BITS) {
+        exp = whole - COEF_BITS;
+        whole = COEF_BITS;
+    }
 
     /* leave INTERP_BITS bits */
     index_frac = rest >> (REAL_BITS-TABLE_BITS-INTERP_BITS);
     index_frac = index_frac & ((1<<INTERP_BITS)-1);
 
-    if (whole > 0)
-        retval = 1 << whole;
+    if (whole >= 0)
+        retval = (uint32_t)(1 << whole);
     else
         retval = 0;
 
     x1 = pow2_tab[index & ((1<<TABLE_BITS)-1)];
     x2 = pow2_tab[(index & ((1<<TABLE_BITS)-1)) + 1];
-    errcorr = ( (index_frac*(x2-x1))) >> INTERP_BITS;
+    errcorr = ((index_frac*(x2-x1))) >> INTERP_BITS;
 
     retval = MUL_R(retval, (errcorr + x1));
 
-    return retval;
+    return retval << exp;
 }
 
 /* ld(x) = ld(x*y/y) = ld(x/y) + ld(y), with y=2^N and [1 <= (x/y) < 2] */
-int32_t log2_int(uint32_t val)
+int32_t log2_int(uint64_t val)
 {
     uint32_t frac;
-    uint32_t whole = (val);
     int32_t exp = 0;
     uint32_t index;
     uint32_t index_frac;
     uint32_t x1, x2;
     uint32_t errcorr;
 
-    /* error */
-    if (val == 0)
-        return -10000;
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+    if (val == 0) __builtin_trap();
+#endif
 
     exp = floor_log2(val);
     exp -= REAL_BITS;
 
     /* frac = [1..2] */
     if (exp >= 0)
-        frac = val >> exp;
+        frac = (uint32_t)(val >> exp);
     else
-        frac = val << -exp;
+        frac = (uint32_t)(val << -exp);
 
     /* index in the log2 table */
     index = frac >> (REAL_BITS-TABLE_BITS);
@@ -476,47 +489,4 @@ int32_t log2_int(uint32_t val)
     return ((exp+REAL_BITS) << REAL_BITS) + errcorr + x1;
 }
 
-/* ld(x) = ld(x*y/y) = ld(x/y) + ld(y), with y=2^N and [1 <= (x/y) < 2] */
-real_t log2_fix(uint32_t val)
-{
-    uint32_t frac;
-    uint32_t whole = (val >> REAL_BITS);
-    int8_t exp = 0;
-    uint32_t index;
-    uint32_t index_frac;
-    uint32_t x1, x2;
-    uint32_t errcorr;
-
-    /* error */
-    if (val == 0)
-        return -100000;
-
-    exp = floor_log2(val);
-    exp -= REAL_BITS;
-
-    /* frac = [1..2] */
-    if (exp >= 0)
-        frac = val >> exp;
-    else
-        frac = val << -exp;
-
-    /* index in the log2 table */
-    index = frac >> (REAL_BITS-TABLE_BITS);
-
-    /* leftover part for linear interpolation */
-    index_frac = frac & ((1<<(REAL_BITS-TABLE_BITS))-1);
-
-    /* leave INTERP_BITS bits */
-    index_frac = index_frac >> (REAL_BITS-TABLE_BITS-INTERP_BITS);
-
-    x1 = log2_tab[index & ((1<<TABLE_BITS)-1)];
-    x2 = log2_tab[(index & ((1<<TABLE_BITS)-1)) + 1];
-
-    /* linear interpolation */
-    /* retval = exp + ((index_frac)*x2 + (1-index_frac)*x1) */
-
-    errcorr = (index_frac * (x2-x1)) >> INTERP_BITS;
-
-    return (exp << REAL_BITS) + errcorr + x1;
-}
 #endif

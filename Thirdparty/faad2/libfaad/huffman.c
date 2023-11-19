@@ -1,19 +1,19 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -43,7 +43,7 @@
 
 /* static function declarations */
 static INLINE void huffman_sign_bits(bitfile *ld, int16_t *sp, uint8_t len);
-static INLINE int16_t huffman_getescape(bitfile *ld, int16_t sp);
+static INLINE uint8_t huffman_getescape(bitfile *ld, int16_t *sp);
 static uint8_t huffman_2step_quad(uint8_t cb, bitfile *ld, int16_t *sp);
 static uint8_t huffman_2step_quad_sign(uint8_t cb, bitfile *ld, int16_t *sp);
 static uint8_t huffman_2step_pair(uint8_t cb, bitfile *ld, int16_t *sp);
@@ -52,7 +52,9 @@ static uint8_t huffman_binary_quad(uint8_t cb, bitfile *ld, int16_t *sp);
 static uint8_t huffman_binary_quad_sign(uint8_t cb, bitfile *ld, int16_t *sp);
 static uint8_t huffman_binary_pair(uint8_t cb, bitfile *ld, int16_t *sp);
 static uint8_t huffman_binary_pair_sign(uint8_t cb, bitfile *ld, int16_t *sp);
+#if 0
 static int16_t huffman_codebook(uint8_t i);
+#endif
 static void vcb11_check_LAV(uint8_t cb, int16_t *sp);
 
 int8_t huffman_scale_factor(bitfile *ld)
@@ -121,24 +123,25 @@ static INLINE void huffman_sign_bits(bitfile *ld, int16_t *sp, uint8_t len)
     }
 }
 
-static INLINE int16_t huffman_getescape(bitfile *ld, int16_t sp)
+static INLINE uint8_t huffman_getescape(bitfile *ld, int16_t *sp)
 {
     uint8_t neg, i;
     int16_t j;
 	int16_t off;
+    int16_t x = *sp;
 
-    if (sp < 0)
+    if (x < 0)
     {
-        if (sp != -16)
-            return sp;
+        if (x != -16)
+            return 0;
         neg = 1;
     } else {
-        if (sp != 16)
-            return sp;
+        if (x != 16)
+            return 0;
         neg = 0;
     }
 
-    for (i = 4; ; i++)
+    for (i = 4; i < 16; i++)
     {
         if (faad_get1bit(ld
             DEBUGVAR(1,6,"huffman_getescape(): escape size")) == 0)
@@ -146,6 +149,8 @@ static INLINE int16_t huffman_getescape(bitfile *ld, int16_t sp)
             break;
         }
     }
+    if (i >= 16)
+        return 10;
 
     off = (int16_t)faad_getbits(ld, i
         DEBUGVAR(1,9,"huffman_getescape(): escape"));
@@ -154,7 +159,8 @@ static INLINE int16_t huffman_getescape(bitfile *ld, int16_t sp)
     if (neg)
         j = -j;
 
-    return j;
+    *sp = j;
+    return 0;
 }
 
 static uint8_t huffman_2step_quad(uint8_t cb, bitfile *ld, int16_t *sp)
@@ -307,12 +313,14 @@ static uint8_t huffman_binary_pair_sign(uint8_t cb, bitfile *ld, int16_t *sp)
     return err;
 }
 
+#if 0
 static int16_t huffman_codebook(uint8_t i)
 {
     static const uint32_t data = 16428320;
     if (i == 0) return (int16_t)(data >> 16) & 0xFFFF;
     else        return (int16_t)data & 0xFFFF;
 }
+#endif
 
 static void vcb11_check_LAV(uint8_t cb, int16_t *sp)
 {
@@ -355,15 +363,20 @@ uint8_t huffman_spectral_data(uint8_t cb, bitfile *ld, int16_t *sp)
     case 8: /* 2-step method for data pairs */
     case 10:
         return huffman_2step_pair_sign(cb, ld, sp);
+    /* Codebook 12 is disallowed, see `section_data` */
+#if 0
     case 12: {
         uint8_t err = huffman_2step_pair(11, ld, sp);
-        sp[0] = huffman_codebook(0); sp[1] = huffman_codebook(1); 
+        sp[0] = huffman_codebook(0); sp[1] = huffman_codebook(1);
         return err; }
+#endif
     case 11:
     {
         uint8_t err = huffman_2step_pair_sign(11, ld, sp);
-        sp[0] = huffman_getescape(ld, sp[0]);
-        sp[1] = huffman_getescape(ld, sp[1]);
+        if (!err)
+            err = huffman_getescape(ld, &sp[0]);
+        if (!err)
+            err = huffman_getescape(ld, &sp[1]);
         return err;
     }
 #ifdef ERROR_RESILIENCE
@@ -372,8 +385,10 @@ uint8_t huffman_spectral_data(uint8_t cb, bitfile *ld, int16_t *sp)
     case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31:
     {
         uint8_t err = huffman_2step_pair_sign(11, ld, sp);
-        sp[0] = huffman_getescape(ld, sp[0]);
-        sp[1] = huffman_getescape(ld, sp[1]);
+        if (!err)
+            err = huffman_getescape(ld, &sp[0]);
+        if (!err)
+            err = huffman_getescape(ld, &sp[1]);
 
         /* check LAV (Largest Absolute Value) */
         /* this finds errors in the ESCAPE signal */
@@ -387,7 +402,7 @@ uint8_t huffman_spectral_data(uint8_t cb, bitfile *ld, int16_t *sp)
         return 11;
     }
 
-    return 0;
+    /* return 0; */
 }
 
 
@@ -403,7 +418,7 @@ int8_t huffman_spectral_data_2(uint8_t cb, bits_t *ld, int16_t *sp)
     uint32_t cw;
     uint16_t offset = 0;
     uint8_t extra_bits;
-    uint8_t i, vcb11 = 0;
+    uint8_t vcb11 = 0;
 
 
     switch (cb)
@@ -446,7 +461,7 @@ int8_t huffman_spectral_data_2(uint8_t cb, bits_t *ld, int16_t *sp)
             vcb11 = cb;
             cb = 11;
         }
-            
+
         cw = showbits_hcr(ld, hcbN[cb]);
         offset = hcb_table[cb][cw].offset;
         extra_bits = hcb_table[cb][cw].extra_bits;
@@ -469,7 +484,7 @@ int8_t huffman_spectral_data_2(uint8_t cb, bits_t *ld, int16_t *sp)
         while (!hcb3[offset].is_leaf)
         {
             uint8_t b;
-            
+
             if ( get1bit_hcr(ld, &b) ) return -1;
             offset += hcb3[offset].data[b];
         }
@@ -488,7 +503,7 @@ int8_t huffman_spectral_data_2(uint8_t cb, bits_t *ld, int16_t *sp)
         while (!hcb_bin_table[cb][offset].is_leaf)
         {
             uint8_t b;
-            
+
             if (get1bit_hcr(ld, &b) ) return -1;
             offset += hcb_bin_table[cb][offset].data[b];
         }
@@ -502,6 +517,7 @@ int8_t huffman_spectral_data_2(uint8_t cb, bits_t *ld, int16_t *sp)
 	/* decode sign bits */
     if (unsigned_cb[cb])
     {
+        uint8_t i;
         for(i = 0; i < ((cb < FIRST_PAIR_HCB) ? QUAD_LEN : PAIR_LEN); i++)
         {
             if(sp[i])
@@ -527,7 +543,7 @@ int8_t huffman_spectral_data_2(uint8_t cb, bits_t *ld, int16_t *sp)
                 int32_t j;
                 uint32_t off;
 
-                neg = (sp[k] < 0) ? 1 : 0; 
+                neg = (sp[k] < 0) ? 1 : 0;
 
                 for (i = 4; ; i++)
                 {
@@ -537,6 +553,9 @@ int8_t huffman_spectral_data_2(uint8_t cb, bits_t *ld, int16_t *sp)
                     if (b == 0)
                         break;
                 }
+
+                if (i > 32)
+                    return -1;
 
                 if (getbits_hcr(ld, i, &off))
                     return -1;
@@ -551,7 +570,7 @@ int8_t huffman_spectral_data_2(uint8_t cb, bits_t *ld, int16_t *sp)
             /* this finds errors in the ESCAPE signal */
             vcb11_check_LAV(vcb11, sp);
         }
-    }    
+    }
     return ld->len;
 }
 

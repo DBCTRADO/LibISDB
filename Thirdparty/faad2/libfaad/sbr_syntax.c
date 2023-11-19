@@ -1,19 +1,19 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -217,7 +217,7 @@ uint8_t sbr_extension_data(bitfile *ld, sbr_info *sbr, uint16_t cnt,
             {
                 result += calc_sbr_tables(sbr, saved_start_freq, saved_stop_freq,
                     saved_samplerate_mode, saved_freq_scale,
-                    saved_alter_scale, saved_xover_band);          
+                    saved_alter_scale, saved_xover_band);
             }
 
             /* we should be able to safely set result to 0 now, */
@@ -232,7 +232,7 @@ uint8_t sbr_extension_data(bitfile *ld, sbr_info *sbr, uint16_t cnt,
     /* check if we read more bits then were available for sbr */
     if (8*cnt < num_sbr_bits2)
     {
-        faad_resetbits(ld, num_sbr_bits1 + 8*cnt);
+        faad_resetbits(ld, num_sbr_bits1 + 8u * cnt);
         num_sbr_bits2 = 8*cnt;
 
 #ifdef PS_DEC
@@ -248,7 +248,7 @@ uint8_t sbr_extension_data(bitfile *ld, sbr_info *sbr, uint16_t cnt,
 #ifdef DRM
     if (!sbr->Is_DRM_SBR)
 #endif
-    {       
+    {
         /* -4 does not apply, bs_extension_type is re-read in this function */
         num_align_bits = 8*cnt /*- 4*/ - num_sbr_bits2;
 
@@ -645,9 +645,9 @@ static uint8_t sbr_channel_pair_element(bitfile *ld, sbr_info *sbr)
 }
 
 /* integer log[2](x): input range [0,10) */
-static int8_t sbr_log2(const int8_t val)
+static uint8_t sbr_log2(const uint8_t val)
 {
-    int8_t log2tab[] = { 0, 0, 1, 2, 2, 3, 3, 3, 3, 4 };
+    uint8_t log2tab[] = { 0, 0, 1, 2, 2, 3, 3, 3, 3, 4 };
     if (val < 10 && val >= 0)
         return log2tab[val];
     else
@@ -658,7 +658,7 @@ static int8_t sbr_log2(const int8_t val)
 /* table 7 */
 static uint8_t sbr_grid(bitfile *ld, sbr_info *sbr, uint8_t ch)
 {
-    uint8_t i, env, rel, result;
+    uint8_t i, j, env, rel, result;
     uint8_t bs_abs_bord, bs_abs_bord_1;
     uint8_t bs_num_env = 0;
     uint8_t saved_L_E = sbr->L_E[ch];
@@ -674,7 +674,7 @@ static uint8_t sbr_grid(bitfile *ld, sbr_info *sbr, uint8_t ch)
         i = (uint8_t)faad_getbits(ld, 2
             DEBUGVAR(1,249,"sbr_grid(): bs_num_env_raw"));
 
-        bs_num_env = min(1 << i, 5);
+        bs_num_env = min(1u << i, 5u);
 
         i = (uint8_t)faad_get1bit(ld
             DEBUGVAR(1,250,"sbr_grid(): bs_freq_res_flag"));
@@ -698,9 +698,11 @@ static uint8_t sbr_grid(bitfile *ld, sbr_info *sbr, uint8_t ch)
             sbr->bs_rel_bord[ch][rel] = 2 * (uint8_t)faad_getbits(ld, 2
                 DEBUGVAR(1,253,"sbr_grid(): bs_rel_bord")) + 2;
         }
-        i = sbr_log2(bs_num_env + 1);
+        j = bs_num_env;
+        i = sbr_log2(j + 1);
         sbr->bs_pointer[ch] = (uint8_t)faad_getbits(ld, i
             DEBUGVAR(1,254,"sbr_grid(): bs_pointer"));
+        sbr->bs_pointer[ch] = min(sbr->bs_pointer[ch], j);
 
         for (env = 0; env < bs_num_env; env++)
         {
@@ -725,9 +727,11 @@ static uint8_t sbr_grid(bitfile *ld, sbr_info *sbr, uint8_t ch)
             sbr->bs_rel_bord[ch][rel] = 2 * (uint8_t)faad_getbits(ld, 2
                 DEBUGVAR(1,258,"sbr_grid(): bs_rel_bord")) + 2;
         }
-        i = sbr_log2(bs_num_env + 1);
+        j = bs_num_env;
+        i = sbr_log2(j + 1);
         sbr->bs_pointer[ch] = (uint8_t)faad_getbits(ld, i
             DEBUGVAR(1,259,"sbr_grid(): bs_pointer"));
+        sbr->bs_pointer[ch] = min(sbr->bs_pointer[ch], j);
 
         for (env = 0; env < bs_num_env; env++)
         {
@@ -763,9 +767,11 @@ static uint8_t sbr_grid(bitfile *ld, sbr_info *sbr, uint8_t ch)
             sbr->bs_rel_bord_1[ch][rel] = 2 * (uint8_t)faad_getbits(ld, 2
                 DEBUGVAR(1,266,"sbr_grid(): bs_rel_bord")) + 2;
         }
-        i = sbr_log2(sbr->bs_num_rel_0[ch] + sbr->bs_num_rel_1[ch] + 2);
+        j = sbr->bs_num_rel_0[ch] + sbr->bs_num_rel_1[ch] + 1;
+        i = sbr_log2(j + 1);
         sbr->bs_pointer[ch] = (uint8_t)faad_getbits(ld, i
             DEBUGVAR(1,267,"sbr_grid(): bs_pointer"));
+        sbr->bs_pointer[ch] = min(sbr->bs_pointer[ch], j);
 
         for (env = 0; env < bs_num_env; env++)
         {
@@ -850,6 +856,7 @@ static uint16_t sbr_extension(bitfile *ld, sbr_info *sbr,
     uint8_t header;
     uint16_t ret;
 #endif
+    (void)num_bits_left;  /* TODO: remove or actually use parameter. */
 
     switch (bs_extension_id)
     {
@@ -880,7 +887,11 @@ static uint16_t sbr_extension(bitfile *ld, sbr_info *sbr,
 #endif
 #ifdef DRM_PS
     case DRM_PARAMETRIC_STEREO:
-        sbr->ps_used = 1;
+        /* If not expected then only decode but do not expose. */
+        if (sbr->Is_DRM_SBR)
+        {
+            sbr->ps_used = 1;
+        }
         if (!sbr->drm_ps)
         {
             sbr->drm_ps = drm_ps_init();

@@ -17,6 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ****************************************************************************/
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -35,54 +37,33 @@ enum ATOM_TYPE
     ATOM_ASCENT,                /* ends group */
     ATOM_DATA,
 };
+
+typedef int (*parse_t)(int);
+
 typedef struct
 {
     uint16_t opcode;
-    void *data;
+    const char *name;
+    parse_t parse;
 } creator_t;
 
+#define STOP() {ATOM_STOP, NULL, NULL}
+#define NAME(N) {ATOM_NAME, N, NULL}
+#define DESCENT() {ATOM_DESCENT, NULL, NULL}
+#define ASCENT() {ATOM_ASCENT, NULL, NULL}
+#define DATA(N, F) {ATOM_NAME, N, NULL}, {ATOM_DATA, NULL, F}
 
 mp4config_t mp4config = { 0 };
 
 static FILE *g_fin = NULL;
 
-static inline uint32_t bswap32(const uint32_t u32)
-{
-#ifndef WORDS_BIGENDIAN
-#if defined (__GNUC__) && ((__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 3)))
-    return __builtin_bswap32(u32);
-#elif defined (_MSC_VER)
-    return _byteswap_ulong(u32);
-#else
-    return (u32 << 24) | ((u32 << 8) & 0xFF0000) | ((u32 >> 8) & 0xFF00) | (u32 >> 24);
-#endif
-#else
-    return u32;
-#endif
-}
-
-static inline uint16_t bswap16(const uint16_t u16)
-{
-#ifndef WORDS_BIGENDIAN
-#if defined (__GNUC__) && ((__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 8)))
-    return __builtin_bswap16(u16);
-#elif defined (_MSC_VER)
-    return _byteswap_ushort(u16);
-#else
-    return (u16 << 8) | (u16 >> 8);
-#endif
-#else
-    return u16;
-#endif
-}
-
 enum {ERR_OK = 0, ERR_FAIL = -1, ERR_UNSUPPORTED = -2};
 
-static int datain(void *data, int size)
+#define freeMem(A) if (*(A)) {free(*(A)); *(A) = NULL;}
+
+static size_t datain(void *data, size_t size)
 {
-    if (fread(data, 1, size, g_fin) != size)
-        return ERR_FAIL;
-    return size;
+    return fread(data, 1, size, g_fin);
 }
 
 static int stringin(char *txt, int sizemax)
@@ -95,24 +76,23 @@ static int stringin(char *txt, int sizemax)
         if (!txt[size])
             break;
     }
+    txt[sizemax-1] = '\0';
 
     return size;
 }
 
 static uint32_t u32in(void)
 {
-    uint32_t u32;
-    datain(&u32, 4);
-    u32 = bswap32(u32);
-    return u32;
+    uint8_t u8[4];
+    datain(&u8, 4);
+    return (uint32_t)u8[3] | ((uint32_t)u8[2] << 8) | ((uint32_t)u8[1] << 16) | ((uint32_t)u8[0] << 24);
 }
 
 static uint16_t u16in(void)
 {
-    uint16_t u16;
-    datain(&u16, 2);
-    u16 = bswap16(u16);
-    return u16;
+    uint8_t u8[2];
+    datain(&u8, 2);
+    return (uint16_t)u8[1] | ((uint16_t)u8[0] << 8);
 }
 
 static int u8in(void)
@@ -177,7 +157,7 @@ static int mdhdin(int size)
     u16in();
 
     return size;
-};
+}
 
 static int hdlr1in(int size)
 {
@@ -212,7 +192,7 @@ static int hdlr1in(int size)
     u8in();
 
     return size;
-};
+}
 
 static int stsdin(int size)
 {
@@ -223,7 +203,7 @@ static int stsdin(int size)
         return ERR_FAIL;
 
     return size;
-};
+}
 
 static int mp4ain(int size)
 {
@@ -324,46 +304,111 @@ static int esdsin(int size)
     return size;
 }
 
+/* stbl "Sample Table" layout: 
+ *  - stts "Time-to-Sample" - useless
+ *  - stsc "Sample-to-Chunk" - condensed table chunk-to-num-samples
+ *  - stsz "Sample Size" - size table
+ *  - stco "Chunk Offset" - chunk starts
+ *
+ * When receiving stco we can combine stsc and stsz tables to produce final
+ * sample offsets.
+ */
+
 static int sttsin(int size)
 {
-    if (size < 16) //min stts size
+    uint32_t ntts;
+
+    if (size < 8)
         return ERR_FAIL;
+
+    // version/flags
+    u32in();
+    ntts = u32in();
+
+    if (ntts < 1)
+        return ERR_FAIL;
+
+    /* 2 x uint32_t per entry */
+    if (((size - 8u) / 8u) < ntts)
+        return ERR_FAIL;
+
+    return size;
+}
+
+static int stscin(int size)
+{
+    uint32_t i, tmp, firstchunk, prevfirstchunk, samplesperchunk;
+
+    if (size < 8)
+        return ERR_FAIL;
+
+    // version/flags
+    u32in();
+
+    mp4config.frame.nsclices = u32in();
+
+    tmp = sizeof(slice_info_t) * mp4config.frame.nsclices;
+    if (tmp < mp4config.frame.nsclices)
+        return ERR_FAIL;
+    mp4config.frame.map = malloc(tmp);
+    if (!mp4config.frame.map)
+        return ERR_FAIL;
+
+    /* 3 x uint32_t per entry */
+    if (((size - 8u) / 12u) < mp4config.frame.nsclices)
+        return ERR_FAIL;
+
+    prevfirstchunk = 0;
+    for (i = 0; i < mp4config.frame.nsclices; ++i) {
+      firstchunk = u32in();
+      samplesperchunk = u32in();
+      // id - unused
+      u32in();
+      if (firstchunk <= prevfirstchunk)
+        return ERR_FAIL;
+      if (samplesperchunk < 1)
+        return ERR_FAIL;
+      mp4config.frame.map[i].firstchunk = firstchunk;
+      mp4config.frame.map[i].samplesperchunk = samplesperchunk;
+      prevfirstchunk = firstchunk;
+    }
 
     return size;
 }
 
 static int stszin(int size)
 {
-    int cnt;
-    uint32_t ofs;
+    uint32_t i, tmp;
+
+    if (size < 12)
+        return ERR_FAIL;
 
     // version/flags
     u32in();
-    // Sample size
+    // (uniform) Sample size
+    // TODO(eustas): add uniform sample size support?
     u32in();
-    // Number of entries
-    mp4config.frame.ents = u32in();
-    // fixme: check atom size
-    mp4config.frame.data = malloc(sizeof(*mp4config.frame.data)
-                                  * (mp4config.frame.ents + 1));
+    mp4config.frame.nsamples = u32in();
 
-    if (!mp4config.frame.data)
+    if (!mp4config.frame.nsamples)
         return ERR_FAIL;
 
-    ofs = 0;
-    mp4config.frame.data[0] = ofs;
-    for (cnt = 0; cnt < mp4config.frame.ents; cnt++)
+    tmp = sizeof(frame_info_t) * mp4config.frame.nsamples;
+    if (tmp < mp4config.frame.nsamples)
+        return ERR_FAIL;
+    mp4config.frame.info = malloc(tmp);
+    if (!mp4config.frame.info)
+        return ERR_FAIL;
+
+    if ((size - 12u) / 4u < mp4config.frame.nsamples)
+        return ERR_FAIL;
+
+    for (i = 0; i < mp4config.frame.nsamples; i++)
     {
-        uint32_t fsize = u32in();
-
-        ofs += fsize;
-        if (mp4config.frame.maxsize < fsize)
-            mp4config.frame.maxsize = fsize;
-
-        mp4config.frame.data[cnt + 1] = ofs;
-
-        if (ofs < mp4config.frame.data[cnt])
-            return ERR_FAIL;
+        mp4config.frame.info[i].len = u32in();
+        mp4config.frame.info[i].offset = 0;
+        if (mp4config.frame.maxsize < mp4config.frame.info[i].len)
+            mp4config.frame.maxsize = mp4config.frame.info[i].len;
     }
 
     return size;
@@ -371,14 +416,51 @@ static int stszin(int size)
 
 static int stcoin(int size)
 {
+    uint32_t numchunks, chunkn, slicen, samplesleft, i, offset;
+    uint32_t nextoffset;
+
+    if (size < 8)
+        return ERR_FAIL;
+
     // version/flags
     u32in();
+
     // Number of entries
-    if (u32in() < 1)
+    numchunks = u32in();
+    if ((numchunks < 1) || ((numchunks + 1) == 0))
         return ERR_FAIL;
-    // first chunk offset
-    mp4config.mdatofs = u32in();
-    // ignore the rest
+
+    if ((size - 8u) / 4u < numchunks)
+        return ERR_FAIL;
+
+    chunkn = 0;
+    samplesleft = 0;
+    slicen = 0;
+    offset = 0;
+
+    for (i = 0; i < mp4config.frame.nsamples; ++i) {
+        if (samplesleft == 0)
+        {
+            chunkn++;
+            if (chunkn > numchunks)
+                return ERR_FAIL;
+            if (slicen < mp4config.frame.nsclices &&
+                (slicen + 1) < mp4config.frame.nsclices) {
+                if (chunkn == mp4config.frame.map[slicen + 1].firstchunk)
+                    slicen++;
+            }
+            samplesleft = mp4config.frame.map[slicen].samplesperchunk;
+            offset = u32in();
+        }
+        mp4config.frame.info[i].offset = offset;
+        nextoffset = offset + mp4config.frame.info[i].len;
+        if (nextoffset < offset)
+            return ERR_FAIL;
+        offset = nextoffset;
+        samplesleft--;
+    }
+
+    freeMem(&mp4config.frame.map);
 
     return size;
 }
@@ -424,11 +506,12 @@ static int tagu32(char *tagname, int n /*number of stored fields*/)
 
 static int metain(int size)
 {
+    (void)size;  /* why not used? */
     // version/flags
     u32in();
 
     return ERR_OK;
-};
+}
 
 static int hdlr2in(int size)
 {
@@ -452,7 +535,7 @@ static int hdlr2in(int size)
     u8in();
 
     return size;
-};
+}
 
 static int ilstin(int size)
 {
@@ -657,7 +740,7 @@ static int ilstin(int size)
                 break;
             case GENRE:
                 {
-                    uint8_t gnum = u16in();
+                    uint16_t gnum = u16in();
                     asize -= 2;
                     if (!gnum)
                        goto skip;
@@ -705,7 +788,7 @@ static int ilstin(int size)
     fprintf(stderr, "-------------------------------\n");
 
     return size;
-};
+}
 
 static creator_t *g_atom = 0;
 static int parse(uint32_t *sizemax)
@@ -719,7 +802,7 @@ static int parse(uint32_t *sizemax)
         fprintf(stderr, "parse error: root is not a 'name' opcode\n");
         return ERR_FAIL;
     }
-    //fprintf(stderr, "looking for '%s'\n", (char *)g_atom->data);
+    //fprintf(stderr, "looking for '%s'\n", (char *)g_atom->name);
 
     // search for atom in the file
     while (1)
@@ -730,7 +813,7 @@ static int parse(uint32_t *sizemax)
         apos = ftell(g_fin);
         if (apos >= (aposmax - 8))
         {
-            fprintf(stderr, "parse error: atom '%s' not found\n", (char *)g_atom->data);
+            fprintf(stderr, "parse error: atom '%s' not found\n", g_atom->name);
             return ERR_FAIL;
         }
         if ((tmp = u32in()) < 8)
@@ -749,7 +832,7 @@ static int parse(uint32_t *sizemax)
 
         //fprintf(stderr, "atom: '%c%c%c%c'(%x)", name[0],name[1],name[2],name[3], size);
 
-        if (!memcmp(name, g_atom->data, 4))
+        if (!memcmp(name, g_atom->name, 4))
         {
             //fprintf(stderr, "OK\n");
             break;
@@ -762,7 +845,7 @@ static int parse(uint32_t *sizemax)
     g_atom++;
     if (g_atom->opcode == ATOM_DATA)
     {
-        int err = ((int (*)(int)) g_atom->data)(size - 8);
+        int err = g_atom->parse(size - 8);
         if (err < ERR_OK)
         {
             fseek(g_fin, apos + size, SEEK_SET);
@@ -772,7 +855,7 @@ static int parse(uint32_t *sizemax)
     }
     if (g_atom->opcode == ATOM_DESCENT)
     {
-        long apos = ftell(g_fin);;
+        long apos2 = ftell(g_fin);
 
         //fprintf(stderr, "descent\n");
         g_atom++;
@@ -785,7 +868,8 @@ static int parse(uint32_t *sizemax)
                 g_atom++;
                 break;
             }
-            fseek(g_fin, apos, SEEK_SET);
+            // TODO: does not feel well - we always return to the same point!
+            fseek(g_fin, apos2, SEEK_SET);
             if ((ret = parse(&subsize)) < 0)
                 return ret;
         }
@@ -797,8 +881,6 @@ static int parse(uint32_t *sizemax)
     return ERR_OK;
 }
 
-
-
 static int moovin(int sizemax)
 {
     long apos = ftell(g_fin);
@@ -807,43 +889,35 @@ static int moovin(int sizemax)
     int err, ret = sizemax;
 
     static creator_t mvhd[] = {
-        {ATOM_NAME, "mvhd"},
-        {0}
+        NAME("mvhd"),
+        STOP()
     };
     static creator_t trak[] = {
-        {ATOM_NAME, "trak"},
-        {ATOM_DESCENT},
-        {ATOM_NAME, "tkhd"},
-        {ATOM_NAME, "mdia"},
-        {ATOM_DESCENT},
-        {ATOM_NAME, "mdhd"},
-        {ATOM_DATA, mdhdin},
-        {ATOM_NAME, "hdlr"},
-        {ATOM_DATA, hdlr1in},
-        {ATOM_NAME, "minf"},
-        {ATOM_DESCENT},
-        {ATOM_NAME, "smhd"},
-        {ATOM_NAME, "dinf"},
-        {ATOM_NAME, "stbl"},
-        {ATOM_DESCENT},
-        {ATOM_NAME, "stsd"},
-        {ATOM_DATA, stsdin},
-        {ATOM_DESCENT},
-        {ATOM_NAME, "mp4a"},
-        {ATOM_DATA, mp4ain},
-        {ATOM_DESCENT},
-        {ATOM_NAME, "esds"},
-        {ATOM_DATA, esdsin},
-        {ATOM_ASCENT},
-        {ATOM_ASCENT},
-        {ATOM_NAME, "stts"},
-        {ATOM_DATA, sttsin},
-        {ATOM_NAME, "stsc"},
-        {ATOM_NAME, "stsz"},
-        {ATOM_DATA, stszin},
-        {ATOM_NAME, "stco"},
-        {ATOM_DATA, stcoin},
-        {0}
+        NAME("trak"),
+        DESCENT(),
+        NAME("tkhd"),
+        NAME("mdia"),
+        DESCENT(),
+        DATA("mdhd", mdhdin),
+        DATA("hdlr", hdlr1in),
+        NAME("minf"),
+        DESCENT(),
+        NAME("smhd"),
+        NAME("dinf"),
+        NAME("stbl"),
+        DESCENT(),
+        DATA("stsd", stsdin),
+        DESCENT(),
+        DATA("mp4a", mp4ain),
+        DESCENT(),
+        DATA("esds", esdsin),
+        ASCENT(),
+        ASCENT(),
+        DATA("stts", sttsin),
+        DATA("stsc", stscin),
+        DATA("stsz", stszin),
+        DATA("stco", stcoin),
+        STOP()
     };
 
     g_atom = mvhd;
@@ -880,60 +954,54 @@ static int moovin(int sizemax)
 
 
 static creator_t g_head[] = {
-    {ATOM_NAME, "ftyp"},
-    {ATOM_DATA, ftypin},
-    {0}
+    DATA("ftyp", ftypin),
+    STOP()
 };
 
 static creator_t g_moov[] = {
-    {ATOM_NAME, "moov"},
-    {ATOM_DATA, moovin},
-    //{ATOM_DESCENT},
-    //{ATOM_NAME, "mvhd"},
-    {0}
+    DATA("moov", moovin),
+    //DESCENT(),
+    //NAME("mvhd"),
+    STOP()
 };
 
 static creator_t g_meta1[] = {
-    {ATOM_NAME, "moov"},
-    {ATOM_DESCENT},
-    {ATOM_NAME, "udta"},
-    {ATOM_DESCENT},
-    {ATOM_NAME, "meta"},
-    {ATOM_DATA, metain},
-    {ATOM_DESCENT},
-    {ATOM_NAME, "hdlr"},
-    {ATOM_DATA, hdlr2in},
-    {ATOM_NAME, "ilst"},
-    {ATOM_DATA, ilstin},
-    {0}
+    NAME("moov"),
+    DESCENT(),
+    NAME("udta"),
+    DESCENT(),
+    DATA("meta", metain),
+    DESCENT(),
+    DATA("hdlr", hdlr2in),
+    DATA("ilst", ilstin),
+    STOP()
 };
 
 static creator_t g_meta2[] = {
-    {ATOM_NAME, "meta"},
-    {ATOM_DATA, metain},
-    {ATOM_DESCENT},
-    {ATOM_NAME, "hdlr"},
-    {ATOM_DATA, hdlr2in},
-    {ATOM_NAME, "ilst"},
-    {ATOM_DATA, ilstin},
-    {0}
+    DATA("meta", metain),
+    DESCENT(),
+    DATA("hdlr", hdlr2in),
+    DATA("ilst", ilstin),
+    STOP()
 };
 
 
 int mp4read_frame(void)
 {
-    if (mp4config.frame.current >= mp4config.frame.ents)
+    if (mp4config.frame.current >= mp4config.frame.nsamples)
         return ERR_FAIL;
 
-    mp4config.bitbuf.size = mp4config.frame.data[mp4config.frame.current + 1]
-        - mp4config.frame.data[mp4config.frame.current];
+    // TODO(eustas): avoid no-op seeks
+    mp4read_seek(mp4config.frame.current);
+
+    mp4config.bitbuf.size = mp4config.frame.info[mp4config.frame.current].len;
 
     if (fread(mp4config.bitbuf.data, 1, mp4config.bitbuf.size, g_fin)
         != mp4config.bitbuf.size)
     {
         fprintf(stderr, "can't read frame data(frame %d@0x%x)\n",
                mp4config.frame.current,
-               mp4config.frame.data[mp4config.frame.current]);
+               mp4config.frame.info[mp4config.frame.current].offset);
 
         return ERR_FAIL;
     }
@@ -943,11 +1011,11 @@ int mp4read_frame(void)
     return ERR_OK;
 }
 
-int mp4read_seek(int framenum)
+int mp4read_seek(uint32_t framenum)
 {
-    if (framenum > mp4config.frame.ents)
+    if (framenum > mp4config.frame.nsamples)
         return ERR_FAIL;
-    if (fseek(g_fin, mp4config.mdatofs + mp4config.frame.data[framenum], SEEK_SET))
+    if (fseek(g_fin, mp4config.frame.info[framenum].offset, SEEK_SET))
         return ERR_FAIL;
 
     mp4config.frame.current = framenum;
@@ -965,18 +1033,18 @@ static void mp4info(void)
     fprintf(stderr, "Buffer size:\t\t%d\n", mp4config.buffersize);
     fprintf(stderr, "Max bitrate:\t\t%d\n", mp4config.bitratemax);
     fprintf(stderr, "Average bitrate:\t%d\n", mp4config.bitrateavg);
-    fprintf(stderr, "Samples per frame:\t%d\n", mp4config.framesamples);
-    fprintf(stderr, "Frames:\t\t\t%d\n", mp4config.frame.ents);
+    fprintf(stderr, "Frames:\t\t\t%d\n", mp4config.frame.nsamples);
     fprintf(stderr, "ASC size:\t\t%d\n", mp4config.asc.size);
     fprintf(stderr, "Duration:\t\t%.1f sec\n", (float)mp4config.samples/mp4config.samplerate);
-    fprintf(stderr, "Data offset/size:\t%x/%x\n", mp4config.mdatofs, mp4config.mdatsize);
+    if (mp4config.frame.nsamples)
+        fprintf(stderr, "Data offset:\t%x\n", mp4config.frame.info[0].offset);
 }
 
 int mp4read_close(void)
 {
-#define FREE(x) if(x){free(x);x=0;}
-    FREE(mp4config.frame.data);
-    FREE(mp4config.bitbuf.data);
+    freeMem(&mp4config.frame.info);
+    freeMem(&mp4config.frame.map);
+    freeMem(&mp4config.bitbuf.data);
 
     return ERR_OK;
 }

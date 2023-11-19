@@ -1,19 +1,19 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -38,7 +38,6 @@
 #include "common.h"
 #include "structs.h"
 
-#include <string.h>
 #include <stdlib.h>
 #include "specrec.h"
 #include "filtbank.h"
@@ -306,6 +305,9 @@ uint8_t window_grouping_info(NeAACDecStruct *hDecoder, ic_stream *ics)
 
     uint8_t sf_index = hDecoder->sf_index;
 
+    if (sf_index >= 12)
+        return 32;
+
     switch (ics->window_sequence) {
     case ONLY_LONG_SEQUENCE:
     case LONG_START_SEQUENCE:
@@ -425,9 +427,7 @@ uint8_t window_grouping_info(NeAACDecStruct *hDecoder, ic_stream *ics)
     }
 }
 
-/* iquant() *
-/* output = sign(input)*abs(input)^(4/3) */
-/**/
+/* iquant() * output = sign(input)*abs(input)^(4/3) */
 static INLINE real_t iquant(int16_t q, const real_t *tab, uint8_t *error)
 {
 #ifdef FIXED_POINT
@@ -560,14 +560,22 @@ static uint8_t quant_to_spec(NeAACDecStruct *hDecoder,
     const real_t *tab = iq_table;
 
     uint8_t g, sfb, win;
-    uint16_t width, bin, k, gindex, wa, wb;
+    uint16_t width, bin, k, gindex;
     uint8_t error = 0; /* Init error flag */
 #ifndef FIXED_POINT
     real_t scf;
+#else
+    int32_t sat_shift_mask = 0;
 #endif
 
     k = 0;
     gindex = 0;
+
+    /* In this case quant_to_spec is no-op and spec_data remains undefined.
+     * Without peeking into AAC specification, there is no strong evidence if
+     * such streams are invalid -> just calm down MSAN. */
+    if (ics->num_swb == 0)
+        memset(spec_data, 0, frame_len * sizeof(real_t));
 
     for (g = 0; g < ics->num_window_groups; g++)
     {
@@ -578,73 +586,79 @@ static uint8_t quant_to_spec(NeAACDecStruct *hDecoder,
         for (sfb = 0; sfb < ics->num_swb; sfb++)
         {
             int32_t exp, frac;
+            uint16_t wa = gindex + j;
+            int16_t scale_factor = ics->scale_factors[g][sfb];
 
             width = ics->swb_offset[sfb+1] - ics->swb_offset[sfb];
 
-            /* this could be scalefactor for IS or PNS, those can be negative or bigger then 255 */
-            /* just ignore them */
-            if (ics->scale_factors[g][sfb] < 0 || ics->scale_factors[g][sfb] > 255)
-            {
-                exp = 0;
-                frac = 0;
-            } else {
-                /* ics->scale_factors[g][sfb] must be between 0 and 255 */
-                exp = (ics->scale_factors[g][sfb] /* - 100 */) >> 2;
-                /* frac must always be > 0 */
-                frac = (ics->scale_factors[g][sfb] /* - 100 */) & 3;
-            }
-
 #ifdef FIXED_POINT
-            exp -= 25;
+            scale_factor -= 100;
             /* IMDCT pre-scaling */
             if (hDecoder->object_type == LD)
             {
-                exp -= 6 /*9*/;
+                scale_factor -= 24 /*9*/;
             } else {
                 if (ics->window_sequence == EIGHT_SHORT_SEQUENCE)
-                    exp -= 4 /*7*/;
+                    scale_factor -= 16 /*7*/;
                 else
-                    exp -= 7 /*10*/;
+                    scale_factor -= 28 /*10*/;
             }
+            if (scale_factor > 120)
+                scale_factor = 120;  /* => exp <= 30 */
+#else
+            (void)hDecoder;
 #endif
 
-            wa = gindex + j;
+            /* scale_factor for IS or PNS, has different meaning; fill with almost zeroes */
+            if (is_intensity(ics, g, sfb) || is_noise(ics, g, sfb))
+            {
+                scale_factor = 0;
+            }
+
+            /* scale_factor must be between 0 and 255 */
+            exp = (scale_factor /* - 100 */) >> 2;
+            /* frac must always be > 0 */
+            frac = (scale_factor /* - 100 */) & 3;
 
 #ifndef FIXED_POINT
             scf = pow2sf_tab[exp/*+25*/] * pow2_table[frac];
+#else
+            if (exp > 0)
+                sat_shift_mask = SAT_SHIFT_MASK(exp);
 #endif
 
             for (win = 0; win < ics->window_group_length[g]; win++)
             {
                 for (bin = 0; bin < width; bin += 4)
                 {
+                    uint16_t wb = wa + bin;
 #ifndef FIXED_POINT
-                    wb = wa + bin;
-
                     spec_data[wb+0] = iquant(quant_data[k+0], tab, &error) * scf;
-                    spec_data[wb+1] = iquant(quant_data[k+1], tab, &error) * scf;                        
-                    spec_data[wb+2] = iquant(quant_data[k+2], tab, &error) * scf;                        
+                    spec_data[wb+1] = iquant(quant_data[k+1], tab, &error) * scf;
+                    spec_data[wb+2] = iquant(quant_data[k+2], tab, &error) * scf;
                     spec_data[wb+3] = iquant(quant_data[k+3], tab, &error) * scf;
-                        
 #else
                     real_t iq0 = iquant(quant_data[k+0], tab, &error);
                     real_t iq1 = iquant(quant_data[k+1], tab, &error);
                     real_t iq2 = iquant(quant_data[k+2], tab, &error);
                     real_t iq3 = iquant(quant_data[k+3], tab, &error);
 
-                    wb = wa + bin;
-
-                    if (exp < 0)
+                    if (exp == -32)
                     {
-                        spec_data[wb+0] = iq0 >>= -exp;
-                        spec_data[wb+1] = iq1 >>= -exp;
-                        spec_data[wb+2] = iq2 >>= -exp;
-                        spec_data[wb+3] = iq3 >>= -exp;
-                    } else {
-                        spec_data[wb+0] = iq0 <<= exp;
-                        spec_data[wb+1] = iq1 <<= exp;
-                        spec_data[wb+2] = iq2 <<= exp;
-                        spec_data[wb+3] = iq3 <<= exp;
+                        spec_data[wb+0] = 0;
+                        spec_data[wb+1] = 0;
+                        spec_data[wb+2] = 0;
+                        spec_data[wb+3] = 0;
+                    } else if (exp <= 0) {
+                        spec_data[wb+0] = iq0 >> -exp;
+                        spec_data[wb+1] = iq1 >> -exp;
+                        spec_data[wb+2] = iq2 >> -exp;
+                        spec_data[wb+3] = iq3 >> -exp;
+                    } else { /* exp > 0 */
+                        spec_data[wb+0] = SAT_SHIFT(iq0, exp, sat_shift_mask);
+                        spec_data[wb+1] = SAT_SHIFT(iq1, exp, sat_shift_mask);
+                        spec_data[wb+2] = SAT_SHIFT(iq2, exp, sat_shift_mask);
+                        spec_data[wb+3] = SAT_SHIFT(iq3, exp, sat_shift_mask);
                     }
                     if (frac != 0)
                     {
@@ -821,7 +835,6 @@ static uint8_t allocate_channel_pair(NeAACDecStruct *hDecoder,
     }
 #endif
 
-    if (hDecoder->time_out[channel] == NULL)
     {
         mul = 1;
 #ifdef SBR_DEC
@@ -833,6 +846,9 @@ static uint8_t allocate_channel_pair(NeAACDecStruct *hDecoder,
             hDecoder->sbr_alloced[hDecoder->fr_ch_ele] = 1;
         }
 #endif
+    }
+    if (hDecoder->time_out[channel] == NULL)
+    {
         hDecoder->time_out[channel] = (real_t*)faad_malloc(mul*hDecoder->frameLength*sizeof(real_t));
         memset(hDecoder->time_out[channel], 0, mul*hDecoder->frameLength*sizeof(real_t));
     }
@@ -890,7 +906,7 @@ uint8_t reconstruct_single_channel(NeAACDecStruct *hDecoder, ic_stream *ics,
                                    element *sce, int16_t *spec_data)
 {
     uint8_t retval;
-    int output_channels;
+    uint8_t output_channels;
     ALIGN real_t spec_coef[1024];
 
 #ifdef PROFILE
@@ -921,8 +937,11 @@ uint8_t reconstruct_single_channel(NeAACDecStruct *hDecoder, ic_stream *ics,
          * this means that there is only 1 bitstream element!
          */
 
-        /* reset the allocation */
-        hDecoder->element_alloced[hDecoder->fr_ch_ele] = 0;
+        /* The simplest way to fix the accounting,
+         * is to reallocate this and all the following channels.
+         */
+        memset(&hDecoder->element_alloced[hDecoder->fr_ch_ele], 0,
+            sizeof(uint8_t) * (MAX_SYNTAX_ELEMENTS - hDecoder->fr_ch_ele));
 
         hDecoder->element_output_channels[hDecoder->fr_ch_ele] = output_channels;
 
@@ -940,6 +959,10 @@ uint8_t reconstruct_single_channel(NeAACDecStruct *hDecoder, ic_stream *ics,
 
     /* sanity check, CVE-2018-20199, CVE-2018-20360 */
     if(!hDecoder->time_out[sce->channel])
+        return 15;
+    if(output_channels > 1 && !hDecoder->time_out[sce->channel+1])
+        return 15;
+    if(!hDecoder->fb_intermed[sce->channel])
         return 15;
 
     /* dequantisation and scaling */
@@ -1003,12 +1026,13 @@ uint8_t reconstruct_single_channel(NeAACDecStruct *hDecoder, ic_stream *ics,
         spec_coef, hDecoder->frameLength);
 
     /* drc decoding */
+#ifdef APPLY_DRC
     if (hDecoder->drc->present)
     {
         if (!hDecoder->drc->exclude_mask[sce->channel] || !hDecoder->drc->excluded_chns_present)
             drc_decode(hDecoder->drc, spec_coef);
     }
-
+#endif
     /* filter bank */
 #ifdef SSR_DEC
     if (hDecoder->object_type != SSR)
@@ -1056,6 +1080,8 @@ uint8_t reconstruct_single_channel(NeAACDecStruct *hDecoder, ic_stream *ics,
 #endif
                 );
         }
+        if (!hDecoder->sbr[ele])
+            return 19;
 
         if (sce->ics1.window_sequence == EIGHT_SHORT_SEQUENCE)
             hDecoder->sbr[ele]->maxAACLine = 8*min(sce->ics1.swb_offset[max(sce->ics1.max_sfb-1, 0)], sce->ics1.swb_offset_max);
@@ -1122,7 +1148,9 @@ uint8_t reconstruct_channel_pair(NeAACDecStruct *hDecoder, ic_stream *ics1, ic_s
     }
 
     /* sanity check, CVE-2018-20199, CVE-2018-20360 */
-    if(!hDecoder->time_out[cpe->channel])
+    if(!hDecoder->time_out[cpe->channel] || !hDecoder->time_out[cpe->paired_channel])
+        return 15;
+    if(!hDecoder->fb_intermed[cpe->channel] || !hDecoder->fb_intermed[cpe->paired_channel])
         return 15;
 
     /* dequantisation and scaling */
@@ -1245,6 +1273,7 @@ uint8_t reconstruct_channel_pair(NeAACDecStruct *hDecoder, ic_stream *ics1, ic_s
         spec_coef2, hDecoder->frameLength);
 
     /* drc decoding */
+#if APPLY_DRC
     if (hDecoder->drc->present)
     {
         if (!hDecoder->drc->exclude_mask[cpe->channel] || !hDecoder->drc->excluded_chns_present)
@@ -1252,7 +1281,7 @@ uint8_t reconstruct_channel_pair(NeAACDecStruct *hDecoder, ic_stream *ics1, ic_s
         if (!hDecoder->drc->exclude_mask[cpe->paired_channel] || !hDecoder->drc->excluded_chns_present)
             drc_decode(hDecoder->drc, spec_coef2);
     }
-
+#endif
     /* filter bank */
 #ifdef SSR_DEC
     if (hDecoder->object_type != SSR)
@@ -1312,6 +1341,8 @@ uint8_t reconstruct_channel_pair(NeAACDecStruct *hDecoder, ic_stream *ics1, ic_s
 #endif
                 );
         }
+        if (!hDecoder->sbr[ele])
+            return 19;
 
         if (cpe->ics1.window_sequence == EIGHT_SHORT_SEQUENCE)
             hDecoder->sbr[ele]->maxAACLine = 8*min(cpe->ics1.swb_offset[max(cpe->ics1.max_sfb-1, 0)], cpe->ics1.swb_offset_max);

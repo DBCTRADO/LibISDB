@@ -1,19 +1,19 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -274,7 +274,7 @@ static void auto_correlation(sbr_info *sbr, acorr_coef *ac, qmf_t buffer[MAX_NTS
 #ifdef FIXED_POINT
     const real_t rel = FRAC_CONST(0.999999); // 1 / (1 + 1e-6f);
     uint32_t mask, exp;
-    real_t pow2_to_exp;
+    real_t half;
 #else
     const real_t rel = 1 / (1 + 1e-6f);
 #endif
@@ -295,16 +295,31 @@ static void auto_correlation(sbr_info *sbr, acorr_coef *ac, qmf_t buffer[MAX_NTS
 
     exp = wl_min_lzc(mask);
 
+    /* All-zero input. */
+    if (exp == 0) {
+        RE(ac->r01) = 0;
+        IM(ac->r01) = 0;
+        RE(ac->r02) = 0;
+        IM(ac->r02) = 0;
+        RE(ac->r11) = 0;
+        // IM(ac->r11) = 0; // unused
+        RE(ac->r12) = 0;
+        IM(ac->r12) = 0;
+        RE(ac->r22) = 0;
+        // IM(ac->r22) = 0; // unused
+        ac->det = 0;
+        return;
+    }
+    /* Otherwise exp > 0. */
     /* improves accuracy */
-    if (exp > 0)
-        exp -= 1;
-   
-    pow2_to_exp = 1<<(exp-1);
+    exp -= 1;
+    /* Now exp is 0..31 */
+    half = (1 << exp) >> 1;
 
-    temp2_r = (QMF_RE(buffer[offset-2][bd]) + pow2_to_exp) >> exp;
-    temp2_i = (QMF_IM(buffer[offset-2][bd]) + pow2_to_exp) >> exp;
-    temp3_r = (QMF_RE(buffer[offset-1][bd]) + pow2_to_exp) >> exp;
-    temp3_i = (QMF_IM(buffer[offset-1][bd]) + pow2_to_exp) >> exp;
+    temp2_r = (QMF_RE(buffer[offset-2][bd]) + half) >> exp;
+    temp2_i = (QMF_IM(buffer[offset-2][bd]) + half) >> exp;
+    temp3_r = (QMF_RE(buffer[offset-1][bd]) + half) >> exp;
+    temp3_i = (QMF_IM(buffer[offset-1][bd]) + half) >> exp;
     // Save these because they are needed after loop
     temp4_r = temp2_r;
     temp4_i = temp2_i;
@@ -313,12 +328,12 @@ static void auto_correlation(sbr_info *sbr, acorr_coef *ac, qmf_t buffer[MAX_NTS
 
     for (j = offset; j < len + offset; j++)
     {
-    	temp1_r = temp2_r; // temp1_r = (QMF_RE(buffer[offset-2][bd] + (1<<(exp-1))) >> exp;
-    	temp1_i = temp2_i; // temp1_i = (QMF_IM(buffer[offset-2][bd] + (1<<(exp-1))) >> exp;
-    	temp2_r = temp3_r; // temp2_r = (QMF_RE(buffer[offset-1][bd] + (1<<(exp-1))) >> exp;
-    	temp2_i = temp3_i; // temp2_i = (QMF_IM(buffer[offset-1][bd] + (1<<(exp-1))) >> exp;
-        temp3_r = (QMF_RE(buffer[j][bd]) + pow2_to_exp) >> exp;
-        temp3_i = (QMF_IM(buffer[j][bd]) + pow2_to_exp) >> exp;
+        temp1_r = temp2_r; // temp1_r = (QMF_RE(buffer[offset-2][bd] + (1<<(exp-1))) >> exp;
+        temp1_i = temp2_i; // temp1_i = (QMF_IM(buffer[offset-2][bd] + (1<<(exp-1))) >> exp;
+        temp2_r = temp3_r; // temp2_r = (QMF_RE(buffer[offset-1][bd] + (1<<(exp-1))) >> exp;
+        temp2_i = temp3_i; // temp2_i = (QMF_IM(buffer[offset-1][bd] + (1<<(exp-1))) >> exp;
+        temp3_r = (QMF_RE(buffer[j][bd]) + half) >> exp;
+        temp3_i = (QMF_IM(buffer[j][bd]) + half) >> exp;
         r01r += MUL_R(temp3_r, temp2_r) + MUL_R(temp3_i, temp2_i);
         r01i += MUL_R(temp3_i, temp2_r) - MUL_R(temp3_r, temp2_i);
         r02r += MUL_R(temp3_r, temp1_r) + MUL_R(temp3_i, temp1_i);
@@ -453,14 +468,15 @@ static void calc_prediction_coef(sbr_info *sbr, qmf_t Xlow[MAX_NTSRHFG][64],
 #endif
     }
 
-    if ((MUL_R(RE(alpha_0[k]),RE(alpha_0[k])) + MUL_R(IM(alpha_0[k]),IM(alpha_0[k])) >= REAL_CONST(16)) ||
-        (MUL_R(RE(alpha_1[k]),RE(alpha_1[k])) + MUL_R(IM(alpha_1[k]),IM(alpha_1[k])) >= REAL_CONST(16)))
-    {
-        RE(alpha_0[k]) = 0;
-        IM(alpha_0[k]) = 0;
-        RE(alpha_1[k]) = 0;
-        IM(alpha_1[k]) = 0;
-    }
+    /* Sanity check; important: use "yes" check to filter-out NaN values. */
+    if ((MUL_R(RE(alpha_0[k]),RE(alpha_0[k])) + MUL_R(IM(alpha_0[k]),IM(alpha_0[k])) <= REAL_CONST(16)) &&
+        (MUL_R(RE(alpha_1[k]),RE(alpha_1[k])) + MUL_R(IM(alpha_1[k]),IM(alpha_1[k])) <= REAL_CONST(16)))
+        return;
+    /* Fallback */
+    RE(alpha_0[k]) = 0;
+    IM(alpha_0[k]) = 0;
+    RE(alpha_1[k]) = 0;
+    IM(alpha_1[k]) = 0;
 }
 #else
 static void calc_prediction_coef_lp(sbr_info *sbr, qmf_t Xlow[MAX_NTSRHFG][64],

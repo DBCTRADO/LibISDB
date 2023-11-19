@@ -1,19 +1,19 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -107,7 +107,11 @@ static uint8_t ObjectTypesTable[32] = {
     0, /* 27 ER Parametric */
 #endif
     0, /* 28 (Reserved) */
-    0, /* 29 (Reserved) */
+#ifdef PS_DEC
+    1, /* 29 AAC LC + SBR + PS */
+#else
+    0, /* 29 AAC LC + SBR + PS */
+#endif
     0, /* 30 (Reserved) */
     0  /* 31 (Reserved) */
 };
@@ -174,7 +178,7 @@ int8_t AudioSpecificConfigFromBitfile(bitfile *ld,
 
 #ifdef SBR_DEC
     mp4ASC->sbr_present_flag = -1;
-    if (mp4ASC->objectTypeIndex == 5)
+    if (mp4ASC->objectTypeIndex == 5 || mp4ASC->objectTypeIndex == 29)
     {
         uint8_t tmp;
 
@@ -229,9 +233,9 @@ int8_t AudioSpecificConfigFromBitfile(bitfile *ld,
     if(short_form)
         bits_to_decode = 0;
     else
-		bits_to_decode = (int8_t)(buffer_size*8 - (startpos-faad_get_processed_bits(ld)));
+		bits_to_decode = (int8_t)(buffer_size*8 + faad_get_processed_bits(ld) - startpos);
 
-    if ((mp4ASC->objectTypeIndex != 5) && (bits_to_decode >= 16))
+    if ((mp4ASC->objectTypeIndex != 5 && mp4ASC->objectTypeIndex != 29) && (bits_to_decode >= 16))
     {
         int16_t syncExtensionType = (int16_t)faad_getbits(ld, 11
             DEBUGVAR(1,9,"parse_audio_decoder_specific_info(): syncExtensionType"));
@@ -301,7 +305,8 @@ int8_t AudioSpecificConfig2(uint8_t *pBuffer,
     uint8_t ret = 0;
     bitfile ld;
     faad_initbits(&ld, pBuffer, buffer_size);
-    faad_byte_align(&ld);
+    if (ld.error != 0)
+        return -7;
     ret = AudioSpecificConfigFromBitfile(&ld, mp4ASC, pce, buffer_size, short_form);
     faad_endbits(&ld);
     return ret;

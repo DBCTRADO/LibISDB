@@ -21,6 +21,18 @@
 
 typedef struct
 {
+    uint32_t len;
+    uint32_t offset;
+} frame_info_t;
+
+typedef struct
+{
+    uint32_t firstchunk;
+    uint32_t samplesperchunk;
+} slice_info_t;
+
+typedef struct
+{
     uint32_t ctime, mtime;
     uint32_t samplerate;
     // total sound samples
@@ -29,27 +41,27 @@ typedef struct
     // sample depth
     uint32_t bits;
     // buffer config
-    uint16_t buffersize;
+    uint32_t buffersize;
     uint32_t bitratemax;
     uint32_t bitrateavg;
-    uint32_t framesamples;
+    // frame size / offsets
     struct
     {
-        uint32_t *data;
-        uint32_t ents;
-        int current;
-        int maxsize;
+        frame_info_t *info;
+        slice_info_t *map;
+        uint32_t nsamples;
+        uint32_t nsclices;
+        uint32_t current;
+        uint32_t maxsize;
     } frame;
     // AudioSpecificConfig data:
     struct
     {
         uint8_t buf[10];
-        int size;
+        uint32_t size;
     } asc;
-    uint32_t mdatofs;
-    uint32_t mdatsize;
     struct {
-        int size;
+        uint32_t size;
         uint8_t *data;
     } bitbuf;
     struct {
@@ -61,6 +73,6 @@ typedef struct
 extern mp4config_t mp4config;
 
 int mp4read_open(char *name);
-int mp4read_seek(int framenum);
+int mp4read_seek(uint32_t framenum);
 int mp4read_frame(void);
 int mp4read_close(void);

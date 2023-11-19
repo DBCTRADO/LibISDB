@@ -1,19 +1,19 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -122,13 +122,18 @@ extern "C" {
   #undef ERROR_RESILIENCE
 #endif
 
-#define SBR_DEC
-//#define SBR_LOW_POWER
-#define PS_DEC
+// Define DISABLE_SBR if you want to disable SBR decoding.
+//#define DISABLE_SBR
 
-#ifdef SBR_LOW_POWER
-#undef PS_DEC
-#endif
+// Define SBR_LOW_POWER if you want only low power SBR decoding without PS.
+//#define SBR_LOW_POWER
+
+#ifndef DISABLE_SBR
+# define SBR_DEC
+# ifndef SBR_LOW_POWER
+#  define PS_DEC
+# endif // SBR_LOW_POWER
+#endif // DISABLE_SBR
 
 /* FIXED POINT: No MAIN decoding */
 #ifdef FIXED_POINT
@@ -149,11 +154,13 @@ extern "C" {
 
 
 #ifdef FIXED_POINT
-#define DIV_R(A, B) (((int64_t)A << REAL_BITS)/B)
-#define DIV_C(A, B) (((int64_t)A << COEF_BITS)/B)
+#define DIV_R(A, B) (((int64_t)A * REAL_PRECISION)/B)
+#define DIV_C(A, B) (((int64_t)A * COEF_PRECISION)/B)
+#define DIV_F(A, B) (((int64_t)A * FRAC_PRECISION)/B)
 #else
 #define DIV_R(A, B) ((A)/(B))
 #define DIV_C(A, B) ((A)/(B))
+#define DIV_F(A, B) ((A)/(B))
 #endif
 
 #ifndef SBR_LOW_POWER
@@ -172,6 +179,7 @@ extern "C" {
 #if defined(_WIN32) && !defined(__MINGW32__)
 
 #include <stdlib.h>
+#include <string.h>
 
 typedef unsigned __int64 uint64_t;
 typedef unsigned __int32 uint32_t;
@@ -184,7 +192,7 @@ typedef signed __int8  int8_t;
 typedef float float32_t;
 
 
-#else
+#else  /* WIN */
 
 #include <stdio.h>
 #if HAVE_SYS_TYPES_H
@@ -254,11 +262,7 @@ char *strchr(), *strrchr();
 # endif
 #endif
 
-#endif
-
-#ifdef WORDS_BIGENDIAN
-#define ARCH_IS_BIG_ENDIAN
-#endif
+#endif  /* WIN */
 
 /* FIXED_POINT doesn't work with MAIN and SSR yet */
 #ifdef FIXED_POINT
@@ -319,7 +323,7 @@ char *strchr(), *strrchr();
   #if defined(_WIN32) && defined(_M_IX86) && !defined(__MINGW32__)
     #ifndef HAVE_LRINTF
     #define HAS_LRINTF
-    static INLINE int lrintf(float f)
+    static INLINE long lrintf(float f)
     {
         int i;
         __asm
@@ -335,7 +339,7 @@ char *strchr(), *strrchr();
     #ifndef HAVE_LRINTF
     #define HAS_LRINTF
     // from http://www.stereopsis.com/FPU.html
-    static INLINE int lrintf(float f)
+    static INLINE long lrintf(float f)
     {
         int i;
         __asm__ __volatile__ (
@@ -401,23 +405,22 @@ char *strchr(), *strrchr();
 
 #ifndef HAS_LRINTF
 /* standard cast */
-#define lrintf(f) ((int32_t)(f))
+#define lrintf(f) ((long)(f))
 #endif
 
 typedef real_t complex_t[2];
-#define RE(A) A[0]
-#define IM(A) A[1]
+#define RE(A) (A)[0]
+#define IM(A) (A)[1]
 
 
 /* common functions */
 uint8_t cpu_has_sse(void);
 uint32_t ne_rng(uint32_t *__r1, uint32_t *__r2);
-uint32_t wl_min_lzc(uint32_t x);
 #ifdef FIXED_POINT
+uint32_t wl_min_lzc(uint32_t x);
 #define LOG2_MIN_INF REAL_CONST(-10000)
-int32_t log2_int(uint32_t val);
-int32_t log2_fix(uint32_t val);
-int32_t pow2_int(real_t val);
+int32_t log2_int(uint64_t val);
+uint64_t pow2_int(real_t val);
 real_t pow2_fix(real_t val);
 #endif
 uint8_t get_sr_index(const uint32_t samplerate);

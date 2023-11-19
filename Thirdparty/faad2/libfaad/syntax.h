@@ -1,19 +1,19 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -91,6 +91,7 @@ extern "C" {
 #define ID_PCE 0x5
 #define ID_FIL 0x6
 #define ID_END 0x7
+#define INVALID_ELEMENT_ID 255
 
 #define ONLY_LONG_SEQUENCE   0x0
 #define LONG_START_SEQUENCE  0x1
@@ -121,7 +122,9 @@ uint8_t reordered_spectral_data(NeAACDecStruct *hDecoder, ic_stream *ics, bitfil
 void DRM_aac_scalable_main_element(NeAACDecStruct *hDecoder, NeAACDecFrameInfo *hInfo,
                                    bitfile *ld, program_config *pce, drc_info *drc);
 #endif
+#if 0
 uint32_t faad_latm_frame(latm_header *latm, bitfile *ld);
+#endif
 
 #ifdef __cplusplus
 }

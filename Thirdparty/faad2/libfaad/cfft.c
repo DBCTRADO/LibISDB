@@ -1,19 +1,19 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -74,6 +74,13 @@ static void passf2pos(const uint16_t ido, const uint16_t l1, const complex_t *cc
 
     if (ido == 1)
     {
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+        // TODO: remove this code once fuzzer proves it is totally unreahable
+        // For supported frame lengths that have odd number of factor 2 it is
+        // never the last factor; consequently `ido` should never be 1.
+        __builtin_trap();
+        /*
+#endif
         for (k = 0; k < l1; k++)
         {
             ah = 2*k;
@@ -84,6 +91,9 @@ static void passf2pos(const uint16_t ido, const uint16_t l1, const complex_t *cc
             IM(ch[ah])    = IM(cc[ac]) + IM(cc[ac+1]);
             IM(ch[ah+l1]) = IM(cc[ac]) - IM(cc[ac+1]);
         }
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+        */
+#endif
     } else {
         for (k = 0; k < l1; k++)
         {
@@ -119,6 +129,13 @@ static void passf2neg(const uint16_t ido, const uint16_t l1, const complex_t *cc
 
     if (ido == 1)
     {
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+        // TODO: remove this code once fuzzer proves it is totally unreahable
+        // For supported frame lengths that have odd number of factor 2 it is
+        // never the last factor; consequently `ido` should never be 1.
+        __builtin_trap();
+        /*
+#endif
         for (k = 0; k < l1; k++)
         {
             ah = 2*k;
@@ -129,6 +146,9 @@ static void passf2neg(const uint16_t ido, const uint16_t l1, const complex_t *cc
             IM(ch[ah])    = IM(cc[ac]) + IM(cc[ac+1]);
             IM(ch[ah+l1]) = IM(cc[ac]) - IM(cc[ac+1]);
         }
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+        */
+#endif
     } else {
         for (k = 0; k < l1; k++)
         {
@@ -169,6 +189,13 @@ static void passf3(const uint16_t ido, const uint16_t l1, const complex_t *cc,
 
     if (ido == 1)
     {
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+        // TODO: remove this code once fuzzer proves it is totally unreahable
+        // 3 is never the the biggest factor for supported frame lengths;
+        // consequently `ido` should never be 1.
+        __builtin_trap();
+        /*
+#endif
         if (isign == 1)
         {
             for (k = 0; k < l1; k++)
@@ -215,6 +242,9 @@ static void passf3(const uint16_t ido, const uint16_t l1, const complex_t *cc,
                 IM(ch[ah+2*l1]) = IM(c2) + RE(c3);
             }
         }
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+        */
+#endif
     } else {
         if (isign == 1)
         {
@@ -478,8 +508,12 @@ static void passf5(const uint16_t ido, const uint16_t l1, const complex_t *cc,
     static real_t ti11 = FRAC_CONST(0.951056516295154);
     static real_t tr12 = FRAC_CONST(-0.809016994374947);
     static real_t ti12 = FRAC_CONST(0.587785252292473);
-    uint16_t i, k, ac, ah;
-    complex_t c2, c3, c4, c5, d3, d4, d5, d2, t2, t3, t4, t5;
+    uint16_t k, ac, ah;
+    complex_t c2, c3, c4, c5, t2, t3, t4, t5;
+    (void)wa1;
+    (void)wa2;
+    (void)wa3;
+    (void)wa4;
 
     if (ido == 1)
     {
@@ -560,6 +594,16 @@ static void passf5(const uint16_t ido, const uint16_t l1, const complex_t *cc,
             }
         }
     } else {
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+        // TODO: remove this code once fuzzer proves it is totally unreahable
+        // 5 if the biggest factor and it never repeated for supported frame
+        // lengths; consequently `ido` should always be 1.
+        __builtin_trap();
+        /*
+#else
+        uint16_t i;
+        complex_t d3, d4, d5, d2;
+#endif
         if (isign == 1)
         {
             for (k = 0; k < l1; k++)
@@ -682,6 +726,9 @@ static void passf5(const uint16_t ido, const uint16_t l1, const complex_t *cc,
                 }
             }
         }
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+        */
+#endif
     }
 }
 
@@ -696,7 +743,7 @@ static INLINE void cfftf1pos(uint16_t n, complex_t *c, complex_t *ch,
 {
     uint16_t i;
     uint16_t k1, l1, l2;
-    uint16_t na, nf, ip, iw, ix2, ix3, ix4, ido, idl1;
+    uint16_t na, nf, ip, iw, ix2, ix3, ix4, ido;
 
     nf = ifac[1];
     na = 0;
@@ -708,7 +755,6 @@ static INLINE void cfftf1pos(uint16_t n, complex_t *c, complex_t *ch,
         ip = ifac[k1];
         l2 = ip*l1;
         ido = n / l2;
-        idl1 = ido*l1;
 
         switch (ip)
         {
@@ -775,7 +821,7 @@ static INLINE void cfftf1neg(uint16_t n, complex_t *c, complex_t *ch,
 {
     uint16_t i;
     uint16_t k1, l1, l2;
-    uint16_t na, nf, ip, iw, ix2, ix3, ix4, ido, idl1;
+    uint16_t na, nf, ip, iw, ix2, ix3, ix4, ido;
 
     nf = ifac[1];
     na = 0;
@@ -787,7 +833,6 @@ static INLINE void cfftf1neg(uint16_t n, complex_t *c, complex_t *ch,
         ip = ifac[k1];
         l2 = ip*l1;
         ido = n / l2;
-        idl1 = ido*l1;
 
         switch (ip)
         {
@@ -952,6 +997,8 @@ startloop:
         }
         l1 = l2;
     }
+#else  // FIXED_POINT
+    (void)wa;  /* whoa! does it work for FIXED_POINT? */
 #endif
 }
 

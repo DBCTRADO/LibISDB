@@ -3,6 +3,8 @@
 
 #include <string.h>
 
+#define PACKAGE_VERSION "2.11.1"
+
 // Pure AAC LC decoder
 //#define LC_ONLY_DECODER
 

@@ -1,19 +1,19 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -41,6 +41,16 @@
 #include "unicode_support.h"
 #include "audio.h"
 
+static size_t write_wav_header(audio_file *aufile);
+static size_t write_wav_extensible_header(audio_file *aufile, long channelMask);
+static size_t write_audio_16bit(audio_file *aufile, void *sample_buffer,
+                                unsigned int samples);
+static size_t write_audio_24bit(audio_file *aufile, void *sample_buffer,
+                                unsigned int samples);
+static size_t write_audio_32bit(audio_file *aufile, void *sample_buffer,
+                                unsigned int samples);
+static size_t write_audio_float(audio_file *aufile, void *sample_buffer,
+                                unsigned int samples);
 
 audio_file *open_audio_file(char *infile, int samplerate, int channels,
                             int outputFormat, int fileType, long channelMask)
@@ -101,24 +111,23 @@ audio_file *open_audio_file(char *infile, int samplerate, int channels,
     return aufile;
 }
 
-int write_audio_file(audio_file *aufile, void *sample_buffer, int samples, int offset)
+size_t write_audio_file(audio_file *aufile, void *sample_buffer, int samples)
 {
     char *buf = (char *)sample_buffer;
     switch (aufile->outputFormat)
     {
     case FAAD_FMT_16BIT:
-        return write_audio_16bit(aufile, buf + offset*2, samples);
+        return write_audio_16bit(aufile, buf, samples);
     case FAAD_FMT_24BIT:
-        return write_audio_24bit(aufile, buf + offset*4, samples);
+        return write_audio_24bit(aufile, buf, samples);
     case FAAD_FMT_32BIT:
-        return write_audio_32bit(aufile, buf + offset*4, samples);
+        return write_audio_32bit(aufile, buf, samples);
     case FAAD_FMT_FLOAT:
-        return write_audio_float(aufile, buf + offset*4, samples);
+        return write_audio_float(aufile, buf, samples);
     default:
         return 0;
     }
-
-    return 0;
+    // return 0;
 }
 
 void close_audio_file(audio_file *aufile)
@@ -139,7 +148,7 @@ void close_audio_file(audio_file *aufile)
     if (aufile) free(aufile);
 }
 
-static int write_wav_header(audio_file *aufile)
+static size_t write_wav_header(audio_file *aufile)
 {
     unsigned char header[44];
     unsigned char* p = header;
@@ -203,7 +212,7 @@ static int write_wav_header(audio_file *aufile)
     return fwrite(header, sizeof(header), 1, aufile->sndfile);
 }
 
-static int write_wav_extensible_header(audio_file *aufile, long channelMask)
+static size_t write_wav_extensible_header(audio_file *aufile, long channelMask)
 {
     unsigned char header[68];
     unsigned char* p = header;
@@ -302,10 +311,10 @@ static int write_wav_extensible_header(audio_file *aufile, long channelMask)
     return fwrite(header, sizeof(header), 1, aufile->sndfile);
 }
 
-static int write_audio_16bit(audio_file *aufile, void *sample_buffer,
-                             unsigned int samples)
+static size_t write_audio_16bit(audio_file *aufile, void *sample_buffer,
+                                unsigned int samples)
 {
-    int ret;
+    size_t ret;
     unsigned int i;
     short *sample_buffer16 = (short*)sample_buffer;
     char *data = malloc(samples*aufile->bits_per_sample*sizeof(char)/8);
@@ -345,10 +354,10 @@ static int write_audio_16bit(audio_file *aufile, void *sample_buffer,
     return ret;
 }
 
-static int write_audio_24bit(audio_file *aufile, void *sample_buffer,
-                             unsigned int samples)
+static size_t write_audio_24bit(audio_file *aufile, void *sample_buffer,
+                                unsigned int samples)
 {
-    int ret;
+    size_t ret;
     unsigned int i;
     int32_t *sample_buffer24 = (int32_t*)sample_buffer;
     char *data = malloc(samples*aufile->bits_per_sample*sizeof(char)/8);
@@ -389,10 +398,10 @@ static int write_audio_24bit(audio_file *aufile, void *sample_buffer,
     return ret;
 }
 
-static int write_audio_32bit(audio_file *aufile, void *sample_buffer,
-                             unsigned int samples)
+static size_t write_audio_32bit(audio_file *aufile, void *sample_buffer,
+                                unsigned int samples)
 {
-    int ret;
+    size_t ret;
     unsigned int i;
     int32_t *sample_buffer32 = (int32_t*)sample_buffer;
     char *data = malloc(samples*aufile->bits_per_sample*sizeof(char)/8);
@@ -434,10 +443,10 @@ static int write_audio_32bit(audio_file *aufile, void *sample_buffer,
     return ret;
 }
 
-static int write_audio_float(audio_file *aufile, void *sample_buffer,
-                             unsigned int samples)
+static size_t write_audio_float(audio_file *aufile, void *sample_buffer,
+                                unsigned int samples)
 {
-    int ret;
+    size_t ret;
     unsigned int i;
     float *sample_buffer_f = (float*)sample_buffer;
     unsigned char *data = malloc(samples*aufile->bits_per_sample*sizeof(char)/8);

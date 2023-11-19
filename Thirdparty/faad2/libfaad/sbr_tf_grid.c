@@ -1,19 +1,19 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -53,11 +53,12 @@ static uint8_t middleBorder(sbr_info *sbr, uint8_t ch);
 /* first build into temp vector to be able to use previous vector on error */
 uint8_t envelope_time_border_vector(sbr_info *sbr, uint8_t ch)
 {
-    uint8_t l, border, temp;
+    uint8_t l, border, temp, trail;
     uint8_t t_E_temp[6] = {0};
 
+    trail = sbr->abs_bord_trail[ch];
     t_E_temp[0] = sbr->rate * sbr->abs_bord_lead[ch];
-    t_E_temp[sbr->L_E[ch]] = sbr->rate * sbr->abs_bord_trail[ch];
+    t_E_temp[sbr->L_E[ch]] = sbr->rate * trail;
 
     switch (sbr->bs_frame_class[ch])
     {
@@ -105,7 +106,7 @@ uint8_t envelope_time_border_vector(sbr_info *sbr, uint8_t ch)
             {
                 border += sbr->bs_rel_bord[ch][l];
 
-                if (sbr->rate * border + sbr->tHFAdj > sbr->numTimeSlotsRate+sbr->tHFGen)
+                if (border > trail)
                     return 1;
 
                 t_E_temp[i++] = sbr->rate * border;
@@ -123,7 +124,7 @@ uint8_t envelope_time_border_vector(sbr_info *sbr, uint8_t ch)
             {
                 border += sbr->bs_rel_bord_0[ch][l];
 
-                if (sbr->rate * border + sbr->tHFAdj > sbr->numTimeSlotsRate+sbr->tHFGen)
+                if (border > trail)
                     return 1;
 
                 t_E_temp[i++] = sbr->rate * border;

@@ -1,19 +1,19 @@
 /*
 ** FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
 ** Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
-**  
+**
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation; either version 2 of the License, or
 ** (at your option) any later version.
-** 
+**
 ** This program is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied warranty of
 ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ** GNU General Public License for more details.
-** 
+**
 ** You should have received a copy of the GNU General Public License
-** along with this program; if not, write to the Free Software 
+** along with this program; if not, write to the Free Software
 ** Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 **
 ** Any non-GPL usage of this software or parts of this software is strictly
@@ -34,6 +34,23 @@
 #include <stdlib.h>
 #include "bits.h"
 
+/* reads only n bytes from the stream instead of the standard 4 */
+static /*INLINE*/ uint32_t getdword_n(void *mem, int n)
+{
+    uint8_t* m8 = (uint8_t*)mem;
+    switch (n)
+    {
+    case 3:
+        return ((uint32_t)m8[2] << 8) | ((uint32_t)m8[1] << 16) | ((uint32_t)m8[0] << 24);
+    case 2:
+        return ((uint32_t)m8[1] << 16) | ((uint32_t)m8[0] << 24);
+    case 1:
+        return (uint32_t)m8[0] << 24;
+    default:
+        return 0;
+    }
+}
+
 /* initialize buffer, call once before first getbits or showbits */
 void faad_initbits(bitfile *ld, const void *_buffer, const uint32_t buffer_size)
 {
@@ -41,9 +58,6 @@ void faad_initbits(bitfile *ld, const void *_buffer, const uint32_t buffer_size)
 
     if (ld == NULL)
         return;
-
-    // useless
-    //memset(ld, 0, sizeof(bitfile));
 
     if (buffer_size == 0 || _buffer == NULL)
     {
@@ -86,7 +100,7 @@ void faad_initbits(bitfile *ld, const void *_buffer, const uint32_t buffer_size)
 
 void faad_endbits(bitfile *ld)
 {
-    // void
+    (void)ld;
 }
 
 uint32_t faad_get_processed_bits(bitfile *ld)
@@ -129,6 +143,7 @@ void faad_flushbits_ex(bitfile *ld, uint32_t bits)
 //        ld->error = 1;
 }
 
+#ifdef DRM
 /* rewind to beginning */
 void faad_rewindbits(bitfile *ld)
 {
@@ -159,13 +174,14 @@ void faad_rewindbits(bitfile *ld)
     ld->bits_left = 32;
     ld->tail = &ld->start[2];
 }
+#endif
 
 /* reset to a certain point */
-void faad_resetbits(bitfile *ld, int bits)
+void faad_resetbits(bitfile *ld, uint32_t bits)
 {
     uint32_t tmp;
-    int words = bits >> 5;
-    int remainder = bits & 0x1F;
+    uint32_t words = bits >> 5;
+    uint32_t remainder = bits & 0x1F;
 
     if (ld->buffer_size < words * 4)
         ld->bytes_left = 0;
@@ -242,6 +258,7 @@ uint32_t faad_origbitbuffer_size(bitfile *ld)
 }
 #endif
 
+#if 0
 /* reversed bit reading routines, used for RVLC and HCR */
 void faad_initbits_rev(bitfile *ld, void *buffer,
                        uint32_t bits_in_buffer)
@@ -270,5 +287,6 @@ void faad_initbits_rev(bitfile *ld, void *buffer,
     ld->bytes_left = ld->buffer_size;
     ld->error = 0;
 }
+#endif
 
 /* EOF */
