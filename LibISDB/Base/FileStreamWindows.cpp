@@ -56,7 +56,7 @@ FileStreamWindows::~FileStreamWindows()
 }
 
 
-bool FileStreamWindows::Open(const CStringView &FileName, OpenFlag Flags)
+bool FileStreamWindows::Open(const String &FileName, OpenFlag Flags)
 {
 	if (m_hFile != INVALID_HANDLE_VALUE) {
 		SetError(std::errc::operation_in_progress);

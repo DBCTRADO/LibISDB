@@ -52,7 +52,7 @@ namespace LibISDB
 		FileStreamPOSIX(const Closer &closer) noexcept;
 		~FileStreamPOSIX();
 
-		bool Open(const CStringView &FileName, OpenFlag Flags) override;
+		bool Open(const String &FileName, OpenFlag Flags) override;
 		bool Close() override;
 		bool IsOpen() const override;
 

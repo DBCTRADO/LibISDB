@@ -81,7 +81,7 @@ namespace LibISDB
 		// RecordingTask
 			virtual bool SetWriter(StreamWriter *pWriter) = 0;
 			virtual bool Reopen(
-				const CStringView &FileName,
+				const String &FileName,
 				StreamWriter::OpenFlag Flags = StreamWriter::OpenFlag::None) = 0;
 
 			virtual bool Start() = 0;
@@ -143,7 +143,7 @@ namespace LibISDB
 			RecordingDataStreamer(StreamWriter *pWriter);
 
 			bool SetWriter(StreamWriter *pWriter);
-			bool ReopenWriter(const CStringView &FileName, StreamWriter::OpenFlag Flags);
+			bool ReopenWriter(const String &FileName, StreamWriter::OpenFlag Flags);
 			void CloseWriter();
 			bool GetFileName(String *pFileName) const;
 			bool GetRecordingStatistics(RecordingStatistics *pStatistics) const;
@@ -172,7 +172,7 @@ namespace LibISDB
 
 		// RecordingTask
 			bool SetWriter(StreamWriter *pWriter) override;
-			bool Reopen(const CStringView &FileName, StreamWriter::OpenFlag Flags) override;
+			bool Reopen(const String &FileName, StreamWriter::OpenFlag Flags) override;
 
 			bool Start() override;
 			void Stop() override;

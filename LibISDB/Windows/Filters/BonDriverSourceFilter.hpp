@@ -83,13 +83,13 @@ namespace LibISDB
 		bool StopStreaming() override;
 
 	// SourceFilter
-		bool OpenSource(const CStringView &Name) override;
+		bool OpenSource(const String &Name) override;
 		bool CloseSource() override;
 		bool IsSourceOpen() const override;
 		SourceMode GetAvailableSourceModes() const noexcept override { return SourceMode::Push; }
 
 	// BonDriverSourceFilter
-		bool LoadBonDriver(const CStringView &FileName);
+		bool LoadBonDriver(const String &FileName);
 		bool UnloadBonDriver();
 		bool IsBonDriverLoaded() const;
 		bool OpenTuner();

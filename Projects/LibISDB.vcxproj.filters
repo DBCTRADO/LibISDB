@@ -325,9 +325,6 @@
     <ClInclude Include="..\LibISDB\Base\StreamingThread.hpp">
       <Filter>Base\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\LibISDB\Templates\cstring_view.hpp">
-      <Filter>Templates</Filter>
-    </ClInclude>
     <ClInclude Include="..\LibISDB\Templates\EnumFlags.hpp">
       <Filter>Templates</Filter>
     </ClInclude>

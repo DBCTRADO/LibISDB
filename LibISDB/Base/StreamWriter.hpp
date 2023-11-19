@@ -51,8 +51,8 @@ namespace LibISDB
 
 		virtual ~StreamWriter() = default;
 
-		virtual bool Open(const CStringView &FileName, OpenFlag Flags = OpenFlag::None) = 0;
-		virtual bool Reopen(const CStringView &FileName, OpenFlag Flags = OpenFlag::None) = 0;
+		virtual bool Open(const String &FileName, OpenFlag Flags = OpenFlag::None) = 0;
+		virtual bool Reopen(const String &FileName, OpenFlag Flags = OpenFlag::None) = 0;
 		virtual void Close() = 0;
 		virtual bool IsOpen() const = 0;
 		virtual size_t Write(const void *pBuffer, size_t Size) = 0;
@@ -71,8 +71,8 @@ namespace LibISDB
 		~FileStreamWriter();
 
 	// StreamWriter
-		bool Open(const CStringView &FileName, OpenFlag Flags = OpenFlag::None) override;
-		bool Reopen(const CStringView &FileName, OpenFlag Flags = OpenFlag::None) override;
+		bool Open(const String &FileName, OpenFlag Flags = OpenFlag::None) override;
+		bool Reopen(const String &FileName, OpenFlag Flags = OpenFlag::None) override;
 		void Close() override;
 		bool IsOpen() const override;
 		size_t Write(const void *pBuffer, size_t Size) override;
@@ -82,7 +82,7 @@ namespace LibISDB
 		bool SetPreallocationUnit(SizeType PreallocationUnit) override;
 
 	private:
-		FileStream * OpenFile(const CStringView &FileName, OpenFlag Flags);
+		FileStream * OpenFile(const String &FileName, OpenFlag Flags);
 
 		std::unique_ptr<FileStream> m_File;
 		SizeType m_WriteSize;

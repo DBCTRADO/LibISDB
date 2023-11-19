@@ -54,12 +54,12 @@ namespace LibISDB
 		EDCBPluginWriter() noexcept;
 		~EDCBPluginWriter();
 
-		bool Load(const CStringView &FileName);
+		bool Load(const String &FileName);
 		void Free();
 
 	// StreamWriter
-		bool Open(const CStringView &FileName, OpenFlag Flags = OpenFlag::None) override;
-		bool Reopen(const CStringView &FileName, OpenFlag Flags = OpenFlag::None) override;
+		bool Open(const String &FileName, OpenFlag Flags = OpenFlag::None) override;
+		bool Reopen(const String &FileName, OpenFlag Flags = OpenFlag::None) override;
 		void Close() override;
 		bool IsOpen() const override;
 		size_t Write(const void *pBuffer, size_t Size) override;

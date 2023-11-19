@@ -61,7 +61,7 @@ FileStreamGenericC::~FileStreamGenericC()
 }
 
 
-bool FileStreamGenericC::Open(const CStringView &FileName, OpenFlag Flags)
+bool FileStreamGenericC::Open(const String &FileName, OpenFlag Flags)
 {
 	if (m_File) {
 		SetError(std::errc::operation_in_progress);

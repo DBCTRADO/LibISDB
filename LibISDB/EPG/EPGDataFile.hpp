@@ -68,7 +68,7 @@ namespace LibISDB
 	// LibISDB::ObjectBase
 		const CharType * GetObjectName() const noexcept override { return LIBISDB_STR("EPGDataFile"); }
 
-		bool Open(EPGDatabase *pEPGDatabase, const CStringView &FileName, OpenFlag Flags);
+		bool Open(EPGDatabase *pEPGDatabase, const String &FileName, OpenFlag Flags);
 		void Close();
 		bool IsOpen() const;
 		bool Load();

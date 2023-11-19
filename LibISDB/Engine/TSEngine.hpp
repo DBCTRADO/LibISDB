@@ -71,7 +71,7 @@ namespace LibISDB
 		template<typename T> T * GetFilter() const { return m_FilterGraph.GetFilter<T>(); }
 		template<typename T> T * GetFilterExplicit() const { return m_FilterGraph.GetFilterExplicit<T>(); }
 
-		bool OpenSource(const CStringView &Name);
+		bool OpenSource(const String &Name);
 		bool CloseSource();
 		bool IsSourceOpen() const;
 

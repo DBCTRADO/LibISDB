@@ -45,7 +45,7 @@ FileStreamWriter::~FileStreamWriter()
 }
 
 
-bool FileStreamWriter::Open(const CStringView &FileName, OpenFlag Flags)
+bool FileStreamWriter::Open(const String &FileName, OpenFlag Flags)
 {
 	if (m_File)
 		return false;
@@ -63,7 +63,7 @@ bool FileStreamWriter::Open(const CStringView &FileName, OpenFlag Flags)
 }
 
 
-bool FileStreamWriter::Reopen(const CStringView &FileName, OpenFlag Flags)
+bool FileStreamWriter::Reopen(const String &FileName, OpenFlag Flags)
 {
 	FileStream *pFile = OpenFile(FileName, Flags);
 
@@ -144,7 +144,7 @@ bool FileStreamWriter::SetPreallocationUnit(SizeType PreallocationUnit)
 }
 
 
-FileStream * FileStreamWriter::OpenFile(const CStringView &FileName, OpenFlag Flags)
+FileStream * FileStreamWriter::OpenFile(const String &FileName, OpenFlag Flags)
 {
 	FileStream *pFile = new FileStream;
 	FileStream::OpenFlag StreamFlags = FileStream::OpenFlag::Write | FileStream::OpenFlag::ShareRead;

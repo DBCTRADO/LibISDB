@@ -170,7 +170,7 @@ bool BonDriverSourceFilter::StopStreaming()
 }
 
 
-bool BonDriverSourceFilter::OpenSource(const CStringView &Name)
+bool BonDriverSourceFilter::OpenSource(const String &Name)
 {
 	if (!LoadBonDriver(Name))
 		return false;
@@ -203,7 +203,7 @@ bool BonDriverSourceFilter::IsSourceOpen() const
 }
 
 
-bool BonDriverSourceFilter::LoadBonDriver(const CStringView &FileName)
+bool BonDriverSourceFilter::LoadBonDriver(const String &FileName)
 {
 	if (m_BonDriver.IsLoaded()) {
 		SetError(ErrorCode::AlreadyLoaded, LIBISDB_STR("既に読み込まれています。"));

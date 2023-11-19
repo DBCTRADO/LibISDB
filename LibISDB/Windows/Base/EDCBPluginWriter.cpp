@@ -53,7 +53,7 @@ EDCBPluginWriter::~EDCBPluginWriter()
 }
 
 
-bool EDCBPluginWriter::Load(const CStringView &FileName)
+bool EDCBPluginWriter::Load(const String &FileName)
 {
 	if (m_hLib != nullptr)
 		return false;
@@ -112,7 +112,7 @@ void EDCBPluginWriter::Free()
 }
 
 
-bool EDCBPluginWriter::Open(const CStringView &FileName, OpenFlag Flags)
+bool EDCBPluginWriter::Open(const String &FileName, OpenFlag Flags)
 {
 	if (!m_hLib || m_IsOpen) {
 		return false;
@@ -141,7 +141,7 @@ bool EDCBPluginWriter::Open(const CStringView &FileName, OpenFlag Flags)
 }
 
 
-bool EDCBPluginWriter::Reopen(const CStringView &FileName, OpenFlag Flags)
+bool EDCBPluginWriter::Reopen(const String &FileName, OpenFlag Flags)
 {
 	Close();
 

@@ -108,7 +108,7 @@ namespace LibISDB
 		BonDriver();
 		~BonDriver();
 
-		bool Load(const CStringView &FileName);
+		bool Load(const String &FileName);
 		void Unload();
 		bool IsLoaded() const;
 		bool CreateIBonDriver();

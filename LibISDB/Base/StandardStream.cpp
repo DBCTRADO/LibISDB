@@ -69,7 +69,7 @@ StandardOutputStream::StandardOutputStream()
 
 
 
-FileStreamBase * OpenFileStream(const CStringView &Name, FileStreamBase::OpenFlag OpenFlags)
+FileStreamBase * OpenFileStream(const String &Name, FileStreamBase::OpenFlag OpenFlags)
 {
 	if (Name.empty())
 		return nullptr;

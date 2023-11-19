@@ -64,7 +64,7 @@ namespace LibISDB
 		void Finalize() override;
 
 	// SourceFilter
-		virtual bool OpenSource(const CStringView &Name) = 0;
+		virtual bool OpenSource(const String &Name) = 0;
 		virtual bool CloseSource() = 0;
 		virtual bool IsSourceOpen() const = 0;
 

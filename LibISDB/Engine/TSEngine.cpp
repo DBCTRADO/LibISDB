@@ -165,7 +165,7 @@ FilterGraph::IDType TSEngine::RegisterFilter(FilterBase *pFilter)
 }
 
 
-bool TSEngine::OpenSource(const CStringView &Name)
+bool TSEngine::OpenSource(const String &Name)
 {
 	CloseSource();
 

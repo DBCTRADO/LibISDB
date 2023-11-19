@@ -150,9 +150,7 @@
 #include <cwchar>
 #endif
 
-#include "Templates/cstring_view.hpp"
-
-
+#include <bit>
 #ifdef LIBISDB_MSB_FIRST
 static_assert(std::endian::native == std::endian::big);
 #else
@@ -263,7 +261,6 @@ namespace LibISDB
 
 	typedef std::basic_string<CharType> String;
 	typedef std::basic_string_view<CharType> StringView;
-	typedef basic_cstring_view<CharType> CStringView;
 
 	template<typename T> inline constexpr bool IsEnumClass =
 		std::bool_constant<std::is_enum_v<T> && !std::is_convertible_v<T, int>>::value;

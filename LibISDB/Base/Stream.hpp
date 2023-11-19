@@ -96,7 +96,7 @@ namespace LibISDB
 			LIBISDB_ENUM_FLAGS_TRAILER
 		};
 
-		virtual bool Open(const CStringView &FileName, OpenFlag Flags) = 0;
+		virtual bool Open(const String &FileName, OpenFlag Flags) = 0;
 
 		virtual bool Preallocate(SizeType Size) { return false; }
 		virtual bool SetPreallocationUnit(SizeType Unit) { return false; }

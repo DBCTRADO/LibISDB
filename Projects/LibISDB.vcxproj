@@ -88,7 +88,6 @@
     <ClInclude Include="..\LibISDB\MediaParsers\H265Parser.hpp" />
     <ClInclude Include="..\LibISDB\MediaParsers\MPEG2VideoParser.hpp" />
     <ClInclude Include="..\LibISDB\MediaParsers\MPEGVideoParser.hpp" />
-    <ClInclude Include="..\LibISDB\Templates\cstring_view.hpp" />
     <ClInclude Include="..\LibISDB\Templates\EnumFlags.hpp" />
     <ClInclude Include="..\LibISDB\Templates\ReturnArg.hpp" />
     <ClInclude Include="..\LibISDB\TS\CaptionParser.hpp" />

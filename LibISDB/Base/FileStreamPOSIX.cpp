@@ -131,7 +131,7 @@ FileStreamPOSIX::~FileStreamPOSIX()
 }
 
 
-bool FileStreamPOSIX::Open(const CStringView &FileName, OpenFlag Flags)
+bool FileStreamPOSIX::Open(const String &FileName, OpenFlag Flags)
 {
 	if (m_File >= 0) {
 		SetError(std::errc::operation_in_progress);

@@ -389,7 +389,7 @@ EPGDataFile::EPGDataFile() noexcept
 }
 
 
-bool EPGDataFile::Open(EPGDatabase *pEPGDatabase, const CStringView &FileName, OpenFlag Flags)
+bool EPGDataFile::Open(EPGDatabase *pEPGDatabase, const String &FileName, OpenFlag Flags)
 {
 	Close();
 

@@ -59,7 +59,7 @@ namespace LibISDB
 		bool StopStreaming() override;
 
 	// SourceFilter
-		bool OpenSource(const CStringView &Name) override;
+		bool OpenSource(const String &Name) override;
 		bool CloseSource() override;
 		bool IsSourceOpen() const override;
 		bool FetchSource(size_t RequestSize) override;

@@ -67,7 +67,7 @@ namespace LibISDB
 	};
 
 
-	FileStreamBase * OpenFileStream(const CStringView &Name, FileStreamBase::OpenFlag OpenFlags);
+	FileStreamBase * OpenFileStream(const String &Name, FileStreamBase::OpenFlag OpenFlags);
 
 }	// namespace LibISDB
 

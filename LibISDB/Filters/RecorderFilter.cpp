@@ -228,7 +228,7 @@ bool RecorderFilter::RecordingDataStreamer::SetWriter(StreamWriter *pWriter)
 
 
 bool RecorderFilter::RecordingDataStreamer::ReopenWriter(
-	const CStringView &FileName, StreamWriter::OpenFlag Flags)
+	const String &FileName, StreamWriter::OpenFlag Flags)
 {
 	BlockLock Lock(m_Lock);
 
@@ -356,7 +356,7 @@ bool RecorderFilter::RecordingTaskImpl::SetWriter(StreamWriter *pWriter)
 
 
 bool RecorderFilter::RecordingTaskImpl::Reopen(
-	const CStringView &FileName, StreamWriter::OpenFlag Flags)
+	const String &FileName, StreamWriter::OpenFlag Flags)
 {
 	LIBISDB_TRACE(LIBISDB_STR("RecorderFilter::RecordingTaskImpl::Reopen() : {}\n"), static_cast<void *>(this));
 

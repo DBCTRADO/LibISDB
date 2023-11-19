@@ -131,7 +131,7 @@ bool StreamSourceFilter::StopStreaming()
 }
 
 
-bool StreamSourceFilter::OpenSource(const CStringView &Name)
+bool StreamSourceFilter::OpenSource(const String &Name)
 {
 	if (m_Stream) {
 		SetError(std::errc::operation_in_progress);
