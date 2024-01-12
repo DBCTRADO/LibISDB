@@ -61,6 +61,9 @@ namespace LibISDB::DirectShow
 		bool GetChannelMap(int Channels, int *pMap) const override;
 		bool GetDownmixInfo(ReturnArg<DownmixInfo> Info) const override;
 
+	// AC3Decoder
+		static void GetVersion(std::string *pVersion);
+
 	private:
 		bool OpenDecoder();
 		void CloseDecoder();

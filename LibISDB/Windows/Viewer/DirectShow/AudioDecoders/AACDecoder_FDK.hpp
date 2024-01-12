@@ -28,6 +28,9 @@
 #define LIBISDB_AAC_DECODER_FDK_H
 
 
+#ifdef LIBISDB_HAS_FDK_AAC
+
+
 #include "AACDecoder.hpp"
 #include "../../../../MediaParsers/ADTSParser.hpp"
 
@@ -54,6 +57,9 @@ namespace LibISDB::DirectShow
 		bool GetChannelMap(int Channels, int *pMap) const override;
 		bool GetDownmixInfo(ReturnArg<DownmixInfo> Info) const override;
 
+	// AACDecoder_FDK
+		static void GetVersion(std::string *pVersion);
+
 	private:
 		bool OpenDecoder() override;
 		void CloseDecoder() override;
@@ -65,6 +71,9 @@ namespace LibISDB::DirectShow
 	};
 
 }	// namespace LibISDB::DirectShow
+
+
+#endif	// LIBISDB_HAS_FDK_AAC
 
 
 #endif	// ifndef LIBISDB_AAC_DECODER_FDK_H

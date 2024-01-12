@@ -27,9 +27,8 @@
 #include "../../../../LibISDBPrivate.hpp"
 #include "../../../../LibISDBWindows.hpp"
 #include "AudioDecoderFilter.hpp"
-#ifdef LIBISDB_USE_FAAD2
 #include "AACDecoder_FAAD2.hpp"
-#else
+#ifdef LIBISDB_HAS_FDK_AAC
 #include "AACDecoder_FDK.hpp"
 #endif
 #include "MPEGAudioDecoder.hpp"
@@ -1367,20 +1366,53 @@ AudioDecoder * AudioDecoderFilter::CreateDecoder(DecoderType Type)
 {
 	switch (Type) {
 	case DecoderType::AAC:
-#ifdef LIBISDB_USE_FAAD2
 		return new AACDecoder_FAAD2;
-#else
-		return new AACDecoder_FDK;
-#endif
 
 	case DecoderType::MPEGAudio:
 		return new MPEGAudioDecoder;
 
 	case DecoderType::AC3:
 		return new AC3Decoder;
+
+#ifdef LIBISDB_HAS_FDK_AAC
+	case DecoderType::FDK_AAC:
+		return new AACDecoder_FDK;
+#endif
+
 	}
 
 	return nullptr;
+}
+
+
+bool AudioDecoderFilter::GetDecoderVersion(DecoderType Type, std::string *pVersion)
+{
+	if (pVersion == nullptr)
+		return false;
+
+	switch (Type) {
+	case DecoderType::AAC:
+		AACDecoder_FAAD2::GetVersion(pVersion);
+		return true;
+
+	case DecoderType::MPEGAudio:
+		MPEGAudioDecoder::GetVersion(pVersion);
+		return true;
+
+	case DecoderType::AC3:
+		AC3Decoder::GetVersion(pVersion);
+		return true;
+
+#ifdef LIBISDB_HAS_FDK_AAC
+	case DecoderType::FDK_AAC:
+		AACDecoder_FDK::GetVersion(pVersion);
+		return true;
+#endif
+	}
+
+	pVersion->clear();
+
+	return false;
 }
 
 

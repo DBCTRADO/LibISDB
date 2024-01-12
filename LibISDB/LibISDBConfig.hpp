@@ -41,4 +41,9 @@
 //#define LIBISDB_H264_STRICT_1SEG
 
 
+#if __has_include("../Thirdparty/fdk-aac/libAACdec/include/aacdecoder_lib.h")
+#define LIBISDB_HAS_FDK_AAC
+#endif
+
+
 #endif	// ifndef LIBISDB_CONFIG_H

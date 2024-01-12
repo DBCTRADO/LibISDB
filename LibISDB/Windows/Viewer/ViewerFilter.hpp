@@ -103,6 +103,16 @@ namespace LibISDB
 			AudioRenderer,
 		};
 
+		enum class AACDecoderType {
+			FAAD2,
+#ifdef LIBISDB_HAS_FDK_AAC
+			FDK_AAC,
+			Default = FDK_AAC,
+#else
+			Default = FAAD2,
+#endif
+		};
+
 		ViewerFilter() noexcept;
 		~ViewerFilter();
 
@@ -192,6 +202,10 @@ namespace LibISDB
 		LONGLONG GetAudioDelay() const;
 		COMPointer<DirectShow::AudioDecoderFilter> GetAudioDecoderFilter() const;
 		bool SetAudioStreamType(uint8_t StreamType);
+		AACDecoderType GetAACDeocderType() const noexcept { return m_AACDecoderType; }
+		bool SetAACDecoderType(AACDecoderType Type);
+		static LPCTSTR GetAACDecoderName(AACDecoderType Type);
+		static bool GetAACDecoderVersion(AACDecoderType Type, std::string *pVersion);
 
 		bool GetVideoDecoderName(String *pName) const;
 		bool GetVideoRendererName(String *pName) const;
@@ -277,6 +291,7 @@ namespace LibISDB
 
 		mutable MutexLock m_ResizeLock;
 		DirectShow::VideoRenderer::RendererType m_VideoRendererType;
+		AACDecoderType m_AACDecoderType;
 		String m_VideoDecoderName;
 		String m_AudioRendererName;
 		uint8_t m_VideoStreamType;

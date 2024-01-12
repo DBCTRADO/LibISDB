@@ -68,6 +68,9 @@ namespace LibISDB::DirectShow
 			AAC,
 			MPEGAudio,
 			AC3,
+#ifdef LIBISDB_HAS_FDK_AAC
+			FDK_AAC,
+#endif
 		};
 
 		enum class DualMonoMode {
@@ -128,6 +131,7 @@ namespace LibISDB::DirectShow
 		using AudioInfo = AudioDecoder::AudioInfo;
 
 		bool SetDecoderType(DecoderType Type);
+		DecoderType GetDecoderType() const noexcept { return m_DecoderType; }
 		uint8_t GetCurrentChannelCount() const;
 		uint8_t GetOutputChannelCount() const;
 		bool GetAudioInfo(ReturnArg<AudioInfo> Info) const;
@@ -152,6 +156,8 @@ namespace LibISDB::DirectShow
 		bool AddEventListener(EventListener *pEventListener);
 		bool RemoveEventListener(EventListener *pEventListener);
 		bool SetSampleCallback(SampleCallback *pCallback);
+
+		static bool GetDecoderVersion(DecoderType Type, std::string *pVersion);
 
 	private:
 		AudioDecoderFilter(LPUNKNOWN pUnk, HRESULT *phr);

@@ -209,6 +209,7 @@ ViewerFilter::ViewerFilter() noexcept
 	, m_VideoWindowSize()
 
 	, m_VideoRendererType(DirectShow::VideoRenderer::RendererType::Invalid)
+	, m_AACDecoderType(AACDecoderType::Default)
 	, m_VideoStreamType(STREAM_TYPE_UNINITIALIZED)
 	, m_AudioStreamType(STREAM_TYPE_UNINITIALIZED)
 	, m_ForcedAspectX(0)
@@ -1627,6 +1628,61 @@ bool ViewerFilter::SetAudioStreamType(uint8_t StreamType)
 }
 
 
+bool ViewerFilter::SetAACDecoderType(AACDecoderType Type)
+{
+	if (m_AACDecoderType != Type) {
+		m_AACDecoderType = Type;
+		if (m_AudioStreamType == STREAM_TYPE_AAC)
+			SetAudioDecoderType(m_AudioStreamType);
+	}
+
+	return true;
+}
+
+
+LPCTSTR ViewerFilter::GetAACDecoderName(AACDecoderType Type)
+{
+	switch (Type) {
+	case AACDecoderType::FAAD2:
+		return TEXT("FAAD2");
+
+#ifdef LIBISDB_HAS_FDK_AAC
+	case AACDecoderType::FDK_AAC:
+		return TEXT("Fraunhofer FDK AAC");
+#endif
+	}
+
+	return nullptr;
+}
+
+
+bool ViewerFilter::GetAACDecoderVersion(AACDecoderType Type, std::string *pVersion)
+{
+	if (pVersion == nullptr)
+		return false;
+
+	DirectShow::AudioDecoderFilter::DecoderType Decoder;
+
+	switch (Type) {
+	case AACDecoderType::FAAD2:
+		Decoder = DirectShow::AudioDecoderFilter::DecoderType::AAC;
+		break;
+
+#ifdef LIBISDB_HAS_FDK_AAC
+	case AACDecoderType::FDK_AAC:
+		Decoder = DirectShow::AudioDecoderFilter::DecoderType::FDK_AAC;
+		break;
+#endif
+
+	default:
+		pVersion->clear();
+		return false;
+	}
+
+	return DirectShow::AudioDecoderFilter::GetDecoderVersion(Decoder, pVersion);
+}
+
+
 bool ViewerFilter::GetVideoDecoderName(String *pName) const
 {
 	if (pName == nullptr)
@@ -2077,7 +2133,12 @@ void ViewerFilter::SetAudioDecoderType(BYTE StreamType)
 	if (m_AudioDecoder) {
 		m_AudioDecoder->SetDecoderType(
 			StreamType == STREAM_TYPE_AAC ?
-				DirectShow::AudioDecoderFilter::DecoderType::AAC :
+				(
+#ifdef LIBISDB_HAS_FDK_AAC
+				m_AACDecoderType == AACDecoderType::FDK_AAC ?
+					DirectShow::AudioDecoderFilter::DecoderType::FDK_AAC :
+#endif
+					DirectShow::AudioDecoderFilter::DecoderType::AAC) :
 			StreamType == STREAM_TYPE_MPEG1_AUDIO ||
 			StreamType == STREAM_TYPE_MPEG2_AUDIO ?
 				DirectShow::AudioDecoderFilter::DecoderType::MPEGAudio :

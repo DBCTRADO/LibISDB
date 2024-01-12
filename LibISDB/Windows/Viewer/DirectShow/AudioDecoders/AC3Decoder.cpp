@@ -63,6 +63,12 @@ constexpr int16_t SampleToInt16(float Sample)
 
 
 
+void AC3Decoder::GetVersion(std::string *pVersion)
+{
+	*pVersion = VERSION;
+}
+
+
 AC3Decoder::AC3Decoder() noexcept
 	: m_pA52State(nullptr)
 	, m_DecodeError(false)

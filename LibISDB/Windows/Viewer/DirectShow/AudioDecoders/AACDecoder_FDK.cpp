@@ -25,6 +25,11 @@
 
 
 #include "../../../../LibISDBPrivate.hpp"
+
+
+#ifdef LIBISDB_HAS_FDK_AAC
+
+
 #include "AACDecoder_FDK.hpp"
 #include "../../../../../Thirdparty/fdk-aac/libAACdec/include/aacdecoder_lib.h"
 #include "../../../../Base/DebugDef.hpp"
@@ -35,6 +40,24 @@
 
 namespace LibISDB::DirectShow
 {
+
+
+void AACDecoder_FDK::GetVersion(std::string *pVersion)
+{
+	LIB_INFO InfoList[FDK_MODULE_LAST];
+
+	::FDKinitLibInfo(InfoList);
+	::aacDecoder_GetLibInfo(InfoList);
+
+	for (const LIB_INFO &Info : InfoList) {
+		if (Info.module_id == FDK_AACDEC) {
+			*pVersion = Info.versionStr;
+			return;
+		}
+	}
+
+	pVersion->clear();
+}
 
 
 AACDecoder_FDK::AACDecoder_FDK() noexcept
@@ -222,6 +245,9 @@ bool AACDecoder_FDK::DecodeFrame(const ADTSFrame *pFrame, ReturnArg<DecodeFrameI
 
 	return OK;
 }
+
+
+#endif	// LIBISDB_HAS_FDK_AAC
 
 
 }	// namespace LibISDB::DirectShow

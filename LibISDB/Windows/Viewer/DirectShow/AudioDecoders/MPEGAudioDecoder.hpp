@@ -58,6 +58,9 @@ namespace LibISDB::DirectShow
 
 		bool IsSPDIFSupported() const override { return false; }
 
+	// MPEGAudioDecoder
+		static void GetVersion(std::string *pVersion);
+
 	private:
 		bool OpenDecoder();
 		void CloseDecoder();

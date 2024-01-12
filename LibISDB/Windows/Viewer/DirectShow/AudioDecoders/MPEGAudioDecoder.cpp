@@ -55,6 +55,12 @@ constexpr int16_t FixedToInt16(mad_fixed_t Value)
 
 
 
+void MPEGAudioDecoder::GetVersion(std::string *pVersion)
+{
+	*pVersion = MAD_VERSION;
+}
+
+
 MPEGAudioDecoder::MPEGAudioDecoder() noexcept
 	: m_Initialized(false)
 	, m_DecodeError(false)

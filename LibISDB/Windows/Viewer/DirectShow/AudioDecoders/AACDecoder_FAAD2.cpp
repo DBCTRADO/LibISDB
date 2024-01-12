@@ -44,6 +44,14 @@ namespace LibISDB::DirectShow
 {
 
 
+void AACDecoder_FAAD2::GetVersion(std::string *pVersion)
+{
+	char *pID;
+	::NeAACDecGetVersion(&pID, nullptr);
+	*pVersion = pID;
+}
+
+
 AACDecoder_FAAD2::AACDecoder_FAAD2() noexcept
 	: m_hDecoder(nullptr)
 	, m_InitRequest(false)
