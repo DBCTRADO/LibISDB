@@ -31,7 +31,13 @@
 
 
 #include "AACDecoder_FDK.hpp"
-#include "../../../../../Thirdparty/fdk-aac/libAACdec/include/aacdecoder_lib.h"
+
+// プロジェクトかファイルのプロパティで、追加のインクルードディレクトリを指定した方がいいかも
+#pragma include_alias("machine_type.h", "../../../../../Thirdparty/fdk-aac/cpp/libSYS/include/machine_type.h")
+#pragma include_alias("FDK_audio.h", "../../../../../Thirdparty/fdk-aac/cpp/libSYS/include/FDK_audio.h")
+#pragma include_alias("genericStds.h", "../../../../../Thirdparty/fdk-aac/cpp/libSYS/include/genericStds.h")
+#include "../../../../../Thirdparty/fdk-aac/cpp/libAACdec/include/aacdecoder_lib.h"
+
 #include "../../../../Base/DebugDef.hpp"
 
 
