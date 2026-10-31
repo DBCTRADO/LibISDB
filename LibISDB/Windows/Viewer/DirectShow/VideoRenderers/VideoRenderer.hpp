@@ -136,6 +136,8 @@ namespace LibISDB::DirectShow
 			const RECT &DestRect, const RECT &WindowRect) override;
 
 	protected:
+		virtual bool InitializeBeforeConnect(HWND hwndRender) { return true; }
+
 		CLSID m_clsidRenderer;
 		String m_RendererName;
 		bool m_NoSourcePosition;
