@@ -96,16 +96,21 @@ endif()
 
 # Lets stick to predefined config, until more flexibility is actually requested.
 set(FAAD_DEFINES
-  APPLY_DRC
   HAVE_INTTYPES_H=1
   HAVE_MEMCPY=1
   HAVE_STRING_H=1
   HAVE_STRINGS_H=1
   HAVE_SYS_STAT_H=1
   HAVE_SYS_TYPES_H=1
-  STDC_HEADERS=1
   PACKAGE_VERSION=\"${FAAD_VERSION}\"
 )
+
+option(FAAD_APPLY_DRC "Apply dynamic range control" ON)
+if(FAAD_APPLY_DRC)
+  list(APPEND FAAD_DEFINES
+    APPLY_DRC
+  )
+endif()
 
 check_library_exists(m lrintf "" HAVE_LIBM)
 if(HAVE_LIBM)
@@ -245,28 +250,34 @@ foreach(LIB faad faad_drm faad_fixed faad_drm_fixed)
 endforeach()
 
 # CLI
+option(FAAD_BUILD_CLI "Build faad_cli executable" ON)
+if (FAAD_BUILD_CLI)
+  add_executable(faad_cli ${FAAD_SOURCES})
+  target_link_libraries(faad_cli faad)
+  target_compile_definitions(faad_cli PRIVATE ${FAAD_DEFINES})
+  target_compile_options(faad_cli PRIVATE ${FAAD_FLAGS})
 
-add_executable(faad_cli ${FAAD_SOURCES})
-target_link_libraries(faad_cli faad)
-target_compile_definitions(faad_cli PRIVATE ${FAAD_DEFINES})
-target_compile_options(faad_cli PRIVATE ${FAAD_FLAGS})
-
-if (MSVC)
-  target_include_directories(faad_cli PRIVATE
-    frontend
-  )
-else()
-  set_target_properties(faad_cli PROPERTIES OUTPUT_NAME faad)
+  if (MSVC)
+    target_include_directories(faad_cli PRIVATE
+      frontend
+    )
+  else()
+    set_target_properties(faad_cli PROPERTIES OUTPUT_NAME faad)
+  endif()
 endif()
-
 # Installation
 
-if(NOT FAAD_BUNDLED_MODE AND NOT MSVC)
+if(NOT FAAD_BUNDLED_MODE)
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/faad2.pc"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
+  set(INSTALL_TARGETS faad faad_drm)
+  if (FAAD_BUILD_CLI)
+    list(APPEND INSTALL_TARGETS faad_cli)
+  endif()
+
   install(
-    TARGETS faad faad_cli faad_drm
+    TARGETS ${INSTALL_TARGETS}
     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"

@@ -138,13 +138,18 @@ static uint8_t estimate_current_envelope(sbr_info *sbr, sbr_hfadj_info *adj,
                                          qmf_t Xsbr[MAX_NTSRHFG][64], uint8_t ch)
 {
     uint8_t m, l, j, k, k_l, k_h, p;
-    real_t nrg, div;
+    real_t div;
     (void)adj;  /* TODO: remove parameter? */
 #ifdef FIXED_POINT
+    /* the per-bin energy is accumulated over the envelope's time slots and,
+       for the wider bands, its QMF bins; that sum exceeds 32 bits on ordinary
+       content, so keep it in 64 bits. the running int32 sum otherwise wraps
+       before the limit test below can reject an over-range energy. */
+    int64_t nrg;
     const real_t half = REAL_CONST(0.5);
-    real_t limit;
-    real_t mul;
+    int64_t limit;
 #else
+    real_t nrg;
     const real_t half = 0;  /* Compiler is smart enough to eliminate +0 op. */
     const real_t limit = FLT_MAX;
 #endif
@@ -163,8 +168,7 @@ static uint8_t estimate_current_envelope(sbr_info *sbr, sbr_hfadj_info *adj,
             if (div <= 0)
                 div = 1;
 #ifdef FIXED_POINT
-            limit = div << (30 - (COEF_BITS - REAL_BITS));
-            mul = (1 << (COEF_BITS - REAL_BITS)) / div;
+            limit = (int64_t)div << 30;
 #endif
 
             for (m = 0; m < sbr->M; m++)
@@ -190,7 +194,7 @@ static uint8_t estimate_current_envelope(sbr_info *sbr, sbr_hfadj_info *adj,
                 if (nrg < -limit || nrg > limit)
                     return 1;
 #ifdef FIXED_POINT
-                sbr->E_curr[ch][m][l] = nrg * mul;
+                sbr->E_curr[ch][m][l] = (real_t)(nrg / div);
 #else
                 sbr->E_curr[ch][m][l] = nrg / div;
 #endif
@@ -224,8 +228,7 @@ static uint8_t estimate_current_envelope(sbr_info *sbr, sbr_hfadj_info *adj,
                     if (div <= 0)
                         div = 1;
 #ifdef FIXED_POINT
-                    limit = div << (30 - (COEF_BITS - REAL_BITS));
-                    mul = (1 << (COEF_BITS - REAL_BITS)) / div;
+                    limit = (int64_t)div << 30;
 #endif
 
                     for (i = l_i + sbr->tHFAdj; i < u_i + sbr->tHFAdj; i++)
@@ -250,7 +253,7 @@ static uint8_t estimate_current_envelope(sbr_info *sbr, sbr_hfadj_info *adj,
                     if (nrg < -limit || nrg > limit)
                         return 1;
 #ifdef FIXED_POINT
-                    sbr->E_curr[ch][k - sbr->kx][l] = nrg * mul;
+                    sbr->E_curr[ch][k - sbr->kx][l] = (real_t)(nrg / div);
 #else
                     sbr->E_curr[ch][k - sbr->kx][l] = nrg / div;
 #endif
@@ -1713,7 +1716,7 @@ static void hf_assembly(sbr_info *sbr, sbr_hfadj_info *adj,
                             QMF_RE(Xsbr[i + sbr->tHFAdj][m+sbr->kx]) -=
                                 (rev*phi_re[i_min1] * MUL_F(adj->S_M_boost[l][m - 1], FRAC_CONST(0.00815)));
                         }
-                        if (m + sbr->kx < 64)
+                        if (m + sbr->kx + 1 < 64)
                         {
                             QMF_RE(Xsbr[i + sbr->tHFAdj][m+sbr->kx + 1]) +=
                                 (rev*phi_re[i_min1] * MUL_F(adj->S_M_boost[l][m], FRAC_CONST(0.00815)));

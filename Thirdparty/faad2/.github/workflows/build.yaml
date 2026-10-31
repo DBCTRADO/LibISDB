@@ -1,0 +1,131 @@
+# FAAD2 - Freeware Advanced Audio (AAC) Decoder including SBR decoding
+# Copyright (C) 2003-2005 M. Bakker, Nero AG, http://www.nero.com
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+# Any non-GPL usage of this software or parts of this software is strictly
+# forbidden.
+#
+# The "appropriate copyright message" mentioned in section 2c of the GPLv2
+# must read: "Code from FAAD2 is copyright (c) Nero AG, www.nero.com"
+#
+# Commercial non-GPL licensing of this software is possible.
+# For more info contact Nero AG through Mpeg4AAClicense@nero.com.
+
+name: Build
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [opened, reopened, labeled, synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  BuildWithCMake:
+    runs-on: ${{ matrix.os || 'ubuntu-latest' }}
+
+    strategy:
+     fail-fast: false
+     matrix:
+       include:
+         - name: Clang Shared
+           cc: clang
+           cxx: clang++
+           cflags: -Wall -fcolor-diagnostics -fansi-escape-codes
+           shared: 'true'
+         - name: Clang Static
+           cc: clang
+           cxx: clang++
+           cflags: -Wall -fcolor-diagnostics -fansi-escape-codes -O2 -Werror=strict-aliasing
+         - name: GCC Static
+           cc: gcc
+           cxx: g++
+           cflags: -Wall -fdiagnostics-color=always -O2 -Werror=strict-aliasing
+         - name: MSVC
+           os: windows-latest
+           cmake_args: >-
+             -G "Visual Studio 18 2026" -A x64
+           cmake_build_options: >-
+             --config Release
+         - name: OSX
+           os: macos-latest
+
+    env:
+      CC: ${{ matrix.cc || 'cc' }}
+      CXX: ${{ matrix.cxx || 'cxx' }}
+      CFLAGS: ${{ matrix.cflags || '-Wall' }}
+      CXXFLAGS: ${{ matrix.cflags || '-Wall' }}
+      SHARED: ${{ matrix.shared || 'false' }}
+
+    steps:
+    - name: Checkout the source
+      uses: actions/checkout@v4
+      with:
+        submodules: false
+        fetch-depth: 1
+    - name: Configure and build
+      shell: bash
+      run: |
+        export NUM_CORES=`nproc || getconf _NPROCESSORS_ONLN`
+        cmake -B build . \
+            -DCMAKE_INSTALL_PREFIX=$RUNNER_TEMP/usrlocal \
+            -DBUILD_SHARED_LIBS=${SHARED} \
+            ${{ matrix.cmake_args }}
+        cmake --build build -j ${NUM_CORES} ${{ matrix.cmake_build_options || '' }}
+        cmake --install build
+
+  BuildOnMsys:
+    name: BuildOnMsys (${{ matrix.msystem }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+         - msystem: ucrt64
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+    - name: Checkout the source
+      uses: actions/checkout@v4
+      with:
+        submodules: false
+        fetch-depth: 1
+    - uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{ matrix.msystem }}
+        update: true
+        path-type: inherit
+        install: >-
+          base-devel
+        pacboy: >-
+          cmake:p
+    - name: Configure and build
+      run: |
+        mkdir -p temp
+        cmake -B build . \
+            -DCMAKE_INSTALL_PREFIX=$(realpath temp) \
+            -DBUILD_SHARED_LIBS='true'
+        cmake --build build -j `nproc`
+        cmake --install build
+    - name: Upload artifacts (Windows)
+      uses: actions/upload-artifact@v4
+      if: runner.os == 'Windows'
+      with:
+        name: faad2-${{ github.sha }}-${{ matrix.msystem }}
+        path: temp
