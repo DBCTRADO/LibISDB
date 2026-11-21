@@ -1230,7 +1230,7 @@ size_t ARIBStringDecoder::UTF8ToCodePoint(const uint8_t *pData, size_t Length, u
 	if (Length == 0) {
 		return 0;
 	} else if ((pData[0] >= 0xC2) && (pData[0] < 0xE0) && (Length >= 2)
-			&& (pData[1] >= 80) && (pData[1] < 0xC0)) {
+			&& (pData[1] >= 0x80) && (pData[1] < 0xC0)) {
 		*pCodePoint = ((pData[0] & 0x1F) << 6) | (pData[1] & 0x3F);
 		return 2;
 	} else if ((pData[0] >= 0xE0) && (pData[0] < 0xF0) && (Length >= 3)
